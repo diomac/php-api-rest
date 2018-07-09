@@ -16,10 +16,10 @@ class ExampleResource extends Resource
 {
     /**
      * @method post
-     * @route /auth/usr-data/id/{id}
+     * @route /auth/usr-data/id/{id}/id2/{id2}
      * @guard secure
      */
-    function setUsrData()
+    function getUsrData()
     {
         $this->response->setCode(Response::OK);
         $this->response->setBodyJSON($this->request->getData());
@@ -28,10 +28,10 @@ class ExampleResource extends Resource
 
     /**
      * @method get
-     * @route /auth/usr-data/id/{id}
+     * @route /auth/usr-data/id/{id}/id2/{id2}
      * @guard secure
      */
-    function getUsrData()
+    function getUsrData2()
     {
         $this->response->setCode(Response::OK);
         $this->response->setBodyJSON($this->request->getData());
