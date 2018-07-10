@@ -66,6 +66,25 @@ function secure(){
   return true;
 }
 ```
+## Running a route
+
+Whenever a route is executed, the class holding the route will be instantiated and inherit the following attributes:
+
+A Request object with the methods:
+```
+$this->request->getParams() // returns the parameters of the URL and $_GET
+$this->request->getData()   // returns an object sent by the front end
+$this->request->getRoute()  // return the executed route
+$this->request->getMethod() // returns the executed HTTP method
+```
+A Response object with the methods:
+```
+$this->response->setHeader('name', 'value'); // set HTTP header response
+$this->response->setCode(Response::BAD_REQUEST); // set HTTP response code
+$this->response->setBody('string'); // set response body
+$this->response->setBodyJSON([]); // set response body to convert in JSON
+$this->response->setContentType(''); // set content type response (for setBodyJSON not needed)
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
