@@ -349,9 +349,9 @@ class Response
     }
 
     /**
-     * @param object $body
+     * @param array|object $body
      */
-    public function setBodyJSON(object $body)
+    public function setBodyJSON($body)
     {
         $this->setContentType('application/json');
         $this->body = json_encode($body, JSON_PRETTY_PRINT);
