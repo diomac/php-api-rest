@@ -26,6 +26,10 @@ class App
      * @var $resource Resource
      */
     private $resource;
+    /**
+     * @var $config array
+     */
+    private static $config;
 
     /**
      * App constructor.
@@ -34,6 +38,7 @@ class App
      */
     public function __construct($config)
     {
+        self::$config = $config;
         $this->router = new Router($config);
         $this->request = new Request($config);
         $this->response = new Response();
@@ -80,6 +85,8 @@ class App
             }
         }
 
+        $this->request = new Request(self::$config, $currentRoute);
+
         if (!$currentRoute) {
             throw new NotFoundException();
         }
@@ -93,7 +100,7 @@ class App
         $method = $this->request->getMethod();
         $class = $currentRouteData[$method]['class'];
         $this->resource = new $class($currentRoute);
-        $this->resource->setParams($this->request->getParams($currentRoute));
+        $this->resource->setParams($this->request->getParams());
         $this->resource->setRequest($this->request);
         $this->resource->setResponse($this->response);
         $function = $currentRouteData[$method]['function'];

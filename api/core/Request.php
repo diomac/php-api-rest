@@ -60,26 +60,26 @@ class Request
      * @return array
      * @throws \Exception
      */
-    public function getParams($route): array
+    public function getParams(): array
     {
-        if(!$this->params) {
-            $this->getUriParams($route);
-        }
         return $this->params;
     }
 
     /**
      * Request constructor.
      * @param $config array
-     * @param $routes array
+     * @param $routeData array
      * @throws \Exception
      */
-    public function __construct($config)
+    public function __construct($config, $routeData = null)
     {
         $base = implode('/', $config['namespace']);
         $this->getEnvironmentRoute($base);
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();
+        if($routeData){
+            $this->getUriParams($routeData);
+        }
     }
 
     private function getUriParams($routeData)
