@@ -42,15 +42,15 @@ class ExampleResource extends Resource {...
 
 * 7 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a function to protect the route (@guard):
 ```
-      / **
-     * @method get
-     * @route /auth/usr-data/id/{id}
-     * @guard secure
-     * /
-    function getUsrData()
-    {
-        $this->response->setCode(Response::OK);
-        $this->response->setBodyJSON($ this->request->getData());
-        return $this->response;
-    }
+/**
+* @method get
+* @route /auth/usr-data/id/{id}
+* @guard secure
+*/
+function getUsrData()
+{
+  $this->response->setCode(Response::OK);
+  $this->response->setBodyJSON($ this->request->getData());
+  return $this->response;
+}
         
