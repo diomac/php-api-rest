@@ -3,7 +3,7 @@
 
 ### Prerequisites
 
-* PHP 7 or >
+* PHP >=7
 * Use namespaces in your project
 
 ### Installing and using
