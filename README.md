@@ -53,4 +53,4 @@ class ExampleResource extends Resource {...
         $this->response->setBodyJSON($ this->request->getData());
         return $this->response;
     }
-        ```
+        
