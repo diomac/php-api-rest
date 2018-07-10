@@ -54,9 +54,16 @@ class ExampleResource extends Resource {...
 */
 function getUsrData()
 {
-  $this->response->setCode(Response::OK);
-  $this->response->setBodyJSON($ this->request->getData());
-  return $this->response;
+  // ... your code
+  $this->response->setCode(Response::OK); // set HTTP response code
+  $this->response->setBodyJSON($ this->request->getData()); // set responde data
+  return $this->response; // return response object
+}
+
+function secure(){
+  //... check access
+  //throw new UnauthorizedException();
+  return true;
 }
 ```
 ## License
