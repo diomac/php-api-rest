@@ -78,7 +78,7 @@ class App
 
         foreach ($routes as $route => $data) {
             $patternRoute = $this->configPatternRoute($route);
-            if (preg_match($patternRoute, $this->request->getRoute())) {
+            if (preg_match($patternRoute, explode('?', $this->request->getRoute())[0])) {
                 $currentRouteData = $data;
                 $currentRoute = $route;
                 break;
