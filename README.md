@@ -85,6 +85,12 @@ $this->response->setBody('string'); // set response body
 $this->response->setBodyJSON([]); // set response body to convert in JSON
 $this->response->setContentType(''); // set content type response (for setBodyJSON not needed)
 ```
+And it inherits methods from the Resource class:
+```
+$this->getRoute(); // returns the configured route
+$this->getParams(); // returns the parameters of the URL and $_GET
+$this->getParam('name'); // returns a parameter by name
+```
 For the output simply return the response object:
 ```
 return $this->response;
