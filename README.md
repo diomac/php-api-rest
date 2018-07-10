@@ -1,6 +1,11 @@
 # Simple-API-REST
 ### PHP Simple API REST using annotations
 
+### Prerequisites
+
+* PHP 7 or >
+* Use namespaces in your project
+
 ### Installing and using
 
 ##### Soon I will be available with Composer dependency management. But for now it follows:
