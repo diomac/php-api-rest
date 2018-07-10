@@ -85,6 +85,11 @@ $this->response->setBody('string'); // set response body
 $this->response->setBodyJSON([]); // set response body to convert in JSON
 $this->response->setContentType(''); // set content type response (for setBodyJSON not needed)
 ```
+For the output simply return the response object:
+```
+return $this->response;
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
