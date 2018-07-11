@@ -13,7 +13,5 @@
         "php": ">=7"
     },
     "bin": ["api/v1/api-start.php"],
-    "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "license": "MIT"
  }
