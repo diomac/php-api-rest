@@ -13,6 +13,6 @@
         "diomac/simple-api-rest": "1.0@dev"
     },
     "license": "MIT",
-    "minimum-stability": "1.0",
+    "minimum-stability": "dev",
     "prefer-stable": true
  }
