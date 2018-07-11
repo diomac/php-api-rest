@@ -1,7 +1,7 @@
 {
     "name": "diomac/simple-api-rest",
     "description": "A simple PHP API REST using annotations",
-    "type": "framework",
+    "type": "microframework",
     "authors": [
         {
             "name": "Dionisio Gabriel Rigo de Souza Machado",
