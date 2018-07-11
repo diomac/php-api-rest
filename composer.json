@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "php": ">=7"
+        "php": ">=7",
+        "diomac/simple-api-rest": "1.0"
     },
     "license": "MIT",
     "minimum-stability": "dev",
