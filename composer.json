@@ -9,8 +9,7 @@
         }
     ],
     "require": {
-        "php": ">=7",
-        "diomac/simple-apirest": "1.0"
+        "php": ">=7"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
