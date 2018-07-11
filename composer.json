@@ -1,5 +1,5 @@
 {
-    "name": "simple_api_rest",
+    "name": "simpleApiRest",
     "description": "A simple PHP API REST using annotations",
     "type": "framework",
     "authors": [
@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7",
-        "diomac/simple_api_rest": "1.0"
+        "diomac/simpleApiRest": "1.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
