@@ -125,6 +125,19 @@ function secure2WithJSONParam(){
   return true;
 }
 ```
+## Using cache (APC - Auternative PHP Cache)
+```
+use api\core\App;
+$config = [
+    'namespace' => ['api', 'v1'],
+    'useCache' => true, // Stores the routes cached.
+    'resources' => [
+        'ExampleResource'
+    ]
+];
+$app = new App($config);
+$app->exec();
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
