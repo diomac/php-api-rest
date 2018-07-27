@@ -1,4 +1,0 @@
-RewriteEngine On
-RewriteCond %{REQUEST_URI} !api-start\.php$
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* api-start.php [L,QSA]
