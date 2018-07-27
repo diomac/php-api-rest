@@ -101,14 +101,13 @@ class Request
         $this->params = $params;
     }
 
-    private function configPatternRoute($route)
-    {
-        return '|^' . preg_replace('/({[^\/]+})/', '[^\/]+', $route) . '$|';
-    }
-
     private function getEnvironmentRoute($base)
     {
-        list(, $this->route) = explode($base, $_SERVER['REQUEST_URI']);
+        if(strpos($_SERVER['REQUEST_URI'], '/rest/informacoes') !== false){
+            $this->route = '/rest/informacoes';
+        }else{
+            list(, $this->route) = explode($base, $_SERVER['REQUEST_URI']);
+        }
     }
 
     private function getEnvironmentMethod()
@@ -130,6 +129,9 @@ class Request
         $data = file_get_contents('php://input');
         if ($data && isset($dataMethods[$this->method])) {
             $this->data = json_decode($data);
+            if(!is_object($this->data)) {
+                $this->data = new \stdClass();
+            }
         }else{
             $this->data = new \stdClass();
         }

@@ -15,7 +15,7 @@ class Response
      *Essa resposta provisória indica que tudo ocorreu bem até agora e que o cliente deve continuar com a requisição ou ignorar se já concluiu o que gostaria.
      * from: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status
      */
-    const CONTINUE_ = 100;
+    const CONTINUE = 100;
     /**
      * Esse código é enviado em resposta a um cabeçalho de solicitação Upgrade pelo cliente, e indica o protocolo que o servidor está alternando.
      * from: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status

@@ -23,7 +23,7 @@ class Resource
      * @var $response Response
      */
     protected $response;
-     /**
+    /**
      * @var $route string
      */
     protected $route;
@@ -31,6 +31,10 @@ class Resource
      * @var $allowedMethods array
      */
     private $allowedMethods;
+    /**
+     * @var $guardParams \stdClass
+     */
+    private $guardParams;
 
     /**
      * @return string
@@ -91,19 +95,32 @@ class Resource
     /**
      * Resource constructor.
      * @param string $route
+     * @param \stdClass $guardParams
      */
-    public function __construct(string $route)
+    public function __construct(string $route, $guardParams = null)
     {
         $this->route = $route;
+        if ($guardParams) {
+            $this->guardParams = $guardParams;
+        }
     }
 
     /**
      * @param $pName string
      * @return mixed
      */
-    protected function getParam($pName){
-        if(isset($this->params[$pName])){
+    protected function getParam($pName)
+    {
+        if (isset($this->params[$pName])) {
             return $this->params[$pName];
         }
+    }
+
+    protected function getGuardParam($name)
+    {
+        if(!isset($this->guardParams->{$name})){
+            return false;
+        }
+        return $this->guardParams->{$name};
     }
 }

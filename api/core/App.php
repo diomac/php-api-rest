@@ -85,13 +85,13 @@ class App
             }
         }
 
-        $this->request = new Request(self::$config, $currentRoute);
-
         if (!$currentRoute) {
             throw new NotFoundException();
         }
 
-        if (!array_key_exists($this->request->getMethod(),  $currentRouteData)) {
+        $this->request = new Request(self::$config, $currentRoute);
+
+        if (!array_key_exists($this->request->getMethod(), $currentRouteData)) {
             $this->resource = new Resource($currentRoute);
             $this->resource->setAllowedMethods($currentRouteData);
             throw new MethodNotAllowedException();
@@ -99,20 +99,41 @@ class App
 
         $method = $this->request->getMethod();
         $class = $currentRouteData[$method]['class'];
-        $this->resource = new $class($currentRoute);
+
+        $guardParams = null;
+
+        if ($currentRouteData[$method]['guard']) {
+            $guardParams = $currentRouteData[$method]['guard']['params'];
+        }
+
+        $this->resource = new $class($currentRoute, $guardParams);
         $this->resource->setParams($this->request->getParams());
         $this->resource->setRequest($this->request);
         $this->resource->setResponse($this->response);
         $function = $currentRouteData[$method]['function'];
 
-        if ($currentRouteData[$method]['guard']) {
-            $guard = $currentRouteData[$method]['guard'];
-            if ($this->resource->$guard()) {
+        if ($currentRouteData[$method]['guards']) {
+            $authorized = $this->execGuards($currentRouteData[$method]['guards']);
+            if ($authorized) {
                 $this->response = $this->resource->$function();
+            } else {
+                throw new ForbbidenException();
             }
         } else {
             $this->response = $this->resource->$function();
         }
+    }
+
+    private function execGuards($guards)
+    {
+        foreach ($guards as $g) {
+            $guardFunction = $g['function'];
+            $guardParams = $g['params'];
+            if (!$this->resource->$guardFunction($guardParams)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private function configPatternRoute($route)
