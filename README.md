@@ -4,6 +4,7 @@
 ### Prerequisites
 
 * PHP >=7
+* APC - Auternative PHP Cache - if use cache routes
 * Use namespaces in your project
 
 ### Installing and using
@@ -95,7 +96,35 @@ For the output simply return the response object:
 ```
 return $this->response;
 ```
+## Using 1 or more route guards
+```
+/**
+* @method get
+* @route /auth/usr-data/id/{id}
+* @guard secure1
+* @guard secure2WithJSONParam {"param1":"value1"}
+*/
+function getUsrData()
+{
+  // ... your code
+  $this->response->setCode(Response::OK); // set HTTP response code
+  $this->response->setBodyJSON($ this->request->getData()); // set responde data
+  return $this->response; // return response object
+}
 
+function secure1(){
+  //... check access
+  //throw new UnauthorizedException();
+  return true;
+}
+
+function secure2WithJSONParam(){
+  $param1 = $this->getGuardParam('param1');
+  //... check access
+  //throw new UnauthorizedException();
+  return true;
+}
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
