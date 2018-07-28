@@ -1,5 +1,5 @@
-# Simple-API-REST
-### PHP Simple API REST using annotations
+# PHP-API-REST
+### PHP API REST using annotations
 
 ### Prerequisites
 
