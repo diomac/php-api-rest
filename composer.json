@@ -19,10 +19,7 @@
     "php": ">=7"
   },
   "minimum-stability": "dev",
-  "bin": [
-    "example/api-start.php"
-  ],
-  "autoload": {
+   "autoload": {
     "psr-4": {
       "Diomac\\API\\": "src"
     }
