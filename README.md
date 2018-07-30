@@ -6,8 +6,6 @@ Prerequisites
 =============
 
 * PHP >=7
-* APC - Auternative PHP Cache - if use cache routes
-* Use namespaces in your project
 
 Installing
 ==========
