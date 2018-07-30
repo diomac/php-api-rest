@@ -26,7 +26,7 @@ RewriteRule .* api-start.php [L,QSA]
 
 * 2 - Use the api-start.php file to import the dependencies of your project, enter the namespace (each folder in an array key) and the list of resources of your REST API in the variable $config:
 ```
-use api\core\App;
+use Diomac\API\App;
 $config = [
     'namespace' => ['api', 'v1'],
     'resources' => [
@@ -39,11 +39,11 @@ $app->exec();
 
 * 3 - In the resource class, enter the inheritance of the Resource class:
 ```
-namespace api\v1;
+namespace example;
 
-use api\core\Resource;
-use api\core\Response;
-use api\core\UnauthorizedException;
+use Diomac\API\Resource;
+use Diomac\API\Response;
+use Diomac\API\UnauthorizedException;
 
 class ExampleResource extends Resource {...
 ```
@@ -129,7 +129,7 @@ function secure2WithJSONParam(){
 ```
 ## Using cache (APC - Auternative PHP Cache)
 ```
-use api\core\App;
+use Diomac\API\App;
 $config = [
     'namespace' => ['api', 'v1'],
     'useCache' => true, // Stores the routes cached.
