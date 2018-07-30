@@ -2,7 +2,12 @@
   "name": "diomac/php-api-rest",
   "description": "A PHP API REST Micro-Framework using annotations",
   "type": "microframework",
-  "keywords": ["api", "rest", "microframework"],
+  "version": "1.2",
+  "keywords": [
+    "api",
+    "rest",
+    "microframework"
+  ],
   "authors": [
     {
       "name": "Dionisio Gabriel Rigo de Souza Machado",
@@ -13,7 +18,10 @@
   "require": {
     "php": ">=7"
   },
-  "bin": ["api-start.php"],
+  "minimum-stability": "dev",
+  "bin": [
+    "example/api-start.php"
+  ],
   "autoload": {
     "psr-4": {
       "Diomac\\API\\": "src"
