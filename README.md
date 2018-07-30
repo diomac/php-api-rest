@@ -1,6 +1,6 @@
 PHP-API-REST
 ============
-### PHP API REST using annotations
+A PHP API REST Micro-Framework using annotations
 
 ### Prerequisites
 
