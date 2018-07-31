@@ -6,7 +6,7 @@
  * Time: 10:01
  */
 
-use Diomac\App;
+use Diomac\API\App;
 
 $config = [
     'namespace' => ['example'],
