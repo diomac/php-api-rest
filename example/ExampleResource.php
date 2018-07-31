@@ -8,9 +8,9 @@
 
 namespace example;
 
-use Diomac\Resource;
-use Diomac\Response;
-use Diomac\UnauthorizedException;
+use Diomac\API\Resource;
+use Diomac\API\Response;
+use Diomac\API\UnauthorizedException;
 
 class ExampleResource extends Resource
 {
