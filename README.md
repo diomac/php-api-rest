@@ -77,7 +77,7 @@ A Request object with the methods:
 ```
 $this->request->getParams() // returns the parameters of the URL and $_GET
 $this->request->getData()   // returns an object sent by the front end
-$this->request->getRoute()  // return the executed route
+$this->request->getRoute()  // returns the executed route
 $this->request->getMethod() // returns the executed HTTP method
 ```
 A Response object with the methods:
