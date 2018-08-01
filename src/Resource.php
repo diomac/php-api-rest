@@ -95,12 +95,9 @@ class Resource
      * @param string $route
      * @param \stdClass $guardParams
      */
-    public function __construct(string $route, $guardParams = null)
+    public function __construct(string $route)
     {
         $this->route = $route;
-        if ($guardParams) {
-            $this->guardParams = $guardParams;
-        }
     }
 
     /**

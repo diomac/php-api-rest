@@ -106,13 +106,7 @@ class App
         $method = $this->request->getMethod();
         $class = $currentRouteData[$method]['class'];
 
-        $guardParams = null;
-
-        if ($currentRouteData[$method]['guard']) {
-            $guardParams = $currentRouteData[$method]['guard']['params'];
-        }
-
-        $this->resource = new $class($currentRoute, $guardParams);
+        $this->resource = new $class($currentRoute);
         $this->resource->setParams($this->request->getParams());
         $this->resource->setRequest($this->request);
         $this->resource->setResponse($this->response);
