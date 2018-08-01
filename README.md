@@ -134,7 +134,7 @@ class AuthGuard implements Guard
     public function guard(object $guardParams = null) : bool
     {
         $func = $guardParams->func;
-        $access = checkAccess();
+        $access = checkAccess($func);
         switch ($access) {
             case Response::OK:
                 return true;
