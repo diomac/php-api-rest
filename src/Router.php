@@ -49,7 +49,7 @@ class Router
         }
 
         if(!$successCache){
-            $namespace = implode('\\', $config['namespace']);
+            $namespace = implode('\\', $config['namespaceResources']);
             $this->routes = [];
             foreach ($config['resources'] as $resource) {
                 $class = $namespace . '\\' . $resource;
@@ -87,18 +87,18 @@ class Router
         $configuredGuards = [];
         foreach ($guards as $g){
             $guard = [
-                'function' => $g,
-                'params' => []
+                'class' => trim($g),
+                'params' => null
             ];
             $params = null;
-            $pregFunction = null;
+            $pregClass = null;
             $pregParams = null;
-            preg_match('/((.|\n)*?)(\ )/', $g, $pregFunction);
-            if(!$pregFunction){
+            preg_match('/((.|\n)*?)(\ )/', $g, $pregClass);
+            if(!$pregClass){
                 $configuredGuards[] = $guard;
                 continue;
             }
-            $guard['function'] = $pregFunction[1];
+            $guard['class'] = trim($pregClass[1]);
             preg_match('/({[^\/]+})/', $g, $pregParams);
 
             if($pregParams){

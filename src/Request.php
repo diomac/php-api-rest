@@ -73,7 +73,7 @@ class Request
      */
     public function __construct($config, $routeData = null)
     {
-        $base = implode('/', $config['namespace']);
+        $base = implode('/', $config['namespaceResources']);
         $this->getEnvironmentRoute($base);
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();

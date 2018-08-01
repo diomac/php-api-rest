@@ -35,11 +35,6 @@ class Resource
      */
     private $allowedMethods;
     /**
-     * @var $guardParams \stdClass
-     */
-    private $guardParams;
-
-    /**
      * @return string
      */
     public function getRoute(): string
@@ -117,13 +112,5 @@ class Resource
         if (isset($this->params[$pName])) {
             return $this->params[$pName];
         }
-    }
-
-    protected function getGuardParam($name)
-    {
-        if(!isset($this->guardParams->{$name})){
-            return false;
-        }
-        return $this->guardParams->{$name};
     }
 }

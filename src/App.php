@@ -48,32 +48,34 @@ class App
         $this->response = new Response();
     }
 
+    /**
+     * start api-rest
+     */
     public function exec()
     {
         try {
             $this->ini();
         } catch (NotFoundException $e) {
-            $this->response->setCode($e->getCode());
-            $this->response->setBody($e->getMessage());
+            $this->exceptionMessage($e);
         } catch (UnauthorizedException $e) {
-            $this->response->setCode($e->getCode());
-            $this->response->setBody($e->getMessage());
-        } catch (ForbbidenException $e) {
-            $this->response->setCode($e->getCode());
-            $this->response->setBody($e->getMessage());
+            $this->exceptionMessage($e);
+        } catch (ForbiddenException $e) {
+            $this->exceptionMessage($e);
         } catch (MethodNotAllowedException $e) {
-            $this->response->setCode($e->getCode());
-            $this->response->setBody($e->getMessage());
-            $allow = implode(", ", array_keys($this->resource->getAllowedMethods()));
-            $this->response->setHeader('AllowedMethods', $allow);
+            $this->exceptionMessage($e);
         } catch (\Exception $e) {
-            $this->response->setCode($e->getCode());
-            $this->response->setBody($e->getMessage());
+            $this->exceptionMessage($e);
         }
 
         $this->response->output();
     }
 
+    /**
+     * init api-rest
+     * @throws ForbiddenException
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     private function ini()
     {
         $currentRouteData = null;
@@ -121,28 +123,63 @@ class App
             if ($authorized) {
                 $this->response = $this->resource->$function();
             } else {
-                throw new ForbbidenException();
+                throw new ForbiddenException();
             }
         } else {
             $this->response = $this->resource->$function();
         }
     }
 
+    /**
+     * Execute route guards
+     * @param $guards
+     * @return bool
+     */
     private function execGuards($guards)
     {
+        $nameSpaceGuards = isset(self::$config['namespaceGuards'])
+            ? implode('\\', self::$config['namespaceGuards']) : '';
         foreach ($guards as $g) {
-            $guardFunction = $g['function'];
+            $guardClass = $nameSpaceGuards . '\\' . $g['class'];
             $guardParams = $g['params'];
-            if (!$this->resource->$guardFunction($guardParams)) {
+            $guard = new $guardClass();
+            if (!$guard->guard($guardParams)) {
                 return false;
             }
         }
         return true;
     }
 
+    /**
+     * @param $route
+     * @return string
+     */
     private function configPatternRoute($route)
     {
         return '|^' . preg_replace('/({[^\/]+})/', '[^\/]+', $route) . '$|';
     }
 
+    /**
+     * @param $ex
+     */
+    private function exceptionMessage($ex)
+    {
+        $contentType = isset(self::$config['contentTypeExceptions'])
+            ? self::$config['typeExceptionMessages'] : 'text/html';
+
+        $this->response->setCode($ex->getCode());
+
+        if ($contentType === 'application/json') {
+            $json = json_decode($ex->getMessage());
+            $this->response->setBodyJSON($json);
+        } else {
+            $this->response->setContentType($contentType);
+            $this->response->setBody($ex->getMessage());
+        }
+
+        if ($ex instanceof MethodNotAllowedException) {
+            $allow = implode(", ", array_keys($this->resource->getAllowedMethods()));
+            $this->response->setHeader('AllowedMethods', $allow);
+        }
+    }
 }
