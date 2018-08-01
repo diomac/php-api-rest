@@ -158,7 +158,7 @@ class AuthGuard implements Guard
 |namespaceGuards|array|null|(Optional) Set namespace of guard Classes.|
 |namespaceResources|array|Not default|(Mandatory) Set namespace of resource Classes.|
 |resources|array|Not default|(Mandatory) Set resource Classes list.|
-|useCache|boolean|false|Set use cache routes with APC -  Auternative PHP Cache.|
+|useCache|boolean|false|(Optional) Set use cache routes with APC -  Auternative PHP Cache.|
 ## Using cache (APC - Auternative PHP Cache)
 ```
 use Diomac\API\App;
