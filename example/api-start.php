@@ -9,7 +9,7 @@
 use Diomac\API\App;
 
 $config = [
-    'namespace' => ['example'],
+    'namespaceResources' => ['example'],
     'resources' => [
         'ExampleResource'
     ]
