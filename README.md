@@ -163,7 +163,7 @@ class AuthGuard implements Guard
 ```
 use Diomac\API\App;
 $config = [
-    'namespace' => ['api', 'v1'],
+    'namespaceResources' => ['api', 'v1'],
     'useCache' => true, // Stores the routes cached.
     'resources' => [
         'ExampleResource'
