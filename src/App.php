@@ -172,8 +172,10 @@ class App
         }
 
         if ($ex instanceof MethodNotAllowedException) {
+            $this->response->setContentType('text/html');
             $allow = implode(", ", array_keys($this->resource->getAllowedMethods()));
             $this->response->setHeader('AllowedMethods', $allow);
+            $this->response->setBody($ex->getMessage());
         }
     }
 }
