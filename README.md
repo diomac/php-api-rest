@@ -155,7 +155,7 @@ class AuthGuard implements Guard
 |Option|Type|Default|Description|
 |------|----|-------|-----------|
 |contentTypeExceptions|string|'text/html'|(Optional) Set content type response when throw exceptions.|
-|namespaceGuards|array|null|(Optional) Set namespace of guard Classes.|
+|namespaceGuards|array|null|(Optional) Set namespace of guard Classes. (If the '@guard' annotation contains only the class name, you will need to set this option.)|
 |namespaceResources|array|Not default|(Mandatory) Set namespace of resource Classes.|
 |resources|array|Not default|(Mandatory) Set resource Classes list.|
 |useCache|boolean|false|(Optional) Set use cache routes with APC -  Auternative PHP Cache.|
