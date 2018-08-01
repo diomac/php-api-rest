@@ -159,7 +159,7 @@ class App
     private function exceptionMessage($ex)
     {
         $contentType = isset(self::$config['contentTypeExceptions'])
-            ? self::$config['typeExceptionMessages'] : 'text/html';
+            ? self::$config['contentTypeExceptions'] : 'text/html';
 
         $this->response->setCode($ex->getCode());
 
