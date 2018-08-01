@@ -28,7 +28,7 @@ RewriteRule .* api-start.php [L,QSA]
 ```
 use Diomac\API\App;
 $config = [
-    'namespace' => ['api', 'v1'],
+    'namespaceResources' => ['api', 'v1'],
     'resources' => [
         'ExampleResource'
     ]
@@ -48,12 +48,12 @@ use Diomac\API\UnauthorizedException;
 class ExampleResource extends Resource {...
 ```
 
-* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a function to protect the route (@guard):
+* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a Class implementing Guard Interface to protect the route (@guard):
 ```
 /**
 * @method get
 * @route /auth/usr-data/id/{id}
-* @guard secure
+* @guard AuthGuard
 */
 function getUsrData()
 {
@@ -61,12 +61,6 @@ function getUsrData()
   $this->response->setCode(Response::OK); // set HTTP response code
   $this->response->setBodyJSON($ this->request->getData()); // set responde data
   return $this->response; // return response object
-}
-
-function secure(){
-  //... check access
-  //throw new UnauthorizedException();
-  return true;
 }
 ```
 ## Running a route
@@ -103,8 +97,8 @@ return $this->response;
 /**
 * @method get
 * @route /auth/usr-data/id/{id}
-* @guard secure1
-* @guard secure2WithJSONParam {"param1":"value1"}
+* @guard AuthGuard
+* @guard AuthGuard2WithJSONParam {"param1":"value1"}
 */
 function getUsrData()
 {
@@ -113,18 +107,57 @@ function getUsrData()
   $this->response->setBodyJSON($ this->request->getData()); // set responde data
   return $this->response; // return response object
 }
+```
+## Implementing a Guard Class
+```
+namespace api\secure;
 
-function secure1(){
-  //... check access
-  //throw new UnauthorizedException();
-  return true;
-}
+use Diomac\API\Exception;
+use Diomac\API\ForbiddenException;
+use Diomac\API\UnauthorizedException;
+use Diomac\API\Response;
+use Diomac\API\Guard;
 
-function secure2WithJSONParam(){
-  $param1 = $this->getGuardParam('param1');
-  //... check access
-  //throw new UnauthorizedException();
-  return true;
+/**
+ * Class AuthGuard
+ * @package api\secure
+ */
+class AuthGuard implements Guard
+{
+    /**
+     * @param object|null $guardParams
+     * @return bool
+     * @throws Exception
+     * @throws ForbiddenException
+     * @throws UnauthorizedException
+     */
+    public function guard(object $guardParams = null) : bool
+    {
+        $func = $guardParams->funcionalidade;
+        $access = \AutenticacaoToken::checkaAcesso($func);
+        switch ($access) {
+            case Response::OK:
+                return true;
+                break;
+            case Response::UNAUTHORIZED:
+                $alert = [
+                    'alert' => 'The request requires user authentication'
+                ];
+                throw new UnauthorizedException(json_encode($alert));
+                break;
+            case Response::FORBIDDEN:
+                $alert = [
+                    'alert' => 'Access Denied'
+                ];
+                throw new ForbiddenException(json_encode($alert));
+                break;
+            default:
+                $error = [
+                    'error' => 'Erro ao tentar autenticar usuário.'
+                ];
+                throw new Exception(json_encode($error), Response::INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 ```
 ## Using cache (APC - Auternative PHP Cache)
