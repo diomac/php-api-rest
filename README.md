@@ -133,29 +133,20 @@ class AuthGuard implements Guard
      */
     public function guard(object $guardParams = null) : bool
     {
-        $func = $guardParams->funcionalidade;
-        $access = \AutenticacaoToken::checkaAcesso($func);
+        $func = $guardParams->func;
+        $access = checkAccess();
         switch ($access) {
             case Response::OK:
                 return true;
                 break;
-            case Response::UNAUTHORIZED:
-                $alert = [
-                    'alert' => 'The request requires user authentication'
-                ];
-                throw new UnauthorizedException(json_encode($alert));
+            case Response::UNAUTHORIZED:                
+                throw new UnauthorizedException();
                 break;
-            case Response::FORBIDDEN:
-                $alert = [
-                    'alert' => 'Access Denied'
-                ];
-                throw new ForbiddenException(json_encode($alert));
+            case Response::FORBIDDEN:                
+                throw new ForbiddenException();
                 break;
-            default:
-                $error = [
-                    'error' => 'Erro ao tentar autenticar usuário.'
-                ];
-                throw new Exception(json_encode($error), Response::INTERNAL_SERVER_ERROR);
+            default:               
+                throw new Exception('Server Error!', Response::INTERNAL_SERVER_ERROR);
         }
     }
 }
