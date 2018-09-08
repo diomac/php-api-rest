@@ -5,7 +5,7 @@ A PHP API REST Micro-Framework using annotations
 Prerequisites
 =============
 
-* PHP >=7
+* PHP >=7.2
 
 Installing
 ==========
