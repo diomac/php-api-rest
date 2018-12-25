@@ -45,7 +45,8 @@ class App
         self::$config = $config;
         $this->router = new Router($config);
         $this->request = new Request($config);
-        $this->response = new Response();
+
+        $this->response = new Response($this->router->getRoutes(), $this->router->getTags());
     }
 
     /**
@@ -134,8 +135,8 @@ class App
         $nameSpaceGuards = isset(self::$config['namespaceGuards'])
             ? implode('\\', self::$config['namespaceGuards']) : '';
         foreach ($guards as $g) {
-            $guardClass = $nameSpaceGuards . '\\' . $g['class'];
-            $guardParams = $g['params'];
+            $guardClass = $nameSpaceGuards . '\\' . $g->className;
+            $guardParams = $g->guardParameters;
             $guard = new $guardClass();
             if (!$guard->guard($guardParams)) {
                 return false;

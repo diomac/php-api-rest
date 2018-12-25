@@ -30,7 +30,7 @@ class Response
      */
     const PROCESSING = 102;
     /**
-     * Estas requisição foi bem sucessida. O significado do sucesso varia de acordo com o método HTTP:
+     * Esta requisição foi bem sucessida. O significado do sucesso varia de acordo com o método HTTP:
      * GET: O recurso foi buscado e transmitido no corpo da mensagem.
      * HEAD: As headers da entidade estão no corpo da mensagem.
      * POST: O recurso descrevendo o resultado da ação foi trasmitido no corpo da mensagem.
@@ -331,6 +331,20 @@ class Response
      * @var $headers array
      */
     private $headers = ['content-type' => 'text/html; charset=UTF-8'];
+    /**
+     * @var array $router
+     */
+    private $routes;
+    /**
+     * @var array $tags
+     */
+    private $tags;
+
+    public function __construct($routes, $tags)
+    {
+        $this->routes = $routes;
+        $this->tags = $tags;
+    }
 
     /**
      * @param int $code
@@ -349,6 +363,110 @@ class Response
         if ($this->responseCode() === self::NO_CONTENT) {
             $this->body = null;
         }
+    }
+
+    /**
+     * @param Swagger $swagger
+     */
+    public function setBodySwaggerJSON(Swagger $swagger): void
+    {
+        $this->body = $this->generateSwaggerJSON($swagger);
+    }
+
+    /**
+     * @param Swagger $swagger
+     * @return string
+     */
+    private function generateSwaggerJSON(Swagger $swagger): string
+    {
+        $json = [
+            'swagger' => '2.0',
+            'info' => $swagger->info(),
+            'host' => $swagger->host(),
+            'basePath' => $swagger->basePath(),
+            'schemes' => $swagger->schemes(),
+            'tags' => $this->tags,
+            'paths' => $this->getRoutesDoc($swagger),
+            'definitions' => $swagger->definitions()
+        ];
+
+        return json_encode($json);
+    }
+
+    private function getRoutesDoc($swagger)
+    {
+        foreach ($this->routes as $k => $r) {
+            foreach ($r as $j => $m) {
+                unset($this->routes[$k][$j]['guards']);
+                unset($this->routes[$k][$j]['class']);
+                unset($this->routes[$k][$j]['function']);
+                $this->routes[$k][$j] = $this->setRouteDoc($this->routes[$k][$j], $swagger);
+                unset($this->routes[$k][$j]['annotation']);
+                unset($this->routes[$k][$j]['tag']);
+                unset($this->routes[$k][$j]['code']);
+            }
+        }
+        return $this->routes;
+    }
+
+    private function setRouteDoc($route, $swagger)
+    {
+        $annotation = new Annotation();
+        $str = $route['annotation'];
+        $contentTypes = $annotation->simpleAnnotationToArray($str, 'contentType', 'trim');
+        $consumeTypes = $annotation->simpleAnnotationToArray($str, 'consumeType', 'trim');
+        $parameters = $annotation->complexAnnotationToArrayJSON($str, 'parameter', function ($value) {
+            if (is_object($value)) {
+                $value->required = property_exists($value, 'required') ? $value->required : true;
+                if (property_exists($value, 'definitionId')) {
+                    $schema = new \stdClass();
+                    $schema->{'$ref'} = '#/definitions/' . $value->definitionId;
+                    $value->schema = $schema;
+                    unset($value->definitionId);
+                }
+                return $value;
+            } else {
+                return 'Error in documentation';
+            }
+        });
+        $summary = $annotation->simpleAnnotationToString($str, 'summary');
+        $description = $annotation->simpleAnnotationToString($str, 'description');
+        $operationId = $annotation->simpleAnnotationToString($str, 'operationId');
+        $responses = $annotation->responses($route['code'], $str, $swagger);
+
+        if (isset($route['tag'])) {
+            $route['tags'] = [$route['tag']];
+        }
+
+        if ($summary) {
+            $route['summary'] = $summary;
+        }
+
+        if ($description) {
+            $route['description'] = $description;
+        }
+
+        if ($operationId) {
+            $route['operationId'] = $operationId;
+        }
+
+        if ($contentTypes) {
+            $route['produces'] = $contentTypes;
+        }
+
+        if ($consumeTypes) {
+            $route['consumes'] = $consumeTypes;
+        }
+
+        if ($parameters) {
+            $route['parameters'] = $parameters;
+        }
+
+        if ($responses) {
+            $route['responses'] = $responses;
+        }
+
+        return $route;
     }
 
     /**
@@ -401,5 +519,4 @@ class Response
     {
         $this->headers[$name] = $value;
     }
-
 }

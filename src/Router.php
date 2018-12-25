@@ -15,6 +15,7 @@ namespace Diomac\API;
 class Router
 {
     private $routes;
+    private $tags;
     private $cache;
 
     /**
@@ -28,9 +29,25 @@ class Router
     /**
      * @param array $routes
      */
-    public function setRoutes(array $routes)
+    public function setRoutes(array $routes): void
     {
         $this->routes = $routes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param array $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
     }
 
     /**
@@ -44,68 +61,82 @@ class Router
         $nameCache = isset($config['nameCache']) ? $config['nameCache'] : null;
         $this->cache = new ResourceCacheAPC($nameCache);
         $useCache = isset($config['useCache']) ? $config['useCache'] : false;
-        if($useCache){
+        if ($useCache) {
             $successCache = $this->routes = $this->cache->load();
         }
 
-        if(!$successCache){
+        if (!$successCache) {
             $namespace = implode('\\', $config['namespaceResources']);
             $this->routes = [];
+            $this->tags = [];
             foreach ($config['resources'] as $resource) {
                 $class = $namespace . '\\' . $resource;
-                $rc = new \ReflectionClass($class);
+                $rc = new Annotation($class);
+                $tag = $this->configTag($rc->getDocComment());
+                if ($tag) {
+                    $this->tags[] = $tag;
+                }
                 $methods = $rc->getMethods();
-                $this->configRoutes($methods, $class);
+                $this->configRoutes($methods, $class, $tag);
             }
-            if($useCache){
+            if ($useCache) {
                 $this->cache->save($this->routes);
             }
         }
     }
 
-    private function configRoutes($methods, $class)
+    private function configTag($doc)
     {
-        foreach ($methods as $m) {
-            $s = $m->getDocComment();
-            $reqMethod = null;
-            $route = null;
-            $guard = null;
-            preg_match('/@method (.*)/', $s, $reqMethod);
-            preg_match('/@route (.*)/', $s, $route);
-            preg_match_all('/@guard (.*)/', $s, $guard);
-            if ($reqMethod && $route) {
-                $this->routes[trim($route[1])][trim(strtoupper($reqMethod[1]))] = [
-                    'guards' => $guard ? $this->configGuards($guard[1]) : null,
-                    'class' => trim($class),
-                    'function' => trim($m->getName())
-                ];
-            }
+        if (!$doc) {
+            return null;
         }
+        $annotation = new Annotation();
+        $name = $annotation->simpleAnnotationToString($doc, 'resourceName');
+        $description = $annotation->simpleAnnotationToString($doc, 'resourceDescription');
+        $externalDocs = $annotation->complexAnnotationToJSON($doc, 'externalDocs');
+
+        if (!$name || !$description) {
+            return null;
+        }
+
+        $tag = [
+            'name' => $name,
+            'description' => $description
+        ];
+
+        if ($externalDocs) {
+            $tag['externalDocs'] = $externalDocs;
+        }
+
+        return $tag;
     }
 
-    private function configGuards($guards){
-        $configuredGuards = [];
-        foreach ($guards as $g){
-            $guard = [
-                'class' => trim($g),
-                'params' => null
-            ];
-            $params = null;
-            $pregClass = null;
-            $pregParams = null;
-            preg_match('/((.|\n)*?)(\ )/', $g, $pregClass);
-            if(!$pregClass){
-                $configuredGuards[] = $guard;
-                continue;
-            }
-            $guard['class'] = trim($pregClass[1]);
-            preg_match('/({[^\/]+})/', $g, $pregParams);
+    private function configRoutes($methods, $class, $tag)
+    {
+        $annotation = new Annotation();
+        foreach ($methods as $m) {
+            $s = $m->getDocComment();
+            $reqMethod = $annotation->simpleAnnotationToString($s, 'method');
+            $route = $annotation->simpleAnnotationToString($s, 'route');
+            $guards = $annotation->complexAnnotationToArrayJSON($s, 'guard');
 
-            if($pregParams){
-                $guard['params'] = json_decode($pregParams[1]);
+            if (!$reqMethod || !$route) {
+                return;
             }
-            $configuredGuards[] = $guard;
+
+            $method = strtoupper($reqMethod);
+
+            $r = [
+                'guards' => $guards,
+                'class' => trim($class),
+                'function' => trim($m->getName()),
+                'annotation' => $s,
+                'tag' => $tag['name'],
+                'code' => $annotation->getCodeFunctionString($m)
+            ];
+
+            $this->routes[$route][$method] = $r;
+
         }
-        return $configuredGuards;
     }
 }
