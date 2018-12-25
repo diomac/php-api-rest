@@ -9,21 +9,22 @@
 namespace example\v1;
 
 use Diomac\API\Swagger;
+use Diomac\API\Response;
 
 class ExampleSwaggerDoc implements Swagger
 {
     public function info(): array
     {
         return [
-            'description' => 'API SADWEB',
-            'version' => '1.0.0',
-            'title' => 'SAD - Sistema de Apoio à Decisão',
+            'description' => 'Diomac PHP API Rest',
+            'version' => '3.0.0',
+            'title' => 'Diomac PHP API Rest',
         ];
     }
 
     public function host(): string
     {
-        return 'http://apps2hom.correiosnet.int/sadweb';
+        return 'https://github.com/diomac/php-api-rest';
     }
 
     public function basePath(): string
@@ -44,7 +45,7 @@ class ExampleSwaggerDoc implements Swagger
     public function defaultResponsesDescription(): array
     {
         return [
-            Response::OK => 'Esta requisição foi bem sucessida.'
+            Response::OK => 'Success request.'
         ];
     }
 }

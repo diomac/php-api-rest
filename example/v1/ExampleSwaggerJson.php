@@ -9,7 +9,7 @@
 namespace example\v1;
 
 use Diomac\API\Resource;
-use example\v1\ExampleSwaggerDoc;
+use Diomac\API\Response;
 
 class ExampleSwaggerJson extends Resource
 {
