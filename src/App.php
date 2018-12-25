@@ -31,7 +31,7 @@ class App
      */
     private $resource;
     /**
-     * @var $config array
+     * @var $config AppConfiguration
      */
     private static $config;
 
@@ -40,7 +40,7 @@ class App
      * @param $config
      * @throws \ReflectionException
      */
-    public function __construct($config)
+    public function __construct(AppConfiguration $config)
     {
         self::$config = $config;
         $this->router = new Router($config);
@@ -132,8 +132,7 @@ class App
      */
     private function execGuards($guards)
     {
-        $nameSpaceGuards = isset(self::$config['namespaceGuards'])
-            ? implode('\\', self::$config['namespaceGuards']) : '';
+        $nameSpaceGuards = implode('\\', self::$config->getNamespaceGuards());
         foreach ($guards as $g) {
             $guardClass = $nameSpaceGuards . '\\' . $g->className;
             $guardParams = $g->guardParameters;
@@ -159,8 +158,7 @@ class App
      */
     private function exceptionMessage($ex)
     {
-        $contentType = isset(self::$config['contentTypeExceptions'])
-            ? self::$config['contentTypeExceptions'] : 'text/html';
+        $contentType = self::$config->getContentTypeExceptions();
 
         $this->response->setCode($ex->getCode());
 

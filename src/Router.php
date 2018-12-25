@@ -52,24 +52,23 @@ class Router
 
     /**
      * Router constructor.
-     * @param $config
+     * @param $config AppConfiguration
      * @throws \ReflectionException
      */
-    public function __construct($config)
+    public function __construct(AppConfiguration $config)
     {
         $successCache = false;
-        $nameCache = isset($config['nameCache']) ? $config['nameCache'] : null;
-        $this->cache = new ResourceCacheAPC($nameCache);
-        $useCache = isset($config['useCache']) ? $config['useCache'] : false;
-        if ($useCache) {
+
+        if ($config->isUseCache()) {
+            $this->cache = new ResourceCacheAPC($config->getNameCache());
             $successCache = $this->routes = $this->cache->load();
         }
 
         if (!$successCache) {
-            $namespace = implode('\\', $config['namespaceResources']);
+            $namespace = implode('\\', $config->getNamespaceResources());
             $this->routes = [];
             $this->tags = [];
-            foreach ($config['resources'] as $resource) {
+            foreach ($config->getResources() as $resource) {
                 $class = $namespace . '\\' . $resource;
                 $rc = new Annotation($class);
                 $tag = $this->configTag($rc->getDocComment());
@@ -79,7 +78,7 @@ class Router
                 $methods = $rc->getMethods();
                 $this->configRoutes($methods, $class, $tag);
             }
-            if ($useCache) {
+            if ($config->isUseCache()) {
                 $this->cache->save($this->routes);
             }
         }

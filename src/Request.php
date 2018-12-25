@@ -67,13 +67,13 @@ class Request
 
     /**
      * Request constructor.
-     * @param $config array
+     * @param $config AppConfiguration
      * @param $routeData array
      * @throws \Exception
      */
-    public function __construct($config, $routeData = null)
+    public function __construct(AppConfiguration $config, array $routeData = null)
     {
-        $base = implode('/', $config['namespaceResources']);
+        $base = implode('/', $config->getNamespaceResources());
         $this->getEnvironmentRoute($base);
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();
