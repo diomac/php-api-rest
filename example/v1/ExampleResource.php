@@ -36,8 +36,9 @@ class ExampleResource extends Resource
         $this->response->setBodyJSON($this->request->getData());
         return $this->response;
     }
+
     function secure(){
-        //throw new UnauthorizedException();
+        throw new UnauthorizedException();
         return true;
     }
 }
