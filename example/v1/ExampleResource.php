@@ -15,30 +15,26 @@ use Diomac\API\UnauthorizedException;
 class ExampleResource extends Resource
 {
     /**
-     * @method post
-     * @route /auth/usr-data/id/{id}/id2/{id2}
-     * @guard secure
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @contentType application/json
+     * @summary Recupera as credenciais do token
+     * @description As credenciais mostram os acessos que o token permite
+     * @operationId GETUSERDATA
+     * @consumeType text/plain; charset=utf-8
+     * @response(
+     *     code=401,
+     *     description="Unauthorized"
+     * )
+     * @guard(
+     *     className="ExampleGuard",
+     *     guardParameters={"operationId":"GETUSERDATA"}
+     * )
      */
     function getUsrData()
     {
         $this->response->setCode(Response::OK);
-        $this->response->setBodyJSON($this->request->getData());
+        $this->response->setBodyJSON($this->request->getParams());
         return $this->response;
-    }
-    /**
-     * @method get
-     * @route /auth/usr-data/id/{id}/id2/{id2}
-     * @guard secure
-     */
-    function getUsrData2()
-    {
-        $this->response->setCode(Response::OK);
-        $this->response->setBodyJSON($this->request->getData());
-        return $this->response;
-    }
-
-    function secure(){
-        throw new UnauthorizedException();
-        return true;
     }
 }

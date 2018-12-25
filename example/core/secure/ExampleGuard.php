@@ -6,7 +6,14 @@
  * Time: 10:59
  */
 
-class ExampleGuard
-{
+namespace example\core\secure;
 
+use Diomac\API\Guard;
+
+class ExampleGuard implements Guard
+{
+    public function guard(object $guardParams = null) : bool
+    {
+        return true;
+    }
 }

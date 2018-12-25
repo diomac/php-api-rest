@@ -68,10 +68,10 @@ class Request
     /**
      * Request constructor.
      * @param $config AppConfiguration
-     * @param $routeData array
+     * @param $routeData string
      * @throws \Exception
      */
-    public function __construct(AppConfiguration $config, array $routeData = null)
+    public function __construct(AppConfiguration $config, string $routeData = null)
     {
         $base = implode('/', $config->getNamespaceResources());
         $this->getEnvironmentRoute($base);

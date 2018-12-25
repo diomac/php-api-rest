@@ -6,13 +6,17 @@
  * Time: 10:01
  */
 
+if (!@include('../../../autoload.php')) {
+    die('Could not find autoloader');
+}
+
 use Diomac\API\App;
 use Diomac\API\AppConfiguration;
 
 $config = new AppConfiguration();
 $config->setNamespaceResources(['example', 'v1']);
-$config->setResources(['ExampleResource']);
-$config->setNamespaceGuards(['api', 'secure']);
+$config->setResources(['ExampleResource', 'ExampleSwaggerJson']);
+$config->setNamespaceGuards(['example', 'core', 'secure']);
 $config->setContentTypeExceptions('application/json');
 $config->setUseCache(false);
 
