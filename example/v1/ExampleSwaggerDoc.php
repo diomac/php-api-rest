@@ -17,30 +17,47 @@ class ExampleSwaggerDoc implements Swagger
     {
         return [
             'description' => 'Diomac PHP API Rest',
-            'version' => '3.0.0',
+            'version' => '1.0.0',
             'title' => 'Diomac PHP API Rest',
         ];
     }
 
     public function host(): string
     {
-        return 'https://github.com/diomac/php-api-rest';
+        return 'example_php_api_rest.com';
     }
 
     public function basePath(): string
     {
-        return '/v1';
+        return '/example/v1';
     }
 
     public function schemes(): array
     {
-        return ['http'];
+        return ['http', 'https'];
     }
 
     public function definitions(): array
     {
-        return [];
+        return [
+            'value1' => [
+                'type' => 'integer'
+            ],
+            'value2' => [
+                'type' => 'integer'
+            ]
+        ];
     }
+
+    public function securityDefinitions(): array
+    {
+        return [
+            'php_api_rest_auth' => [
+                'type' => 'Bearer',
+            ]
+        ];
+    }
+
 
     public function defaultResponsesDescription(): array
     {

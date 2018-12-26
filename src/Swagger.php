@@ -19,5 +19,6 @@ Interface Swagger
     public function basePath() : string;
     public function schemes() : array;
     public function definitions() : array;
+    public function securityDefinitions() : array;
     public function defaultResponsesDescription() : array;
 }

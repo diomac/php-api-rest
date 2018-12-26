@@ -387,7 +387,8 @@ class Response
             'schemes' => $swagger->schemes(),
             'tags' => $this->tags,
             'paths' => $this->getRoutesDoc($swagger),
-            'definitions' => $swagger->definitions()
+            'definitions' => $swagger->definitions(),
+            'securityDefinitions' => $swagger->securityDefinitions()
         ];
 
         return json_encode($json);
@@ -404,6 +405,9 @@ class Response
                 unset($this->routes[$k][$j]['annotation']);
                 unset($this->routes[$k][$j]['tag']);
                 unset($this->routes[$k][$j]['code']);
+
+                $this->routes[$k][strtolower($j)] = $this->routes[$k][$j];
+                unset($this->routes[$k][$j]);
             }
         }
         return $this->routes;
