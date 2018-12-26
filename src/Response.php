@@ -370,14 +370,22 @@ class Response
      */
     public function setBodySwaggerJSON(Swagger $swagger): void
     {
-        $this->body = $this->generateSwaggerJSON($swagger);
+        $this->body = json_encode($this->generateSwaggerDoc($swagger));
     }
 
     /**
      * @param Swagger $swagger
-     * @return string
      */
-    private function generateSwaggerJSON(Swagger $swagger): string
+    public function setBodySwaggerYAML(Swagger $swagger): void
+    {
+        $this->body = yaml_emit($this->generateSwaggerDoc($swagger));
+    }
+
+    /**
+     * @param Swagger $swagger
+     * @return array
+     */
+    private function generateSwaggerDoc(Swagger $swagger): array
     {
         $json = [
             'swagger' => '2.0',
@@ -391,7 +399,7 @@ class Response
             'securityDefinitions' => $swagger->securityDefinitions()
         ];
 
-        return json_encode($json);
+        return $json;
     }
 
     private function getRoutesDoc($swagger)

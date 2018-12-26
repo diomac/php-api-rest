@@ -53,7 +53,7 @@ class ExampleSwaggerDoc implements Swagger
     {
         return [
             'php_api_rest_auth' => [
-                'type' => 'Bearer',
+                'type' => 'basic',
             ]
         ];
     }
