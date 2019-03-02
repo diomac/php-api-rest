@@ -11,20 +11,18 @@ namespace Diomac\API;
 
 class AppConfiguration
 {
-    /**
-     * @var string[] $namespaceResources - Namespace of where the resource classes of your API
-     */
-    private $namespaceResources;
+    const DEFAULT_NAME_CACHE = 'DiomacApiCache';
+    const DEFAULT_CONTENT_TYPE_EXCEPTIONS = 'text/html';
 
     /**
-     * @var string[] $resources - Names of your API's resource classes
+     * @var string[] $resourceNames - Names of your API's resource classes
      */
-    private $resources;
+    private $resourceNames;
 
     /**
-     * @var string[] $namespaceGuards - Namespace of where the guard classes of your API
+     * @var string $baseUrl - Base url of your API
      */
-    private $namespaceGuards;
+    private $baseUrl;
 
     /**
      * @var string $contentTypeExceptions - MIME default for exceptions of your API - Default: text/html
@@ -42,57 +40,44 @@ class AppConfiguration
     private $nameCache;
 
     /**
-     * @return string[]
+     * AppConfiguration constructor.
      */
-    public function getNamespaceResources(): array
+    public function __construct()
     {
-        if (!$this->namespaceResources) {
-            return [];
-        }
-        return $this->namespaceResources;
-    }
-
-    /**
-     * @param string[] $namespaceResources
-     */
-    public function setNamespaceResources(array $namespaceResources): void
-    {
-        $this->namespaceResources = $namespaceResources;
+        $this->nameCache = self::DEFAULT_NAME_CACHE;
+        $this->contentTypeExceptions = self::DEFAULT_NAME_CACHE;
     }
 
     /**
      * @return string[]
      */
-    public function getResources(): array
+    public function getResourceNames(): array
     {
-        return $this->resources;
+        return $this->resourceNames;
     }
 
     /**
-     * @param string[] $resources
+     * @param string $resourceName - Name of class resource
      */
-    public function setResources(array $resources): void
+    public function addResource(string $resourceName): void
     {
-        $this->resources = $resources;
+        $this->resourceNames[] = $resourceName;
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getNamespaceGuards(): array
+    public function getBaseUrl(): string
     {
-        if (!$this->namespaceGuards) {
-            return [];
-        }
-        return $this->namespaceGuards;
+        return $this->baseUrl;
     }
 
     /**
-     * @param string[] $namespaceGuards
+     * @param string $baseUrl - Base url of your API
      */
-    public function setNamespaceGuards(array $namespaceGuards): void
+    public function setBaseUrl(string $baseUrl): void
     {
-        $this->namespaceGuards = $namespaceGuards;
+        $this->baseUrl = $baseUrl;
     }
 
     /**

@@ -73,8 +73,25 @@ class Request
      */
     public function __construct(AppConfiguration $config, string $routeData = null)
     {
-        $base = implode('/', $config->getNamespaceResources());
-        $this->getEnvironmentRoute($base);
+        $baseUrl = $config->getBaseUrl();
+        $this->getEnvironmentRoute($baseUrl);
+
+        /**
+         * Test required configuration
+         */
+        try {
+            $this->getRoute();
+        } catch (\Error $err) {
+            $msg = $err->getMessage();
+
+            if (strpos($msg, 'Diomac\API\Request::getRoute()') !== false) {
+                throw new \Exception(
+                    'Diomac\API\AppConfiguration::baseUrl is bad configured. 
+                    Verify that the variable matches the resource folder.'
+                );
+            }
+        }
+
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();
         if ($routeData) {
@@ -101,9 +118,9 @@ class Request
         $this->params = $params;
     }
 
-    private function getEnvironmentRoute($base)
+    private function getEnvironmentRoute(string $baseUrl)
     {
-        list(, $this->route) = explode($base, $_SERVER['REQUEST_URI']);
+        list(, $this->route) = explode($baseUrl, $_SERVER['REQUEST_URI']);
     }
 
     private function getEnvironmentMethod()

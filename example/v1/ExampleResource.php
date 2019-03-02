@@ -10,7 +10,6 @@ namespace example\v1;
 
 use Diomac\API\Resource;
 use Diomac\API\Response;
-use Diomac\API\UnauthorizedException;
 
 /**
  * Class ExampleResource

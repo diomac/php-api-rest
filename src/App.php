@@ -43,6 +43,27 @@ class App
      */
     public function __construct(AppConfiguration $config)
     {
+        /**
+         * Test required configuration
+         */
+        try {
+            $config->getBaseUrl();
+            $config->getResourceNames();
+        } catch (\Error $err) {
+            $msg = $err->getMessage();
+
+            if (strpos($msg, 'Diomac\API\AppConfiguration::getBaseUrl()') !== false) {
+                throw new \Exception('Diomac\API\AppConfiguration::baseUrl is required.');
+            }
+
+            if (strpos($msg, 'Diomac\API\AppConfiguration::getResourceNames()') !== false) {
+                throw new \Exception('Resources not configured.');
+            }
+        }
+
+        /**
+         * Init routes and request configuration
+         */
         self::$config = $config;
         $this->router = new Router($config);
         $this->request = new Request($config);

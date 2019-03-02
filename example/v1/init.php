@@ -14,11 +14,18 @@ use Diomac\API\App;
 use Diomac\API\AppConfiguration;
 
 $config = new AppConfiguration();
-$config->setNamespaceResources(['example', 'v1']);
-$config->setResources(['ExampleResource', 'ExampleSwaggerJson']);
-$config->setNamespaceGuards(['example', 'core', 'secure']);
+$config->setBaseUrl('/php-api-rest/vendor/example/v1');
+
+$config->addResource(\example\v1\ExampleResource::class);
+$config->addResource(\example\v1\ExampleSwaggerJson::class);
+
 $config->setContentTypeExceptions('application/json');
+
 $config->setUseCache(false);
 
-$app = new App($config);
-$app->exec();
+try {
+    $app = new App($config);
+    $app->exec();
+} catch (\Exception $ex) {
+    dd($ex);
+}

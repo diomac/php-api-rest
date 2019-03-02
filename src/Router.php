@@ -65,11 +65,9 @@ class Router
         }
 
         if (!$successCache) {
-            $namespace = implode('\\', $config->getNamespaceResources());
             $this->routes = [];
             $this->tags = [];
-            foreach ($config->getResources() as $resource) {
-                $class = $namespace . '\\' . $resource;
+            foreach ($config->getResourceNames() as $class) {
                 $rc = new Annotation($class);
                 $tag = $this->configTag($rc->getDocComment());
                 if ($tag) {
@@ -84,6 +82,11 @@ class Router
         }
     }
 
+    /**
+     * @param $doc
+     * @return array|null
+     * @throws \ReflectionException
+     */
     private function configTag($doc)
     {
         if (!$doc) {
@@ -110,7 +113,13 @@ class Router
         return $tag;
     }
 
-    private function configRoutes($methods, $class, $tag)
+    /**
+     * @param \ReflectionMethod[] $methods
+     * @param string $class
+     * @param array|null $tag
+     * @throws \ReflectionException
+     */
+    private function configRoutes(array $methods, string $class, array $tag = null)
     {
         $annotation = new Annotation();
         foreach ($methods as $m) {
