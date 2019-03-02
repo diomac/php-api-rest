@@ -39,6 +39,7 @@ class App
      * App constructor.
      * @param $config
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __construct(AppConfiguration $config)
     {

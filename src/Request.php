@@ -77,7 +77,7 @@ class Request
         $this->getEnvironmentRoute($base);
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();
-        if($routeData){
+        if ($routeData) {
             $this->getUriParams($routeData);
         }
     }
@@ -103,11 +103,7 @@ class Request
 
     private function getEnvironmentRoute($base)
     {
-        if(strpos($_SERVER['REQUEST_URI'], '/rest/informacoes') !== false){
-            $this->route = '/rest/informacoes';
-        }else{
-            list(, $this->route) = explode($base, $_SERVER['REQUEST_URI']);
-        }
+        list(, $this->route) = explode($base, $_SERVER['REQUEST_URI']);
     }
 
     private function getEnvironmentMethod()
@@ -129,10 +125,10 @@ class Request
         $data = file_get_contents('php://input');
         if ($data && isset($dataMethods[$this->method])) {
             $this->data = json_decode($data);
-            if(!is_object($this->data)) {
+            if (!is_object($this->data)) {
                 $this->data = new \stdClass();
             }
-        }else{
+        } else {
             $this->data = new \stdClass();
         }
     }
@@ -145,7 +141,7 @@ class Request
         } elseif (isset($_SERVER[$name])) {
             return $_SERVER[$name];
         } else {
-            return NULL;
+            return null;
         }
     }
 

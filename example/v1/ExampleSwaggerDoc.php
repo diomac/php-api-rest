@@ -16,20 +16,30 @@ class ExampleSwaggerDoc implements Swagger
     public function info(): array
     {
         return [
-            'description' => 'Diomac PHP API Rest',
-            'version' => '1.0.0',
-            'title' => 'Diomac PHP API Rest',
+            'title' => 'Swagger Sample App',
+            'description' => 'This is a sample server Petstore server.',
+            'termsOfService' => 'http://swagger.io/terms/',
+            'contact' => [
+                'name' => 'API Support',
+                'url' => 'http://www.swagger.io/support',
+                'email' => 'support@swagger.io',
+            ],
+            'license' => [
+                'name' => 'Apache 2.0',
+                'url' => 'http://www.apache.org/licenses/LICENSE-2.0.html'
+            ],
+            'version' => '1.0.1',
         ];
     }
 
     public function host(): string
     {
-        return 'example_php_api_rest.com';
+        return 'localhost';
     }
 
     public function basePath(): string
     {
-        return '/example/v1';
+        return '/vendor/example/v1';
     }
 
     public function schemes(): array

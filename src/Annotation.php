@@ -79,15 +79,29 @@ class Annotation extends \ReflectionClass
     {
         $pregResult = null;
         $array = [];
+        $pattern = '@' . $tag . '\([^)]+\)';
 
-        preg_match_all('/(@' . $tag . '\([\S\s]*?\*[ ]*\))/', $annotation, $pregResult);
+        foreach ($this->enumeratePregResult($annotation, $tag) as $enum) {
 
-        if (!$pregResult) {
-            return null;
-        }
+            preg_match('/' . $pattern . '/', $annotation, $pregResult);
 
-        foreach ($pregResult[0] as $a) {
-            $array[] = $this->complexAnnotationToJSON($a, $tag);
+            $openedParenthesesOccur = substr_count($pregResult[0], '(');
+            $closedParenthesesOccur = substr_count($pregResult[0], ')');
+
+            while ($openedParenthesesOccur !== $closedParenthesesOccur) {
+                $pattern .= '[^)]+\)';
+                preg_match('/' . $pattern . '/', $annotation, $pregResult);
+
+                $openedParenthesesOccur = substr_count($pregResult[0], '(');
+                $closedParenthesesOccur = substr_count($pregResult[0], ')');
+            }
+
+            //d($tag);
+           // d($pregResult[0]);
+
+            $annotation = str_replace($pregResult[0], '', $annotation);
+            $pattern = '@' . $tag . '\([^)]+\)';
+            $array[] = $this->complexAnnotationToJSON($pregResult[0], $tag);
         }
 
         if ($func) {
@@ -109,13 +123,14 @@ class Annotation extends \ReflectionClass
         $strSearch = ['(', ')', '=', ',', '*'];
         $strReplace = ['{"', '"}', '":', ',"', ''];
 
-        preg_match('/@' . $tag . '\(([\S\s]*)\)/', $annotation, $pregResult);
+        preg_match('/@' . $tag . '\(([\S\s]*)(?!.\))/', $annotation, $pregResult);
 
         if (!$pregResult) {
             return null;
         }
 
         $outersTag = explode(',', $pregResult[1]);
+//        d($outersTag);
         $outersJson = [];
         $remountAnnotation = [];
 
@@ -167,6 +182,12 @@ class Annotation extends \ReflectionClass
             $responsesDoc = [];
         }
 
+        foreach ($responsesDoc as $res) {
+            $obj = new \stdClass();
+            $obj->description = $res->description;
+            $responses->{$res->code} = $obj;
+        }
+
         preg_match_all('/Response::([A-Z\_]+)/', $code, $pregResult);
 
         $reflection = new Annotation('Diomac\\API\\Response');
@@ -174,24 +195,23 @@ class Annotation extends \ReflectionClass
         if ($pregResult) {
             foreach ($pregResult[1] as $res) {
                 $obj = new \stdClass();
-                $obj->code = $reflection->getConstant($res);
+                $code = $reflection->getConstant($res);
+
+                if (isset($responses->{$code})) {
+                    continue;
+                }
+
                 $constant = $reflection->getReflectionConstant($res);
 
                 $swaggerDesc = $swagger->defaultResponsesDescription();
 
-                if (isset($swaggerDesc[$obj->code])) {
-                    $obj->description = $swaggerDesc[$obj->code];
+                if (isset($swaggerDesc[$code])) {
+                    $obj->description = $swaggerDesc[$code];
                 } else {
                     $obj->description = trim(preg_replace(['/\s\s+/', '/\/\*+/'], '', $constant->getDocComment()));
                 }
-                $responsesDoc[] = $obj;
+                $responses->{$code} = $obj;
             }
-        }
-
-        foreach ($responsesDoc as $res) {
-            $obj = new \stdClass();
-            $obj->description = $res->description;
-            $responses->{$res->code} = $obj;
         }
 
         return $responses;
@@ -211,5 +231,16 @@ class Annotation extends \ReflectionClass
         $source = file($filename);
 
         return implode("", array_slice($source, $start_line, $length));
+    }
+
+    private function enumeratePregResult(string $annotation, string $tag): array
+    {
+        $pregResult = null;
+        preg_match_all('/@' . $tag . '/', $annotation, $pregResult);
+
+        if (!$pregResult) {
+            return [];
+        }
+        return $pregResult[0];
     }
 }

@@ -28,12 +28,23 @@ class ExampleResource extends Resource
      * @method get
      * @route /example/api/value1/{value1}/value2/{value2}
      * @contentType application/json
-     * @summary Exmaple api rest php
+     * @summary Example api rest php
      * @description A example api rest php
      * @operationId GETUSERDATA
      * @consumeType text/plain; charset=utf-8
      * @response(
      *     code=401,
+     *     description="Unauthorized",
+     *     @schema(
+     *     type="array",
+     *     @items(
+     *     $ref="#/definitions/pet",
+     *     @teste()
+     * )
+     * )
+     * )
+     * @response(
+     *     code=200,
      *     description="Unauthorized"
      * )
      * @parameter(
