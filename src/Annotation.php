@@ -52,7 +52,7 @@ class Annotation extends \ReflectionClass
      * @param null $func
      * @return string[]|null
      */
-    public function simpleAnnotationToArray(string $annotation, string $tag, $func = null): ?array
+    public function simpleAnnotationToArray(string $annotation, string $tag, callable $func = null): ?array
     {
         $pregResult = null;
 
@@ -72,10 +72,11 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
+     * @param callable $func
      * @return \stdClass[]
      * @throws \Exception
      */
-    public function complexAnnotationToArrayJSON(string $annotation, string $tag): array
+    public function complexAnnotationToArrayJSON(string $annotation, string $tag, callable $func = null): array
     {
         $array = [];
         $loop = $this->enumeratePregResult($annotation, $tag);
@@ -83,6 +84,10 @@ class Annotation extends \ReflectionClass
         for ($i = 0; $i < count($loop); $i++) {
             $array[] = $this->complexAnnotationToJSON($annotation, $tag);
             $annotation = preg_replace('/@' . $tag . '/', '', $annotation, 1);
+        }
+
+        if ($func) {
+            return array_map($func, $array);
         }
 
         return $array;

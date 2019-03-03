@@ -25,7 +25,7 @@ use Diomac\API\Response;
 class ExampleResource extends Resource
 {
     /**
-     * @method gets
+     * @method get
      * @route /example/api/value1/{value1}/value2/{value2}
      * @contentType application/json
      * @summary Example api rest php

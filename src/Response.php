@@ -340,10 +340,29 @@ class Response
      */
     private $tags;
 
-    public function __construct($routes, $tags)
+    /**
+     * @var array
+     */
+    private static $fields;
+
+    /**
+     * Response constructor.
+     * @param array $routes
+     * @param array $tags
+     */
+    public function __construct(array $routes, array $tags)
     {
         $this->routes = $routes;
         $this->tags = $tags;
+    }
+
+    /**
+     * @param array $fields
+     * @param string $className
+     */
+    public static function setFields(array $fields, string $className): void
+    {
+        self::$fields[$className] = $fields;
     }
 
     /**
@@ -366,13 +385,25 @@ class Response
     }
 
     /**
+     * @param \JsonSerializable $body
+     */
+    public function setBodyJSON(\JsonSerializable $body): void
+    {
+        $this->setContentType('application/json');
+        $this->body = json_encode($body, JSON_PRETTY_PRINT);
+        if ($this->responseCode() === self::NO_CONTENT) {
+            $this->body = null;
+        }
+    }
+
+    /**
      * @param Swagger $swagger
      * @throws \Exception
      */
     public function setBodySwaggerJSON(Swagger $swagger): void
     {
         try {
-            $this->body = json_encode($this->generateSwaggerDoc($swagger));
+            $this->body = json_encode($this->generateSwaggerDoc($swagger), JSON_PRETTY_PRINT);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -398,6 +429,7 @@ class Response
     /**
      * @param Swagger $swagger
      * @return array
+     * @throws \ReflectionException
      */
     private function generateSwaggerDoc(Swagger $swagger): array
     {
@@ -416,6 +448,11 @@ class Response
         return $json;
     }
 
+    /**
+     * @param $swagger
+     * @return array
+     * @throws \ReflectionException
+     */
     private function getRoutesDoc($swagger)
     {
         foreach ($this->routes as $k => $r) {
@@ -440,6 +477,7 @@ class Response
      * @param $swagger
      * @return mixed
      * @throws \ReflectionException
+     * @throws \Exception
      */
     private function setRouteDoc($route, $swagger)
     {
@@ -502,18 +540,6 @@ class Response
     }
 
     /**
-     * @param array|object $body
-     */
-    public function setBodyJSON($body): void
-    {
-        $this->setContentType('application/json');
-        $this->body = json_encode($body, JSON_PRETTY_PRINT);
-        if ($this->responseCode() === self::NO_CONTENT) {
-            $this->body = null;
-        }
-    }
-
-    /**
      * @param $type string
      */
     public function setContentType($type): void
@@ -550,5 +576,46 @@ class Response
     public function setHeader($name, $value): void
     {
         $this->headers[$name] = $value;
+    }
+
+    /**
+     * Use this method to implements JsonSerialize of your Definition Class.
+     *
+     * @param \JsonSerializable $object
+     * @param array $indexMethods
+     * @return array
+     */
+    public static function jsonSerialize(\JsonSerializable $object, array $indexMethods): array
+    {
+        $properties = self::$fields[get_class($object)] ?? array_keys($indexMethods);
+        $json = [];
+
+        foreach ($properties as $prop) {
+            $i = $prop;
+            if (strpos($prop, ':') !== false) {
+                list($i, $prop) = explode(':', $prop);
+            }
+
+            if (method_exists($object, $indexMethods[$i])) {
+                $m = $indexMethods[$i];
+                $json[$prop] = $object->$m();
+            }
+        }
+
+        return $json;
+    }
+
+    /**
+     * Use this method to filter fields in your end-point
+     *
+     * @param array $fields
+     * @param array $restrict
+     * @return array
+     */
+    public static function restrictFields(array $fields, array $restrict): array
+    {
+        return array_filter($fields, function ($v) use ($restrict) {
+            return in_array(explode(':', $v)[0], $restrict);
+        });
     }
 }
