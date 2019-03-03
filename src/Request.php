@@ -173,4 +173,13 @@ class Request
         }
     }
 
+    /**
+     * @param string $implementer
+     * @return Guard
+     */
+    public static function createGuard(string $implementer): Guard
+    {
+        return new $implementer();
+    }
+
 }

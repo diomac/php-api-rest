@@ -25,7 +25,7 @@ use Diomac\API\Response;
 class ExampleResource extends Resource
 {
     /**
-     * @method get
+     * @method gets
      * @route /example/api/value1/{value1}/value2/{value2}
      * @contentType application/json
      * @summary Example api rest php
@@ -54,10 +54,6 @@ class ExampleResource extends Resource
      *     format="int32",
      *     required=true
      * )
-     * @guard(
-     *     className="ExampleGuard0",
-     *     @parameters(operationId="GETUSERDATA0")
-     * )
      * @parameter(
      *     in="path",
      *     name="value2",
@@ -67,15 +63,12 @@ class ExampleResource extends Resource
      *     required=true
      * )
      * @guard(
-     *     className="ExampleGuard",
+     *     className="example\core\secure\ExampleGuard",
      *     @parameters(operationId="GETUSERDATA")
      * )
-     * @guard(
-     *     className="ExampleGuard2",
-     *     @parameters(operationId="GETUSERDATA2")
-     * )
+     * @throws \Exception
      */
-    function getUsrData()
+    function getUsrData(): Response
     {
         $this->response->setCode(Response::OK);
         $this->response->setBodyJSON($this->request->getParams());

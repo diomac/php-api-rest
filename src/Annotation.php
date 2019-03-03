@@ -98,8 +98,8 @@ class Annotation extends \ReflectionClass
     {
 
         $pregResult = null;
-        $strSearch = ['(', ')', '=', ',', '*'];
-        $strReplace = ['":{"', '}', '":', ',"', ''];
+        $strSearch = ['(', ')', '=', ',', '*', '\\'];
+        $strReplace = ['":{"', '}', '":', ',"', '', '\\\\'];
 
         $pregResult = $this->pregMatchComplexAnnotation($annotation, $tag);
 

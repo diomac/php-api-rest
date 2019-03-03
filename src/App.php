@@ -15,23 +15,23 @@ namespace Diomac\API;
 class App
 {
     /**
-     * @var $request Request
+     * @var Request $request
      */
     protected $request;
     /**
-     * @var $response Response
+     * @var Response $response
      */
     protected $response;
     /**
-     * @var $router Router
+     * @var Router $router
      */
     protected $router;
     /**
-     * @var $resource Resource
+     * @var Resource $resource
      */
     private $resource;
     /**
-     * @var $config AppConfiguration
+     * @var AppConfiguration $config
      */
     private static $config;
 
@@ -153,15 +153,16 @@ class App
      * @param $guards
      * @return bool
      * @throws UnauthorizedException
+     * @throws \Exception
      */
-    private function execGuards($guards)
+    private function execGuards($guards): bool
     {
-        $nameSpaceGuards = implode('\\', self::$config->getNamespaceGuards());
         foreach ($guards as $g) {
-            $guardClass = $nameSpaceGuards . '\\' . $g->className;
-            $guardParams = $g->guardParameters;
-            $guard = new $guardClass();
-            if (!$guard->guard($guardParams)) {
+            if (!$g->className) {
+                throw new \Exception('Guard bad configured. ClassName is required.');
+            }
+            $guard = Request::createGuard($g->className);
+            if (!$guard->guard($g->guardParameters)) {
                 throw new UnauthorizedException();
             }
         }
@@ -180,7 +181,7 @@ class App
     /**
      * @param \Exception $ex
      */
-    private function exceptionMessage(\Exception $ex)
+    private function exceptionMessage(\Exception $ex): void
     {
         $contentType = self::$config->getContentTypeExceptions();
 
@@ -196,6 +197,9 @@ class App
 
         if ($ex instanceof MethodNotAllowedException) {
             $this->response->setContentType('text/html');
+            if(!$this->resource){
+                $this->resource = Resource::createResource(Resource::class, '');
+            }
             $allow = implode(", ", array_keys($this->resource->getAllowedMethods()));
             $this->response->setHeader('AllowedMethods', $allow);
             $this->response->setBody($ex->getMessage());
