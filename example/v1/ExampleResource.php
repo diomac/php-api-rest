@@ -18,9 +18,7 @@ use Diomac\API\Response;
  * @resourceDescription Example API Doc Swagger (tag)
  * @externalDocs(
  *     description="External docs example",
- *     url="http://example_php_api_rest.com",
- *     teste(0="123",1="321",teste(0="1234")),
- *     teste="123"
+ *     url="http://example_php_api_rest.com"
  * )
  * @teste()
  */
@@ -57,6 +55,10 @@ class ExampleResource extends Resource
      *     format="int32",
      *     required=true
      * )
+     * @guard(
+     *     className="ExampleGuard0",
+     *     @parameters(operationId="GETUSERDATA0")
+     * )
      * @parameter(
      *     in="path",
      *     name="value2",
@@ -67,7 +69,11 @@ class ExampleResource extends Resource
      * )
      * @guard(
      *     className="ExampleGuard",
-     *     guardParameters={"operationId":"GETUSERDATA"}
+     *     @parameters(operationId="GETUSERDATA")
+     * )
+     * @guard(
+     *     className="ExampleGuard2",
+     *     @parameters(operationId="GETUSERDATA2")
      * )
      */
     function getUsrData()

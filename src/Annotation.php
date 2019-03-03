@@ -72,40 +72,17 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
-     * @param null $func
-     * @return array|null
+     * @return array
+     * @throws \Exception
      */
-    public function complexAnnotationToArrayJSON(string $annotation, string $tag, $func = null)
+    public function complexAnnotationToArrayJSON(string $annotation, string $tag)
     {
-        $pregResult = null;
         $array = [];
-        $pattern = '@' . $tag . '\([^)]+\)';
+        $loop = $this->enumeratePregResult($annotation, $tag);
 
-        foreach ($this->enumeratePregResult($annotation, $tag) as $enum) {
-
-            preg_match('/' . $pattern . '/', $annotation, $pregResult);
-
-            $openedParenthesesOccur = substr_count($pregResult[0], '(');
-            $closedParenthesesOccur = substr_count($pregResult[0], ')');
-
-            while ($openedParenthesesOccur !== $closedParenthesesOccur) {
-                $pattern .= '[^)]+\)';
-                preg_match('/' . $pattern . '/', $annotation, $pregResult);
-
-                $openedParenthesesOccur = substr_count($pregResult[0], '(');
-                $closedParenthesesOccur = substr_count($pregResult[0], ')');
-            }
-
-            //d($tag);
-            // d($pregResult[0]);
-
-            $annotation = str_replace($pregResult[0], '', $annotation);
-            $pattern = '@' . $tag . '\([^)]+\)';
-            $array[] = $this->complexAnnotationToJSON($pregResult[0], $tag);
-        }
-
-        if ($func) {
-            return array_map($func, $array);
+        for ($i = 0; $i < count($loop); $i++) {
+            $array[] = $this->complexAnnotationToJSON($annotation, $tag);
+            $annotation = preg_replace('/@' . $tag . '/', '', $annotation, 1);
         }
 
         return $array;
@@ -114,15 +91,15 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
-     * @param string|null $closeParentheses
      * @return mixed|null|\stdClass
+     * @throws \Exception
      */
     public function complexAnnotationToJSON(string $annotation, string $tag)
     {
 
         $pregResult = null;
         $strSearch = ['(', ')', '=', ',', '*'];
-        $strReplace = ['{"', '"}', '":', ',"', ''];
+        $strReplace = ['":{"', '}', '":', ',"', ''];
 
         $pregResult = $this->pregMatchComplexAnnotation($annotation, $tag);
 
@@ -130,54 +107,33 @@ class Annotation extends \ReflectionClass
             return null;
         }
 
-        dd($pregResult);
+        $json = preg_replace('/":/', '', str_replace($strSearch, $strReplace, $pregResult[1]), 1);
 
-        $outersTag = explode(',', $pregResult[1]);
-//        d($outersTag);
-        $outersJson = [];
-        $remountAnnotation = [];
+        $std = json_decode(preg_replace('/@|\s/', '', $json));
 
-        foreach ($outersTag as $k => $a) {
-            $tagName = null;
-            preg_match('/@([\S\s]*?)\(/', $a, $tagName);
-
-            if ($tagName) {
-                $outersJson[] = [
-                    'tag' => $tagName[1],
-                    'annotation' => $a
-                ];
-            } else {
-                $remountAnnotation[] = $a;
-            }
+        if (!$std) {
+            throw new \Exception('Bad documentation. Check PHPDoc in tag ' . $tag . '.');
         }
 
-        $str = implode(',', $remountAnnotation);
-
-        if ($str) {
-            $replaced = str_replace($strSearch, $strReplace, $str);
-            $replacedLines = trim(preg_replace('/\s\s+/', ' ', $replaced));
-            $json = json_decode('{"' . str_replace('," ', ',"', $replacedLines) . '}');
-        } else {
-            $json = new \stdClass();
-        }
-
-        foreach ($outersJson as $j) {
-            $json->{trim($j['tag'])} = $this->complexAnnotationToJSON($j['annotation'], $j['tag']);
-        }
-
-        return $json;
+        return $std;
     }
 
-    private function pregMatchComplexAnnotation(string $annotation, string $tag, string $closePar = null)
+    /**
+     * @param string $annotation
+     * @param string $tag
+     * @param string|null $closePar
+     * @return array|null
+     */
+    private function pregMatchComplexAnnotation(string $annotation, string $tag, string $closePar = null): array
     {
-        $pattern = '/@' . $tag . '\([^)]*\)' . $closePar . '/';
-        d($pattern);
+        $pattern = '/@' . $tag . '(\([^)]*\)' . $closePar . ')/';
+
         preg_match($pattern, $annotation, $pregResult);
 
         if (!$pregResult) {
             return null;
         }
-        d($pregResult);
+
         $open = substr_count($pregResult[0], '(');
         $close = substr_count($pregResult[0], ')');
 
@@ -260,7 +216,7 @@ class Annotation extends \ReflectionClass
     private function enumeratePregResult(string $annotation, string $tag): array
     {
         $pregResult = null;
-        preg_match_all('/@' . $tag . '/', $annotation, $pregResult);
+        preg_match_all('/@' . $tag . '(\([^)]*\))/', $annotation, $pregResult);
 
         if (!$pregResult) {
             return [];
