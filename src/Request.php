@@ -181,5 +181,79 @@ class Request
         return new $implementer();
     }
 
+    /**
+     * Check request data using swagger 2.0 definitions
+     *
+     * @param \stdClass $definition
+     * @param Swagger $swagger
+     * @param \stdClass|null $data
+     * @throws BadRequestException
+     * @throws \Exception
+     */
+    private function checkData(\stdClass $definition, Swagger $swagger, \stdClass $data = null): void
+    {
+        if (!$data) {
+            $data = $this->data;
+        }
 
+        if (!$definition->required) {
+            $definition->required = [];
+        }
+
+        foreach ($definition->required as $p) {
+            if (!isset($data->{$p})) {
+                throw new BadRequestException('Required property "' . $p . '" not found.');
+            } else {
+                $this->checkDataType($data->{$p}, $p, $definition, $swagger);
+            }
+        }
+    }
+
+    /**
+     * Check request data type using swagger 2.0 definitions
+     *
+     * @param $value
+     * @param string $propertyName
+     * @param \stdClass $definition
+     * @param Swagger $swagger
+     * @throws BadRequestException
+     * @throws \Exception
+     */
+    private function checkDataType($value, string $propertyName, \stdClass $definition, Swagger $swagger): void
+    {
+        if (!$definition->properies) {
+            throw new \Exception('Definition not contain field "properties"');
+        }
+
+        $strPath = $definition->properies->{$propertyName}->{'$ref'};
+
+        if ($strPath) {
+            $path = explode('/', str_replace('#/definition/', '', $strPath));
+
+            $d = $swagger->definitions();
+
+            foreach ($path as $p) {
+                $d = $d[$p];
+            }
+
+            $refDefinition = json_decode(json_encode($d));
+
+            $this->checkData($refDefinition, $swagger, $value);
+        } else {
+            $dType = $definition->properies->{$propertyName}->type;
+            $pType = gettype($value);
+
+            if ($pType !== $dType) {
+                throw new BadRequestException(
+                    'Property "' .
+                    $propertyName .
+                    '" type error. Must be ' .
+                    $dType .
+                    ', ' .
+                    $pType .
+                    ' given.'
+                );
+            }
+        }
+    }
 }
