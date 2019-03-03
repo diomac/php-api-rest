@@ -14,12 +14,19 @@ namespace Diomac\API;
  */
 class ResourceCacheAPC implements ResourceCache
 {
-    private $cacheName = 'diomac-simple-api-rest';
+    const DEFAULT_CACHE_NAME = 'diomac-api-rest';
+
+    /**
+     * @var string $cacheName
+     */
+    private $cacheName;
 
     public function __construct($cacheName = null)
     {
         if ($cacheName) {
             $this->cacheName = $cacheName;
+        } else {
+            $this->cacheName = self::DEFAULT_CACHE_NAME;
         }
     }
 
@@ -32,7 +39,7 @@ class ResourceCacheAPC implements ResourceCache
     }
 
     /**
-     * @return str[]|mixed
+     * @return string[]|mixed
      */
     public function load()
     {
@@ -40,7 +47,7 @@ class ResourceCacheAPC implements ResourceCache
     }
 
     /**
-     * @param str[] $resources Resource
+     * @param string[] $resources Resource
      * @return array|bool
      */
     public function save($resources)

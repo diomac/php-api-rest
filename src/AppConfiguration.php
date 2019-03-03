@@ -11,11 +11,10 @@ namespace Diomac\API;
 
 class AppConfiguration
 {
-    const DEFAULT_NAME_CACHE = 'DiomacApiCache';
     const DEFAULT_CONTENT_TYPE_EXCEPTIONS = 'text/html';
 
     /**
-     * @var string[] $resourceNames - Names of your API's resource classes
+     * @var string[] $resourceNames - Names of your API resource classes
      */
     private $resourceNames;
 
@@ -44,8 +43,7 @@ class AppConfiguration
      */
     public function __construct()
     {
-        $this->nameCache = self::DEFAULT_NAME_CACHE;
-        $this->contentTypeExceptions = self::DEFAULT_NAME_CACHE;
+        $this->contentTypeExceptions = self::DEFAULT_CONTENT_TYPE_EXCEPTIONS;
     }
 
     /**
@@ -108,7 +106,7 @@ class AppConfiguration
     }
 
     /**
-     * Set true if your API development is finished for more performance (require APC - Auternative PHP Cache) - Default: false
+     * Set true if your API development is finished for more performance (require APC - Alternative PHP Cache) - Default: false
      * @param bool $useCache
      */
     public function setUseCache(bool $useCache): void

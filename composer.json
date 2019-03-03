@@ -1,12 +1,12 @@
 {
   "name": "diomac/php-api-rest",
   "description": "A PHP API REST Micro-Framework using annotations",
-  "type": "microframework",
+  "type": "micro-framework",
   "version": "2.0.1",
   "keywords": [
     "api",
     "rest",
-    "microframework"
+    "micro-framework"
   ],
   "authors": [
     {
@@ -18,7 +18,8 @@
   "require": {
     "php": ">=7.2",
     "ext-json": "*",
-    "ext-yaml": "*"
+    "ext-yaml": "*",
+    "ext-apc": "*"
   },
   "minimum-stability": "dev",
    "autoload": {

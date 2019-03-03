@@ -56,7 +56,6 @@ class Request
     }
 
     /**
-     * @param $route string
      * @return array
      * @throws \Exception
      */
@@ -181,5 +180,6 @@ class Request
     {
         return new $implementer();
     }
+
 
 }

@@ -15,23 +15,23 @@ namespace Diomac\API;
 class Resource
 {
     /**
-     * @var $params array
+     * @var array $params
      */
     private $params;
     /**
-     * @var $request Request
+     * @var Request $request
      */
     protected $request;
     /**
-     * @var $response Response
+     * @var Response $response
      */
     protected $response;
     /**
-     * @var $route string
+     * @var string $route
      */
     protected $route;
     /**
-     * @var $allowedMethods array
+     * @var string[] $allowedMethods
      */
     private $allowedMethods;
 
@@ -112,12 +112,13 @@ class Resource
 
     /**
      * @param $pName string
-     * @return mixed
+     * @return mixed|null
      */
     protected function getParam($pName)
     {
         if (isset($this->params[$pName])) {
             return $this->params[$pName];
         }
+        return null;
     }
 }

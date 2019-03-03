@@ -20,12 +20,12 @@ interface ResourceCache
     public function isCached();
 
     /**
-     * @return str[]
+     * @return string[]
      */
     public function load();
 
     /**
-     * @param  str[] $resources Resource metadata
+     * @param  string[] $resources Resource metadata
      * @return boolean
      */
     public function save($resources);
