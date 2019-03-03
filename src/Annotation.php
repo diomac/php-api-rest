@@ -31,7 +31,7 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
-     * @return null|string
+     * @return string|null
      */
     public function simpleAnnotationToString(string $annotation, string $tag)
     {
@@ -97,7 +97,7 @@ class Annotation extends \ReflectionClass
             }
 
             //d($tag);
-           // d($pregResult[0]);
+            // d($pregResult[0]);
 
             $annotation = str_replace($pregResult[0], '', $annotation);
             $pattern = '@' . $tag . '\([^)]+\)';
@@ -114,6 +114,7 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
+     * @param string|null $closeParentheses
      * @return mixed|null|\stdClass
      */
     public function complexAnnotationToJSON(string $annotation, string $tag)
@@ -123,11 +124,13 @@ class Annotation extends \ReflectionClass
         $strSearch = ['(', ')', '=', ',', '*'];
         $strReplace = ['{"', '"}', '":', ',"', ''];
 
-        preg_match('/@' . $tag . '\(([\S\s]*)(?!.\))/', $annotation, $pregResult);
+        $pregResult = $this->pregMatchComplexAnnotation($annotation, $tag);
 
         if (!$pregResult) {
             return null;
         }
+
+        dd($pregResult);
 
         $outersTag = explode(',', $pregResult[1]);
 //        d($outersTag);
@@ -163,6 +166,27 @@ class Annotation extends \ReflectionClass
         }
 
         return $json;
+    }
+
+    private function pregMatchComplexAnnotation(string $annotation, string $tag, string $closePar = null)
+    {
+        $pattern = '/@' . $tag . '\([^)]*\)' . $closePar . '/';
+        d($pattern);
+        preg_match($pattern, $annotation, $pregResult);
+
+        if (!$pregResult) {
+            return null;
+        }
+        d($pregResult);
+        $open = substr_count($pregResult[0], '(');
+        $close = substr_count($pregResult[0], ')');
+
+        if ($open > $close) {
+            $closePar = str_repeat('[^)]*\)', $open - $close);
+            $pregResult = $this->pregMatchComplexAnnotation($annotation, $tag, $closePar);
+        }
+
+        return $pregResult;
     }
 
     /**

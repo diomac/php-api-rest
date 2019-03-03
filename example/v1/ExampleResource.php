@@ -18,8 +18,11 @@ use Diomac\API\Response;
  * @resourceDescription Example API Doc Swagger (tag)
  * @externalDocs(
  *     description="External docs example",
- *     url="http://example_php_api_rest.com"
+ *     url="http://example_php_api_rest.com",
+ *     teste(0="123",1="321",teste(0="1234")),
+ *     teste="123"
  * )
+ * @teste()
  */
 class ExampleResource extends Resource
 {
