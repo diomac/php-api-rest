@@ -367,18 +367,32 @@ class Response
 
     /**
      * @param Swagger $swagger
+     * @throws \Exception
      */
     public function setBodySwaggerJSON(Swagger $swagger): void
     {
-        $this->body = json_encode($this->generateSwaggerDoc($swagger));
+        try {
+            $this->body = json_encode($this->generateSwaggerDoc($swagger));
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
     /**
      * @param Swagger $swagger
+     * @throws \Exception
      */
     public function setBodySwaggerYAML(Swagger $swagger): void
     {
-        $this->body = yaml_emit($this->generateSwaggerDoc($swagger));
+        try {
+            $this->body = yaml_emit($this->generateSwaggerDoc($swagger));
+        } catch (\Exception $ex) {
+            throw $ex;
+        } catch (\Error $err) {
+            if (strpos('Call to undefined function Diomac\API\yaml_emit()', $err->getMessage()) !== false) {
+                throw new \Exception('Yaml not configured. Check http://pecl.php.net/package/yaml.');
+            }
+        }
     }
 
     /**
@@ -421,6 +435,12 @@ class Response
         return $this->routes;
     }
 
+    /**
+     * @param $route
+     * @param $swagger
+     * @return mixed
+     * @throws \ReflectionException
+     */
     private function setRouteDoc($route, $swagger)
     {
         $annotation = new Annotation();
@@ -445,7 +465,7 @@ class Response
         $description = $annotation->simpleAnnotationToString($str, 'description');
         $operationId = $annotation->simpleAnnotationToString($str, 'operationId');
         $responses = $annotation->responses($route['code'], $str, $swagger);
-//        dd($responses);
+
         if (isset($route['tag'])) {
             $route['tags'] = [$route['tag']];
         }
@@ -484,7 +504,7 @@ class Response
     /**
      * @param array|object $body
      */
-    public function setBodyJSON($body)
+    public function setBodyJSON($body): void
     {
         $this->setContentType('application/json');
         $this->body = json_encode($body, JSON_PRETTY_PRINT);
@@ -496,7 +516,7 @@ class Response
     /**
      * @param $type string
      */
-    public function setContentType($type)
+    public function setContentType($type): void
     {
         $this->headers['content-type'] = $type . '; charset=UTF-8';
     }
@@ -504,7 +524,7 @@ class Response
     /**
      * Output response
      */
-    public function output()
+    public function output(): void
     {
         foreach ($this->headers as $name => $value) {
             header($name . ': ' . $value, true, $this->responseCode());
@@ -517,7 +537,7 @@ class Response
      * HTTP response code
      * @return int
      */
-    protected function responseCode()
+    protected function responseCode(): int
     {
         return $this->code;
     }
@@ -527,7 +547,7 @@ class Response
      * @param $value string
      *
      */
-    public function setHeader($name, $value)
+    public function setHeader($name, $value): void
     {
         $this->headers[$name] = $value;
     }

@@ -34,6 +34,7 @@ class Resource
      * @var $allowedMethods array
      */
     private $allowedMethods;
+
     /**
      * @return string
      */
@@ -93,11 +94,20 @@ class Resource
     /**
      * Resource constructor.
      * @param string $route
-     * @param \stdClass $guardParams
      */
     public function __construct(string $route)
     {
         $this->route = $route;
+    }
+
+    /**
+     * @param string $childClassName
+     * @param string $route
+     * @return Resource
+     */
+    public static function createResource(string $childClassName, string $route): Resource
+    {
+        return new $childClassName($route);
     }
 
     /**

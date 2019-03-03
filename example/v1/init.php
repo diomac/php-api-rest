@@ -19,7 +19,7 @@ $config->setBaseUrl('/php-api-rest/vendor/example/v1');
 $config->addResource(\example\v1\ExampleResource::class);
 $config->addResource(\example\v1\ExampleSwaggerJson::class);
 
-$config->setContentTypeExceptions('application/json');
+//$config->setContentTypeExceptions('application/json');
 
 $config->setUseCache(false);
 

@@ -38,8 +38,7 @@ class ExampleResource extends Resource
      *     @schema(
      *     type="array",
      *     @items(
-     *     $ref="#/definitions/pet",
-     *     @teste()
+     *     $ref="#/definitions/pet"
      * )
      * )
      * )

@@ -16,9 +16,10 @@ class ExampleSwaggerJson extends Resource
     /**
      * @method get
      * @route /swagger.json
-     *
+     * @throws \Exception
      */
-    function swaggerJson(){
+    function swaggerJson()
+    {
         $this->response->setCode(Response::OK);
         $swagger = new ExampleSwaggerDoc();
         $this->response->setBodySwaggerJSON($swagger);

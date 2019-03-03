@@ -86,6 +86,7 @@ class Router
      * @param $doc
      * @return array|null
      * @throws \ReflectionException
+     * @throws \Exception
      */
     private function configTag($doc)
     {
@@ -118,6 +119,7 @@ class Router
      * @param string $class
      * @param array|null $tag
      * @throws \ReflectionException
+     * @throws \Exception
      */
     private function configRoutes(array $methods, string $class, array $tag = null)
     {

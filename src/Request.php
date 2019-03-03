@@ -99,7 +99,11 @@ class Request
         }
     }
 
-    private function getUriParams($routeData)
+    /**
+     * @param $routeData
+     * @throws \Exception
+     */
+    private function getUriParams($routeData): void
     {
         $params = $_GET;
         $partsRouteData = explode('/', $routeData);
@@ -109,7 +113,7 @@ class Request
             if (preg_match('/({[^\/]+})/', $p)) {
                 $pName = preg_replace('/({|})/', '', $p);
                 if (isset($params[$pName])) {
-                    throw new \Exception('Variáveis duplicadas na chamada.');
+                    throw new \Exception('Duplicate variables in the call.');
                 }
                 $params[$pName] = preg_replace('/\?(.*)/', '', $partsRoute[$key]);
             }
@@ -118,12 +122,15 @@ class Request
         $this->params = $params;
     }
 
-    private function getEnvironmentRoute(string $baseUrl)
+    /**
+     * @param string $baseUrl
+     */
+    private function getEnvironmentRoute(string $baseUrl): void
     {
         list(, $this->route) = explode($baseUrl, $_SERVER['REQUEST_URI']);
     }
 
-    private function getEnvironmentMethod()
+    private function getEnvironmentMethod(): void
     {
         $method = strtoupper($this->getHeader('requestMethod'));
         if (!$method) {
@@ -132,7 +139,7 @@ class Request
         $this->method = $method;
     }
 
-    private function getEnvironmentData()
+    private function getEnvironmentData(): void
     {
         $dataMethods = [
             'POST' => true,
@@ -150,7 +157,11 @@ class Request
         }
     }
 
-    private function getHeader($name)
+    /**
+     * @param string $name
+     * @return string|null
+     */
+    private function getHeader(string $name): ?string
     {
         $name = strtoupper(preg_replace('/([A-Z])/', '_$1', $name));
         if (isset($_SERVER['HTTP_' . $name])) {

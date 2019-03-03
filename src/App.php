@@ -77,7 +77,7 @@ class App
     public function exec()
     {
         try {
-            $this->ini();
+            $this->init();
         } catch (NotFoundException $e) {
             $this->exceptionMessage($e);
         } catch (UnauthorizedException $e) {
@@ -96,10 +96,12 @@ class App
     /**
      * init api-rest
      * @throws ForbiddenException
+     * @throws UnauthorizedException
      * @throws MethodNotAllowedException
      * @throws NotFoundException
+     * @throws \Exception
      */
-    private function ini()
+    private function init()
     {
         $currentRouteData = null;
         $currentRoute = null;
@@ -129,7 +131,7 @@ class App
         $method = $this->request->getMethod();
         $class = $currentRouteData[$method]['class'];
 
-        $this->resource = new $class($currentRoute);
+        $this->resource = Resource::createResource($class, $currentRoute);
         $this->resource->setParams($this->request->getParams());
         $this->resource->setRequest($this->request);
         $this->resource->setResponse($this->response);
@@ -148,9 +150,9 @@ class App
     }
 
     /**
-     * Execute route guards
      * @param $guards
      * @return bool
+     * @throws UnauthorizedException
      */
     private function execGuards($guards)
     {
@@ -160,7 +162,7 @@ class App
             $guardParams = $g->guardParameters;
             $guard = new $guardClass();
             if (!$guard->guard($guardParams)) {
-                return false;
+                throw new UnauthorizedException();
             }
         }
         return true;
@@ -170,15 +172,15 @@ class App
      * @param $route
      * @return string
      */
-    private function configPatternRoute($route)
+    private function configPatternRoute($route): string
     {
         return '|^' . preg_replace('/({[^\/]+})/', '[^\/]+', $route) . '$|';
     }
 
     /**
-     * @param $ex
+     * @param \Exception $ex
      */
-    private function exceptionMessage($ex)
+    private function exceptionMessage(\Exception $ex)
     {
         $contentType = self::$config->getContentTypeExceptions();
 

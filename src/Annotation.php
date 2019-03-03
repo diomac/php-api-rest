@@ -33,7 +33,7 @@ class Annotation extends \ReflectionClass
      * @param string $tag
      * @return string|null
      */
-    public function simpleAnnotationToString(string $annotation, string $tag)
+    public function simpleAnnotationToString(string $annotation, string $tag): ?string
     {
         $pregResult = null;
 
@@ -50,9 +50,9 @@ class Annotation extends \ReflectionClass
      * @param string $annotation
      * @param string $tag
      * @param null $func
-     * @return array|null
+     * @return string[]|null
      */
-    public function simpleAnnotationToArray(string $annotation, string $tag, $func = null)
+    public function simpleAnnotationToArray(string $annotation, string $tag, $func = null): ?array
     {
         $pregResult = null;
 
@@ -72,10 +72,10 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
-     * @return array
+     * @return \stdClass[]
      * @throws \Exception
      */
-    public function complexAnnotationToArrayJSON(string $annotation, string $tag)
+    public function complexAnnotationToArrayJSON(string $annotation, string $tag): array
     {
         $array = [];
         $loop = $this->enumeratePregResult($annotation, $tag);
@@ -94,7 +94,7 @@ class Annotation extends \ReflectionClass
      * @return mixed|null|\stdClass
      * @throws \Exception
      */
-    public function complexAnnotationToJSON(string $annotation, string $tag)
+    public function complexAnnotationToJSON(string $annotation, string $tag): \stdClass
     {
 
         $pregResult = null;
@@ -151,8 +151,9 @@ class Annotation extends \ReflectionClass
      * @param Swagger $swagger
      * @return \stdClass
      * @throws \ReflectionException
+     * @throws \Exception
      */
-    public function responses(string $code, string $annotationStr, Swagger $swagger)
+    public function responses(string $code, string $annotationStr, Swagger $swagger): \stdClass
     {
         $responses = new \stdClass();
         $pregResult = null;
@@ -170,7 +171,7 @@ class Annotation extends \ReflectionClass
 
         preg_match_all('/Response::([A-Z\_]+)/', $code, $pregResult);
 
-        $reflection = new Annotation('Diomac\\API\\Response');
+        $reflection = new Annotation(Response::class);
 
         if ($pregResult) {
             foreach ($pregResult[1] as $res) {
@@ -213,6 +214,11 @@ class Annotation extends \ReflectionClass
         return implode("", array_slice($source, $start_line, $length));
     }
 
+    /**
+     * @param string $annotation
+     * @param string $tag
+     * @return array
+     */
     private function enumeratePregResult(string $annotation, string $tag): array
     {
         $pregResult = null;
