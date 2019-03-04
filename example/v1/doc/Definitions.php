@@ -6,7 +6,7 @@
  * Time: 14:45
  */
 
-namespace example\core\doc;
+namespace example\v1\doc;
 
 class Definitions implements \JsonSerializable
 {

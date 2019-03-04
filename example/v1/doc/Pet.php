@@ -6,7 +6,7 @@
  * Time: 14:47
  */
 
-namespace example\core\doc;
+namespace example\v1\doc;
 
 class Pet
 {
