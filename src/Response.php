@@ -434,7 +434,7 @@ class Response
     private function generateSwaggerDoc(Swagger $swagger): array
     {
         $json = [
-            'swagger' => '2.0',
+            'swagger' => Swagger::getVersion(),
             'info' => $swagger->info(),
             'host' => $swagger->host(),
             'basePath' => $swagger->basePath(),
