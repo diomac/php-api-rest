@@ -26,7 +26,7 @@ class ExampleSwaggerDoc extends Swagger
 
         $this->info->getContact()->setName('API Support');
         $this->info->getContact()->setEmail('support@swagger.io');
-        $this->info->getContact()->setUrl('"http://swagger.io');
+        $this->info->getContact()->setUrl('http://swagger.io');
 
         $this->info->getLicense()->setName('Apache 2.0');
         $this->info->getLicense()->setUrl('http://www.apache.org/licenses/LICENSE-2.0.html');

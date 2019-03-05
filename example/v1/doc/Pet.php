@@ -14,7 +14,7 @@ use Diomac\API\SwaggerDefinition;
  * Class Pet
  * @package example\v1\doc
  * @swaggerType object
- * @swaggerAllOf #/definitions/NewPet
+ * @swaggerAllOf newPet
  */
 class Pet extends SwaggerDefinition
 {

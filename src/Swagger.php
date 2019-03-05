@@ -9,7 +9,7 @@
 namespace Diomac\API;
 
 
-abstract class Swagger
+abstract class Swagger implements \JsonSerializable
 {
     private static $version = '2.0';
     /**
@@ -45,11 +45,33 @@ abstract class Swagger
      */
     protected $definitions;
     /**
+     * @var \JsonSerializable $securityDefinitions
+     */
+    protected $securityDefinitions;
+
+    /**
      * Swagger constructor.
      */
     public function __construct()
     {
-        $this->info = new SwaggerInfo();
+        $this->info = $this->info();
+        $this->host = $this->host();
+        $this->basePath = $this->basePath();
+        $this->schemes = $this->schemes();
+//        $this->consumes
+//        $this->produces
+//        $this->tags
+//        $this->paths
+        $this->definitions = $this->definitions();
+        $this->securityDefinitions = $this->securityDefinitions();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getVersion(): string
+    {
+        return self::$version;
     }
 
     /**
@@ -181,11 +203,19 @@ abstract class Swagger
     }
 
     /**
-     * @return string
+     * @return \JsonSerializable
      */
-    public static function getVersion(): string
+    public function getSecurityDefinitions(): \JsonSerializable
     {
-        return self::$version;
+        return $this->securityDefinitions;
+    }
+
+    /**
+     * @param \JsonSerializable $securityDefinitions
+     */
+    public function setSecurityDefinitions(\JsonSerializable $securityDefinitions): void
+    {
+        $this->securityDefinitions = $securityDefinitions;
     }
 
     public abstract function info(): SwaggerInfo;
@@ -201,4 +231,29 @@ abstract class Swagger
     public abstract function securityDefinitions(): array;
 
     public abstract function defaultResponsesDescription(): array;
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        $p = [
+            'swagger' => 'getVersion',
+            'info' => 'getInfo',
+            'host' => 'getHost',
+            'basePath' => 'getBasePath',
+            'schemes' => 'getSchemes',
+            'consumes' => 'getConsumes',
+            'produces' => 'getProduces',
+            'tags' => 'getTags',
+            'paths' => 'getPaths',
+            'definitions' => 'getDefinitions',
+            'securityDefinitions' => 'getSecurityDefinitions'
+        ];
+        return Response::jsonSerialize($this, $p);
+    }
 }
