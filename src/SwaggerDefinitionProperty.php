@@ -26,15 +26,23 @@ class SwaggerDefinitionProperty implements \JsonSerializable
 
     /**
      * SwaggerDefinitionProperty constructor.
-     * @param string $name
-     * @param string $type
-     * @param string $format
+     * @param string $docComment
      */
-    public function __construct(string $name, string $type, string $format = null)
+    public function __construct(string $docComment)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->format = $format;
+        preg_match('/@var ([A-Za-z]+)/', $docComment, $match);
+
+        if($match){
+            $this->type = $match[1];
+        }
+
+        $match = null;
+
+        preg_match('/@swaggerFormat ([A-Za-z0-9]+)/', $docComment, $match);
+
+        if($match){
+            $this->format = $match[1];
+        }
     }
 
     /**
@@ -95,10 +103,14 @@ class SwaggerDefinitionProperty implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return Response::jsonSerialize($this, [
-            'name' => 'getName',
-            'type' => 'getType',
-            'format' => 'getFormat'
-        ]);
+        $p = [
+            'type' => 'getType'
+        ];
+
+        if($this->format){
+            $p['format'] = 'getFormat';
+        }
+
+        return Response::jsonSerialize($this, $p);
     }
 }

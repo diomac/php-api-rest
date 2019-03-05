@@ -49,7 +49,7 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
-     * @param null $func
+     * @param callable $func
      * @return string[]|null
      */
     public function simpleAnnotationToArray(string $annotation, string $tag, callable $func = null): ?array

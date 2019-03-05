@@ -8,7 +8,20 @@
 
 namespace example\v1\doc;
 
-class Pet
-{
+use Diomac\API\SwaggerDefinition;
 
+/**
+ * Class Pet
+ * @package example\v1\doc
+ * @swaggerType object
+ * @swaggerAllOf #/definitions/NewPet
+ */
+class Pet extends SwaggerDefinition
+{
+    /**
+     * @swaggerRequired
+     * @swaggerFormat int32
+     * @var integer $id
+     */
+    public $id;
 }

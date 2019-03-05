@@ -12,32 +12,67 @@ namespace Diomac\API;
 abstract class SwaggerDefinition implements \JsonSerializable
 {
     /**
-     * @var string $type
+     * @var Annotation $annotation
      */
-    protected $type;
+    private $annotation;
     /**
-     * @var string[] $required
+     * @var SwaggerDefinitionProperty[]
      */
-    protected $required;
-    /**
-     * @var SwaggerDefinitionProperty[] $properties
-     */
-    protected $properties;
+    private $properties = [];
 
     /**
      * @return string
+     * @throws \ReflectionException
+     * @throws \Exception
      */
-    public abstract function getType(): string;
+    public function getType(): string
+    {
+        if (!$this->annotation) {
+            $this->annotation = new Annotation(get_called_class());
+        }
+
+        preg_match('/@swaggerType ([A-Za-z]+)/', $this->annotation->getDocComment(), $match);
+
+        if ($match) {
+            return $match[1];
+        }
+
+        throw new \Exception('@swaggerType bad configured in "' . $this->annotation->getName() . '"');
+    }
 
     /**
      * @return string[]
+     * @throws \ReflectionException
      */
-    public abstract function getRequired(): array;
+    public function getRequired(): ?array
+    {
+        if (!$this->annotation) {
+            $this->annotation = new Annotation(get_called_class());
+        }
+
+        $properties = $this->annotation->getProperties();
+
+        $r = [];
+
+        foreach ($properties as $p) {
+            $this->properties[$p->getName()] = new SwaggerDefinitionProperty($p->getDocComment());
+            $match = null;
+            preg_match('/@swaggerRequired/', $p->getDocComment(), $match);
+            if ($match) {
+                $r[] = $p->getName();
+            }
+        }
+
+        return $r;
+    }
 
     /**
      * @return SwaggerDefinitionProperty[]
      */
-    public abstract function getProperties(): array;
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
 
     /**
      * Specify data which should be serialized to JSON

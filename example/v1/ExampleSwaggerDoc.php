@@ -11,9 +11,9 @@ namespace example\v1;
 use Diomac\API\Swagger;
 use Diomac\API\Response;
 use Diomac\API\SwaggerInfo;
-use example\core\doc\Definitions;
-use example\core\doc\NewPet;
-use example\core\doc\Pet;
+use example\v1\doc\Definitions;
+use example\v1\doc\NewPet;
+use example\v1\doc\Pet;
 
 class ExampleSwaggerDoc extends Swagger
 {
