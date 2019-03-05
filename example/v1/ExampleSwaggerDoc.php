@@ -19,6 +19,7 @@ class ExampleSwaggerDoc extends Swagger
 {
     public function info(): SwaggerInfo
     {
+        $this->setInfo(new SwaggerInfo());
         $this->info->setVersion('1.0.0');
         $this->info->setTitle('Swagger Sample App');
         $this->info->setDescription('This is a sample server Petstore server.');

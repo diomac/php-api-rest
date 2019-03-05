@@ -103,15 +103,13 @@ class App
      */
     private function init()
     {
-        $currentRouteData = null;
         $currentRoute = null;
         $routes = $this->router->getRoutes();
 
-        foreach ($routes as $route => $data) {
-            $patternRoute = $this->configPatternRoute($route);
+        foreach ($routes as $swaggerPath) {
+            $patternRoute = $this->configPatternRoute($swaggerPath->getRoute());
             if (preg_match($patternRoute, explode('?', $this->request->getRoute())[0])) {
-                $currentRouteData = $data;
-                $currentRoute = $route;
+                $currentRoute = $swaggerPath;
                 break;
             }
         }
@@ -120,32 +118,34 @@ class App
             throw new NotFoundException();
         }
 
-        $this->request = new Request(self::$config, $currentRoute);
+        $routePath = $currentRoute->getRoute();
 
-        if (!array_key_exists($this->request->getMethod(), $currentRouteData)) {
-            $this->resource = new Resource($currentRoute);
-            $this->resource->setAllowedMethods($currentRouteData);
+        $this->request = new Request(self::$config, $routePath);
+        $method = $this->request->getMethod();
+
+        if (!in_array($method, $currentRoute->getAllowedMethods())) {
+            $this->resource = new Resource($currentRoute->getRoute());
+            $this->resource->setAllowedMethods($currentRoute->getAllowedMethods());
             throw new MethodNotAllowedException();
         }
 
-        $method = $this->request->getMethod();
-        $class = $currentRouteData[$method]['class'];
 
-        $this->resource = Resource::createResource($class, $currentRoute);
+        $swaggerMethod = $currentRoute->getMethodByName($method);
+        $class = $swaggerMethod->getRouteConfig()->getResourceClass();
+
+        $this->resource = Resource::createResource($class, $currentRoute->getRoute());
         $this->resource->setParams($this->request->getParams());
         $this->resource->setRequest($this->request);
         $this->resource->setResponse($this->response);
-        $function = $currentRouteData[$method]['function'];
+        $function = $swaggerMethod->getRouteConfig()->getFunction();
 
-        if ($currentRouteData[$method]['guards']) {
-            $authorized = $this->execGuards($currentRouteData[$method]['guards']);
+        if ($swaggerMethod->getRouteConfig()->getGuards()) {
+            $authorized = $this->execGuards($swaggerMethod->getRouteConfig()->getGuards());
             if ($authorized) {
-                $this->response = $this->resource->$function();
-            } else {
-                throw new ForbiddenException();
+                $this->response = $function->invoke($this->resource);
             }
         } else {
-            $this->response = $this->resource->$function();
+            $this->response = $function->invoke($this->resource);
         }
     }
 
@@ -153,6 +153,7 @@ class App
      * @param $guards
      * @return bool
      * @throws UnauthorizedException
+     * @throws ForbiddenException
      * @throws \Exception
      */
     private function execGuards($guards): bool
@@ -162,8 +163,14 @@ class App
                 throw new \Exception('Guard bad configured. ClassName is required.');
             }
             $guard = Request::createGuard($g->className);
-            if (!$guard->guard($g->guardParameters)) {
-                throw new UnauthorizedException();
+            try {
+                $guard->guard($g->guardParameters);
+            } catch (UnauthorizedException $ex) {
+                throw $ex;
+            } catch (ForbiddenException $ex) {
+                throw $ex;
+            } catch (\Exception $ex) {
+                throw $ex;
             }
         }
         return true;
@@ -197,7 +204,7 @@ class App
 
         if ($ex instanceof MethodNotAllowedException) {
             $this->response->setContentType('text/html');
-            if(!$this->resource){
+            if (!$this->resource) {
                 $this->resource = Resource::createResource(Resource::class, '');
             }
             $allow = implode(", ", array_keys($this->resource->getAllowedMethods()));

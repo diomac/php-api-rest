@@ -16,21 +16,13 @@ class SwaggerPath
      */
     private $route;
     /**
-     * @var string $httpMethod
+     * @var SwaggerMethod[] $methods
      */
-    private $httpMethod;
+    private $methods;
     /**
-     * @var string $operationId
+     * @var string[] $allowedMethods
      */
-    private $operationId;
-    /**
-     * @var SwaggerParameter[] $parameters
-     */
-    private $parameters;
-    /**
-     * @var SwaggerResponse[] $responses
-     */
-    private $responses;
+    private $allowedMethods;
 
     /**
      * @return string
@@ -49,66 +41,51 @@ class SwaggerPath
     }
 
     /**
-     * @return string
+     * @return SwaggerMethod[]
      */
-    public function getHttpMethod(): string
+    public function getMethods(): array
     {
-        return $this->httpMethod;
+        return $this->methods;
     }
 
     /**
-     * @param string $httpMethod
+     * @param SwaggerMethod[] $methods
      */
-    public function setHttpMethod(string $httpMethod): void
+    public function setMethods(array $methods): void
     {
-        $this->httpMethod = $httpMethod;
+        $this->methods = $methods;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getOperationId(): string
+    public function getAllowedMethods(): array
     {
-        return $this->operationId;
+        return $this->allowedMethods;
     }
 
     /**
-     * @param string $operationId
+     * @param string[] $allowedMethods
      */
-    public function setOperationId(string $operationId): void
+    public function setAllowedMethods(array $allowedMethods): void
     {
-        $this->operationId = $operationId;
+        $this->allowedMethods = $allowedMethods;
     }
 
     /**
-     * @return SwaggerParameter[]
+     * @param string $name
+     * @return SwaggerMethod|null
      */
-    public function getParameters(): array
+    public function getMethodByName(string $name): ?SwaggerMethod
     {
-        return $this->parameters;
-    }
+        $filter = array_filter($this->methods, function (SwaggerMethod $m) use ($name) {
+            return $m->getName() === $name;
+        });
 
-    /**
-     * @param SwaggerParameter[] $parameters
-     */
-    public function setParameters(array $parameters): void
-    {
-        $this->parameters = $parameters;
-    }
+        if ($filter){
+            return $filter[0];
+        }
 
-    /**
-     * @return SwaggerResponse[]
-     */
-    public function getResponses(): array
-    {
-        return $this->responses;
-    }
-
-    /**
-     * @param SwaggerResponse[] $responses
-     */
-    public function setResponses(array $responses): void
-    {
-        $this->responses = $responses;
+        return null;
     }
 }

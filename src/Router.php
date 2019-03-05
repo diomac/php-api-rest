@@ -14,12 +14,15 @@ namespace Diomac\API;
  */
 class Router
 {
+    /**
+     * @var SwaggerPath[]
+     */
     private $routes;
     private $tags;
     private $cache;
 
     /**
-     * @return array
+     * @return SwaggerPath[]
      */
     public function getRoutes(): array
     {
@@ -27,7 +30,7 @@ class Router
     }
 
     /**
-     * @param array $routes
+     * @param SwaggerPath[] $routes
      */
     public function setRoutes(array $routes): void
     {
@@ -124,6 +127,8 @@ class Router
     private function configRoutes(array $methods, string $class, array $tag = null)
     {
         $annotation = new Annotation();
+        $infoRoutes = [];
+
         foreach ($methods as $m) {
             $s = $m->getDocComment();
             $reqMethod = $annotation->simpleAnnotationToString($s, 'method');
@@ -131,22 +136,66 @@ class Router
             $guards = $annotation->complexAnnotationToArrayJSON($s, 'guard');
 
             if (!$reqMethod || !$route) {
-                return;
+                continue;
             }
-
-            $method = strtoupper($reqMethod);
 
             $r = [
                 'guards' => $guards,
                 'class' => trim($class),
-                'function' => trim($m->getName()),
+                'function' => $m,
                 'annotation' => $s,
                 'tag' => $tag['name'],
                 'code' => $annotation->getCodeFunctionString($m)
             ];
 
-            $this->routes[$route][$method] = $r;
+            $infoRoutes[$route][strtoupper($reqMethod)] = $r;
+        }
 
+        foreach ($infoRoutes as $strPath => $path) {
+
+            $swaggerPath = new SwaggerPath();
+            $swaggerPath->setRoute($strPath);
+            $listMethods = [];
+            $allowedHttpMethods = [];
+
+            foreach ($path as $strMethod => $method) {
+                $allowedHttpMethods[] = $strMethod;
+
+                $sm = new SwaggerMethod();
+
+                $sm->setName($strMethod);
+                $sm->setOperationId('');
+                $sm->setParameters([]);
+                $sm->setResponses([]);
+                $sm->setConsumes('');
+                $sm->setProduces('');
+                $sm->setSummary('');
+                $sm->setDescription('');
+                $sm->setTags([]);
+
+                $routeConfig = new RouteConfig();
+                $routeConfig->setFunction($method['function']);
+                $routeConfig->setResourceClass($method['class']);
+
+                $listGuards = [];
+
+                foreach ($method['guards'] as $g) {
+                    $rcg = new RouteConfigGuard();
+                    $rcg->setGuardClass($g->className);
+                    $rcg->setGuardParams($g->guardParameters);
+                    $listGuards[] = $rcg;
+                }
+
+                $routeConfig->setGuards($listGuards);
+                $sm->setRouteConfig($routeConfig);
+
+                $listMethods[] = $sm;
+            }
+
+            $swaggerPath->setMethods($listMethods);
+            $swaggerPath->setAllowedMethods($allowedHttpMethods);
+
+            $this->routes[] = $swaggerPath;
         }
     }
 }

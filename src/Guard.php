@@ -17,6 +17,9 @@ Interface Guard
     /**
      * @param object|null $params
      * @return bool
+     * @throws UnauthorizedException
+     * @throws ForbiddenException
+     * @throws \Exception
      */
     public function guard(object $params = null) : bool;
 }

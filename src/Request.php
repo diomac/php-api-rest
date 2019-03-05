@@ -66,11 +66,11 @@ class Request
 
     /**
      * Request constructor.
-     * @param $config AppConfiguration
-     * @param $routeData string
+     * @param AppConfiguration $config
+     * @param string $currentRoute
      * @throws \Exception
      */
-    public function __construct(AppConfiguration $config, string $routeData = null)
+    public function __construct(AppConfiguration $config, string $currentRoute = null)
     {
         $baseUrl = $config->getBaseUrl();
         $this->getEnvironmentRoute($baseUrl);
@@ -93,8 +93,8 @@ class Request
 
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();
-        if ($routeData) {
-            $this->getUriParams($routeData);
+        if ($currentRoute) {
+            $this->getUriParams($currentRoute);
         }
     }
 
