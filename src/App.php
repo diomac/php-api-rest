@@ -196,6 +196,7 @@ class App
 
         if ($contentType === 'application/json') {
             $json = json_decode($ex->getMessage());
+            $json->code = $ex->getCode();
             $this->response->setBodyJSON($json);
         } else {
             $this->response->setContentType($contentType);
