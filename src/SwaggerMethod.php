@@ -9,7 +9,7 @@
 namespace Diomac\API;
 
 
-class SwaggerMethod
+class SwaggerMethod implements \JsonSerializable
 {
     /**
      * @var string $name
@@ -306,5 +306,26 @@ class SwaggerMethod
     public function readPHPDocProduces(string $PHPDoc, Annotation $annotation): ?array
     {
         return $annotation->simpleAnnotationToArray($PHPDoc, 'contentType');
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize(): array
+    {
+        return Response::jsonSerialize($this, [
+            'summary' => 'getSummary',
+            'description' => 'getDescription',
+            'operationId' => 'getOperationId',
+            'produces' => 'getProduces',
+            'consumes' => 'getConsumes',
+            'tags' => 'getTags',
+            'parameters' => 'getParameters',
+            'responses' => 'getResponses'
+        ]);
     }
 }

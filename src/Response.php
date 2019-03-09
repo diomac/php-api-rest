@@ -402,8 +402,11 @@ class Response
      */
     public function setBodySwaggerJSON(Swagger $swagger): void
     {
+        $swagger->setPaths($this->routes);
+        $swagger->setConsumes();
+        $swagger->setProduces();
         try {
-            $this->body = json_encode($this->generateSwaggerDoc($swagger), JSON_PRETTY_PRINT);
+            $this->body = json_encode($swagger, JSON_PRETTY_PRINT);
         } catch (\Exception $ex) {
             throw $ex;
         }

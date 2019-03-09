@@ -58,13 +58,9 @@ class ExampleSwaggerDoc extends Swagger
         return $d;
     }
 
-    public function securityDefinitions(): array
+    public function securityDefinitions(): ?array
     {
-        return [
-            'php_api_rest_auth' => [
-                'type' => 'basic',
-            ]
-        ];
+        return null;
     }
 
 

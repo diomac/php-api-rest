@@ -58,7 +58,7 @@ abstract class Swagger implements \JsonSerializable
         $this->host = $this->host();
         $this->basePath = $this->basePath();
         $this->schemes = $this->schemes();
-//        $this->consumes
+//        $this->consumes = $this->configConsumes();
 //        $this->produces
 //        $this->tags
 //        $this->paths
@@ -146,12 +146,9 @@ abstract class Swagger implements \JsonSerializable
         return $this->consumes;
     }
 
-    /**
-     * @param string[] $consumes
-     */
-    public function setConsumes(array $consumes): void
+    public function setConsumes(): void
     {
-        $this->consumes = $consumes;
+        $this->consumes = $this->configConsumes();
     }
 
     /**
@@ -162,12 +159,9 @@ abstract class Swagger implements \JsonSerializable
         return $this->produces;
     }
 
-    /**
-     * @param string[] $produces
-     */
-    public function setProduces(array $produces): void
+    public function setProduces(): void
     {
-        $this->produces = $produces;
+        $this->produces = $this->configProduces();
     }
 
     /**
@@ -176,6 +170,20 @@ abstract class Swagger implements \JsonSerializable
     public function getPaths(): array
     {
         return $this->paths;
+    }
+
+    public function getJsonSerializablePaths(): ?array
+    {
+        $jsonPaths = [];
+
+        foreach ($this->paths as $path) {
+            foreach ($path->getMethods() as $method) {
+                $jsonPaths[$path->getRoute()][$method->getName()] = $method;
+            }
+        }
+
+        return $jsonPaths;
+
     }
 
     /**
@@ -205,7 +213,7 @@ abstract class Swagger implements \JsonSerializable
     /**
      * @return \JsonSerializable
      */
-    public function getSecurityDefinitions(): \JsonSerializable
+    public function getSecurityDefinitions(): ?\JsonSerializable
     {
         return $this->securityDefinitions;
     }
@@ -228,9 +236,37 @@ abstract class Swagger implements \JsonSerializable
 
     public abstract function definitions(): \JsonSerializable;
 
-    public abstract function securityDefinitions(): array;
+    public abstract function securityDefinitions(): ?array;
 
     public abstract function defaultResponsesDescription(): array;
+
+    /**
+     * @return string[]
+     */
+    private function configConsumes(): array
+    {
+        $consumes = [];
+        foreach ($this->getPaths() as $path) {
+            foreach ($path->getMethods() as $method) {
+                $consumes = array_merge($consumes, $method->getConsumes() ?? []);
+            }
+        }
+        return array_unique($consumes);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function configProduces(): array
+    {
+        $produces = [];
+        foreach ($this->getPaths() as $path) {
+            foreach ($path->getMethods() as $method) {
+                $produces = array_merge($produces, $method->getProduces() ?? []);
+            }
+        }
+        return array_unique($produces);
+    }
 
     /**
      * Specify data which should be serialized to JSON
@@ -250,7 +286,7 @@ abstract class Swagger implements \JsonSerializable
             'consumes' => 'getConsumes',
             'produces' => 'getProduces',
             'tags' => 'getTags',
-            'paths' => 'getPaths',
+            'paths' => 'getJsonSerializablePaths',
             'definitions' => 'getDefinitions',
             'securityDefinitions' => 'getSecurityDefinitions'
         ];
