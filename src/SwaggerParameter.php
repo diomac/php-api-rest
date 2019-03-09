@@ -99,7 +99,7 @@ class SwaggerParameter
     /**
      * @return bool
      */
-    public function isRequired(): bool
+    public function isRequired(): ?bool
     {
         return $this->required;
     }
@@ -107,7 +107,7 @@ class SwaggerParameter
     /**
      * @param bool $required
      */
-    public function setRequired(bool $required): void
+    public function setRequired(bool $required = null): void
     {
         $this->required = $required;
     }
@@ -131,7 +131,7 @@ class SwaggerParameter
     /**
      * @return string
      */
-    public function getFormat(): string
+    public function getFormat(): ?string
     {
         return $this->format;
     }
@@ -139,7 +139,7 @@ class SwaggerParameter
     /**
      * @param string $format
      */
-    public function setFormat(string $format): void
+    public function setFormat(string $format = null): void
     {
         $this->format = $format;
     }
@@ -147,7 +147,7 @@ class SwaggerParameter
     /**
      * @return string
      */
-    public function getCollectionFormat(): string
+    public function getCollectionFormat(): ?string
     {
         return $this->collectionFormat;
     }
@@ -155,7 +155,7 @@ class SwaggerParameter
     /**
      * @param string $collectionFormat
      */
-    public function setCollectionFormat(string $collectionFormat): void
+    public function setCollectionFormat(string $collectionFormat = null): void
     {
         $this->collectionFormat = $collectionFormat;
     }
@@ -163,7 +163,7 @@ class SwaggerParameter
     /**
      * @return Object[]
      */
-    public function getItems(): array
+    public function getItems(): ?array
     {
         return $this->items;
     }
@@ -171,7 +171,7 @@ class SwaggerParameter
     /**
      * @param Object[] $items
      */
-    public function setItems(array $items): void
+    public function setItems(array $items = null): void
     {
         $this->items = $items;
     }
@@ -179,7 +179,7 @@ class SwaggerParameter
     /**
      * @return Object
      */
-    public function getSchema(): Object
+    public function getSchema(): ?Object
     {
         return $this->schema;
     }
@@ -187,7 +187,7 @@ class SwaggerParameter
     /**
      * @param Object $schema
      */
-    public function setSchema(Object $schema): void
+    public function setSchema(Object $schema = null): void
     {
         $this->schema = $schema;
     }

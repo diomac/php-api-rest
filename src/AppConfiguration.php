@@ -17,6 +17,10 @@ class AppConfiguration
      * @var string[] $resourceNames - Names of your API resource classes
      */
     private $resourceNames;
+    /**
+     * @var string $swaggerResourceName
+     */
+    private $swaggerResourceName;
 
     /**
      * @var string $baseUrl - Base url of your API
@@ -60,6 +64,23 @@ class AppConfiguration
     public function addResource(string $resourceName): void
     {
         $this->resourceNames[] = $resourceName;
+    }
+
+    /**
+     * @param string $swaggerResourceName
+     */
+    public function setSwaggerResourceName(string $swaggerResourceName): void
+    {
+        $this->addResource($swaggerResourceName);
+        $this->swaggerResourceName = $swaggerResourceName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSwaggerResourceName(): ?string
+    {
+        return $this->swaggerResourceName;
     }
 
     /**

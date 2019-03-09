@@ -59,7 +59,7 @@ class SwaggerResponse
     /**
      * @return Object
      */
-    public function getSchema(): Object
+    public function getSchema(): ?Object
     {
         return $this->schema;
     }
@@ -67,7 +67,7 @@ class SwaggerResponse
     /**
      * @param Object $schema
      */
-    public function setSchema(Object $schema): void
+    public function setSchema(Object $schema = null): void
     {
         $this->schema = $schema;
     }

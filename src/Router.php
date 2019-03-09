@@ -18,8 +18,18 @@ class Router
      * @var SwaggerPath[]
      */
     private $routes;
+    /**
+     * @var string[] $tags
+     */
     private $tags;
+    /**
+     * @var ResourceCacheAPC $cache
+     */
     private $cache;
+    /**
+     * @var AppConfiguration $appConfig
+     */
+    private $appConfig;
 
     /**
      * @return SwaggerPath[]
@@ -60,6 +70,8 @@ class Router
      */
     public function __construct(AppConfiguration $config)
     {
+        $this->appConfig = $config;
+
         $successCache = false;
 
         if ($config->isUseCache()) {
@@ -160,36 +172,7 @@ class Router
 
             foreach ($path as $strMethod => $method) {
                 $allowedHttpMethods[] = $strMethod;
-
-                $sm = new SwaggerMethod();
-
-                $sm->setName($strMethod);
-                $sm->setOperationId('');
-                $sm->setParameters([]);
-                $sm->setResponses([]);
-                $sm->setConsumes('');
-                $sm->setProduces('');
-                $sm->setSummary('');
-                $sm->setDescription('');
-                $sm->setTags([]);
-
-                $routeConfig = new RouteConfig();
-                $routeConfig->setFunction($method['function']);
-                $routeConfig->setResourceClass($method['class']);
-
-                $listGuards = [];
-
-                foreach ($method['guards'] as $g) {
-                    $rcg = new RouteConfigGuard();
-                    $rcg->setGuardClass($g->className);
-                    $rcg->setGuardParams($g->guardParameters);
-                    $listGuards[] = $rcg;
-                }
-
-                $routeConfig->setGuards($listGuards);
-                $sm->setRouteConfig($routeConfig);
-
-                $listMethods[] = $sm;
+                $listMethods[] = $this->buildConfigRoute($strMethod, $method, $annotation);
             }
 
             $swaggerPath->setMethods($listMethods);
@@ -197,5 +180,60 @@ class Router
 
             $this->routes[] = $swaggerPath;
         }
+    }
+
+    /**
+     * @param string $httpMethod
+     * @param array $configMethod
+     * @param Annotation $methodAnnotation
+     * @return SwaggerMethod
+     * @throws \Exception
+     */
+    private function buildConfigRoute(
+        string $httpMethod,
+        array $configMethod,
+        Annotation $methodAnnotation
+    ): SwaggerMethod {
+
+        $sm = new SwaggerMethod();
+        if($this->appConfig->getSwaggerResourceName()){
+            try {
+                $sm->setName($httpMethod);
+                $sm->setSummary($sm->readPHPDocSummary($configMethod['annotation'], $methodAnnotation));
+                $sm->setDescription($sm->readPHPDocDescription($configMethod['annotation'], $methodAnnotation));
+            } catch (\Error $err) {
+                if (strpos($err->getMessage(), 'Diomac\API\SwaggerMethod::set') !== false) {
+                    throw new \Exception('Swagger 2.0 require @method, @summary and @description in all the paths.');
+                }
+            }
+
+            $sm->setOperationId($sm->readPHPDocOperationId($configMethod['annotation'], $methodAnnotation));
+            $sm->setParameters($sm->readPHPDocParameters($configMethod['annotation'], $methodAnnotation));
+            $sm->setResponses($sm->readPHPDocResponses($configMethod['annotation'], $methodAnnotation));
+            $sm->setConsumes($sm->readPHPDocConsumes($configMethod['annotation'], $methodAnnotation));
+            $sm->setProduces($sm->readPHPDocProduces($configMethod['annotation'], $methodAnnotation));
+
+            $sm->setTags([$configMethod['tag']]);
+        }else{
+            $sm->setName($httpMethod);
+        }
+
+        $routeConfig = new RouteConfig();
+        $routeConfig->setFunction($configMethod['function']);
+        $routeConfig->setResourceClass($configMethod['class']);
+
+        $listGuards = [];
+
+        foreach ($configMethod['guards'] as $g) {
+            $rcg = new RouteConfigGuard();
+            $rcg->setGuardClass($g->className);
+            $rcg->setGuardParams($g->guardParameters);
+            $listGuards[] = $rcg;
+        }
+
+        $routeConfig->setGuards($listGuards);
+        $sm->setRouteConfig($routeConfig);
+
+        return $sm;
     }
 }

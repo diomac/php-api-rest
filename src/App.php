@@ -150,21 +150,23 @@ class App
     }
 
     /**
-     * @param $guards
+     * @param RouteConfigGuard[] $guards
      * @return bool
      * @throws UnauthorizedException
      * @throws ForbiddenException
      * @throws \Exception
      */
-    private function execGuards($guards): bool
+    private function execGuards(array $guards): bool
     {
         foreach ($guards as $g) {
-            if (!$g->className) {
+            if (!$g->getGuardClass()) {
                 throw new \Exception('Guard bad configured. ClassName is required.');
             }
-            $guard = Request::createGuard($g->className);
+
+            $guard = Request::createGuard($g->getGuardClass());
+
             try {
-                $guard->guard($g->guardParameters);
+                $guard->guard($g->getGuardParams());
             } catch (UnauthorizedException $ex) {
                 throw $ex;
             } catch (ForbiddenException $ex) {

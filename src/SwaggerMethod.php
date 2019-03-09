@@ -40,11 +40,11 @@ class SwaggerMethod
      */
     private $description;
     /**
-     * @var string $produces
+     * @var string[] $produces
      */
     private $produces;
     /**
-     * @var string $consumes
+     * @var string[] $consumes
      */
     private $consumes;
     /**
@@ -71,7 +71,7 @@ class SwaggerMethod
     /**
      * @return string
      */
-    public function getOperationId(): string
+    public function getOperationId(): ?string
     {
         return $this->operationId;
     }
@@ -79,7 +79,7 @@ class SwaggerMethod
     /**
      * @param string $operationId
      */
-    public function setOperationId(string $operationId): void
+    public function setOperationId(string $operationId = null): void
     {
         $this->operationId = $operationId;
     }
@@ -87,7 +87,7 @@ class SwaggerMethod
     /**
      * @return SwaggerParameter[]
      */
-    public function getParameters(): array
+    public function getParameters(): ?array
     {
         return $this->parameters;
     }
@@ -95,7 +95,7 @@ class SwaggerMethod
     /**
      * @param SwaggerParameter[] $parameters
      */
-    public function setParameters(array $parameters): void
+    public function setParameters(array $parameters = null): void
     {
         $this->parameters = $parameters;
     }
@@ -103,7 +103,7 @@ class SwaggerMethod
     /**
      * @return SwaggerResponse[]
      */
-    public function getResponses(): array
+    public function getResponses(): ?array
     {
         return $this->responses;
     }
@@ -111,7 +111,7 @@ class SwaggerMethod
     /**
      * @param SwaggerResponse[] $responses
      */
-    public function setResponses(array $responses): void
+    public function setResponses(array $responses = null): void
     {
         $this->responses = $responses;
     }
@@ -165,33 +165,33 @@ class SwaggerMethod
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getProduces(): string
+    public function getProduces(): ?array
     {
         return $this->produces;
     }
 
     /**
-     * @param string $produces
+     * @param string[] $produces
      */
-    public function setProduces(string $produces): void
+    public function setProduces(array $produces = null): void
     {
         $this->produces = $produces;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getConsumes(): string
+    public function getConsumes(): ?array
     {
         return $this->consumes;
     }
 
     /**
-     * @param string $consumes
+     * @param string[] $consumes
      */
-    public function setConsumes(string $consumes): void
+    public function setConsumes(array $consumes = null): void
     {
         $this->consumes = $consumes;
     }
@@ -210,5 +210,101 @@ class SwaggerMethod
     public function setRouteConfig(RouteConfig $routeConfig): void
     {
         $this->routeConfig = $routeConfig;
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return string|null
+     */
+    public function readPHPDocSummary(string $PHPDoc, Annotation $annotation): ?string
+    {
+        return $annotation->simpleAnnotationToString($PHPDoc, 'summary');
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return string|null
+     */
+    public function readPHPDocDescription(string $PHPDoc, Annotation $annotation): ?string
+    {
+        return $annotation->simpleAnnotationToString($PHPDoc, 'description');
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return string|null
+     */
+    public function readPHPDocOperationId(string $PHPDoc, Annotation $annotation): ?string
+    {
+        return $annotation->simpleAnnotationToString($PHPDoc, 'operationId');
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return array
+     * @throws \Exception
+     */
+    public function readPHPDocParameters(string $PHPDoc, Annotation $annotation): array
+    {
+        $parameters = [];
+        foreach ($annotation->complexAnnotationToArrayJSON($PHPDoc, 'parameter') as $p) {
+            $sp = new SwaggerParameter();
+            $sp->setName($p->name);
+            $sp->setIn($p->in);
+            $sp->setDescription($p->description);
+            $sp->setRequired($p->required);
+            $sp->setType($p->type);
+            $sp->setFormat($p->format);
+            $sp->setCollectionFormat($p->collectionFormat);
+            $sp->setItems($p->items);
+            $sp->setSchema($p->schema);
+
+            $parameters[] = $sp;
+        }
+        return $parameters;
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return array
+     * @throws \Exception
+     */
+    public function readPHPDocResponses(string $PHPDoc, Annotation $annotation): array
+    {
+        $responses = [];
+        foreach ($annotation->complexAnnotationToArrayJSON($PHPDoc, 'response') as $r) {
+            $sr = new SwaggerResponse();
+            $sr->setCode($r->code);
+            $sr->setDescription($r->description);
+            $sr->setSchema($r->schema);
+
+            $responses[] = $sr;
+        }
+        return $responses;
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return array|null
+     */
+    public function readPHPDocConsumes(string $PHPDoc, Annotation $annotation): ?array
+    {
+        return $annotation->simpleAnnotationToArray($PHPDoc, 'consumeType');
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return array|null
+     */
+    public function readPHPDocProduces(string $PHPDoc, Annotation $annotation): ?array
+    {
+        return $annotation->simpleAnnotationToArray($PHPDoc, 'contentType');
     }
 }

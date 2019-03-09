@@ -10,6 +10,7 @@ namespace example\v1;
 
 use Diomac\API\Resource;
 use Diomac\API\Response;
+use example\v1\doc\Pet;
 
 /**
  * Class ExampleResource
@@ -34,17 +35,15 @@ class ExampleResource extends Resource
      * @consumeType text/plain; charset=utf-8
      * @response(
      *     code=401,
-     *     description="Unauthorized",
-     *     @schema(
-     *     type="array",
-     *     @items(
-     *     $ref="#/definitions/pet"
-     * )
-     * )
+     *     description="Unauthorized"
      * )
      * @response(
      *     code=200,
-     *     description="Unauthorized"
+     *     description="Success",
+     *     @schema(
+     *     type="array",
+     *     @items($ref="#/definitions/pet")
+     * )
      * )
      * @parameter(
      *     in="path",
@@ -70,8 +69,9 @@ class ExampleResource extends Resource
      */
     function getUsrData(): Response
     {
+        $pet = new Pet();
         $this->response->setCode(Response::OK);
-        $this->response->setBodyJSON($this->request->getParams());
+        $this->response->setBodyJSON($pet);
         return $this->response;
     }
 }
