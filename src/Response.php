@@ -8,6 +8,8 @@
 
 namespace Diomac\API;
 
+use Diomac\API\swagger\Swagger;
+
 /**
  * Class Response
  * @package Diomac\API

@@ -8,6 +8,9 @@
 
 namespace Diomac\API;
 
+use Diomac\API\swagger\SwaggerMethod;
+use Diomac\API\swagger\SwaggerPath;
+
 /**
  * Class Router
  * @package Diomac\API

@@ -6,8 +6,10 @@
  * Time: 15:45
  */
 
-namespace Diomac\API;
+namespace Diomac\API\swagger;
 
+
+use Diomac\API\Response;
 
 abstract class Swagger implements \JsonSerializable
 {
@@ -45,9 +47,34 @@ abstract class Swagger implements \JsonSerializable
      */
     protected $definitions;
     /**
+     * @var \JsonSerializable $parameters
+     */
+    protected $parameters;
+    /**
+     * @var SwaggerResponse[] $responses
+     */
+    protected $responses;
+    /**
      * @var \JsonSerializable $securityDefinitions
      */
     protected $securityDefinitions;
+    /**
+     * @var Object $security
+     */
+    protected $security;
+    /**
+     * @var Object[] $tags
+     *
+     */
+    protected $tags;
+    /**
+     * @var Object $externalDocs
+     * @externalDocs(
+     *     description="A short description of the target documentation. GFM syntax can be used for rich text representation.",
+     *     url="Required. The URL for the target documentation. Value MUST be in the format of a URL."
+     * )
+     */
+    protected $externalDocs;
 
     /**
      * Swagger constructor.
@@ -58,10 +85,6 @@ abstract class Swagger implements \JsonSerializable
         $this->host = $this->host();
         $this->basePath = $this->basePath();
         $this->schemes = $this->schemes();
-//        $this->consumes = $this->configConsumes();
-//        $this->produces
-//        $this->tags
-//        $this->paths
         $this->definitions = $this->definitions();
         $this->securityDefinitions = $this->securityDefinitions();
     }
@@ -213,6 +236,38 @@ abstract class Swagger implements \JsonSerializable
     /**
      * @return \JsonSerializable
      */
+    public function getParameters(): \JsonSerializable
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param \JsonSerializable $parameters
+     */
+    public function setParameters(\JsonSerializable $parameters): void
+    {
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * @return SwaggerResponse[]
+     */
+    public function getResponses(): array
+    {
+        return $this->responses;
+    }
+
+    /**
+     * @param SwaggerResponse[] $responses
+     */
+    public function setResponses(array $responses): void
+    {
+        $this->responses = $responses;
+    }
+
+    /**
+     * @return \JsonSerializable
+     */
     public function getSecurityDefinitions(): ?\JsonSerializable
     {
         return $this->securityDefinitions;
@@ -224,6 +279,54 @@ abstract class Swagger implements \JsonSerializable
     public function setSecurityDefinitions(\JsonSerializable $securityDefinitions): void
     {
         $this->securityDefinitions = $securityDefinitions;
+    }
+
+    /**
+     * @return Object
+     */
+    public function getSecurity(): Object
+    {
+        return $this->security;
+    }
+
+    /**
+     * @param Object $security
+     */
+    public function setSecurity(Object $security): void
+    {
+        $this->security = $security;
+    }
+
+    /**
+     * @return Object[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Object[] $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return Object
+     */
+    public function getExternalDocs(): Object
+    {
+        return $this->externalDocs;
+    }
+
+    /**
+     * @param Object $externalDocs
+     */
+    public function setExternalDocs(Object $externalDocs): void
+    {
+        $this->externalDocs = $externalDocs;
     }
 
     public abstract function info(): SwaggerInfo;

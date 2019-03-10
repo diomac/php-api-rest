@@ -15,13 +15,11 @@ use example\v1\doc\Pet;
 /**
  * Class ExampleResource
  * @package example\v1
- * @resourceName Example API Doc Swagger
- * @resourceDescription Example API Doc Swagger (tag)
- * @externalDocs(
- *     description="External docs example",
- *     url="http://example_php_api_rest.com"
+ * @tag(
+ *     name="Example API Doc Swagger",
+ *     description="Example API Doc Swagger",
+ *     @externalDocs(description="External docs example", url="http://example_php_api_rest.com")
  * )
- * @teste()
  */
 class ExampleResource extends Resource
 {

@@ -8,9 +8,9 @@
 
 namespace example\v1;
 
-use Diomac\API\Swagger;
+use Diomac\API\swagger\Swagger;
 use Diomac\API\Response;
-use Diomac\API\SwaggerInfo;
+use Diomac\API\swagger\SwaggerInfo;
 use example\v1\doc\Definitions;
 use example\v1\doc\NewPet;
 use example\v1\doc\Pet;
@@ -50,6 +50,10 @@ class ExampleSwaggerDoc extends Swagger
         return ['http', 'https'];
     }
 
+    /**
+     * @return \JsonSerializable
+     * @throws \Exception
+     */
     public function definitions(): \JsonSerializable
     {
         $d = new Definitions();

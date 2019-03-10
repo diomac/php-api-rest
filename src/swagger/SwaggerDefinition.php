@@ -6,8 +6,11 @@
  * Time: 14:51
  */
 
-namespace Diomac\API;
+namespace Diomac\API\swagger;
 
+
+use Diomac\API\Annotation;
+use Diomac\API\Response;
 
 abstract class SwaggerDefinition implements \JsonSerializable
 {

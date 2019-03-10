@@ -6,8 +6,10 @@
  * Time: 13:40
  */
 
-namespace Diomac\API;
+namespace Diomac\API\swagger;
 
+
+use Diomac\API\Response;
 
 class SwaggerInfo implements \JsonSerializable
 {

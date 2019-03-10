@@ -6,7 +6,7 @@
  * Time: 14:01
  */
 
-namespace Diomac\API;
+namespace Diomac\API\swagger;
 
 
 class SwaggerPath

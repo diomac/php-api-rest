@@ -13,7 +13,7 @@ namespace example\v1\doc;
  * @package example\v1\doc
  * @swaggerType object
  */
-class NewPet extends \Diomac\API\SwaggerDefinition
+class NewPet extends \Diomac\API\swagger\SwaggerDefinition
 {
     /**
      * @swaggerRequired

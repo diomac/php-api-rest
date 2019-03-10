@@ -6,27 +6,15 @@
  * Time: 14:53
  */
 
-namespace Diomac\API;
+namespace Diomac\API\swagger;
 
+
+use Diomac\API\Annotation;
+use Diomac\API\Response;
+use Diomac\API\RouteConfig;
 
 class SwaggerMethod implements \JsonSerializable
 {
-    /**
-     * @var string $name
-     */
-    private $name;
-    /**
-     * @var string $operationId
-     */
-    private $operationId;
-    /**
-     * @var SwaggerParameter[] $parameters
-     */
-    private $parameters;
-    /**
-     * @var SwaggerResponse[] $responses
-     */
-    private $responses;
     /**
      * @var string[] $tags
      */
@@ -40,81 +28,53 @@ class SwaggerMethod implements \JsonSerializable
      */
     private $description;
     /**
-     * @var string[] $produces
+     * @var Object $externalDocs
+     * @externalDocs(
+     *     description="A short description of the target documentation. GFM syntax can be used for rich text representation.",
+     *     url="Required. The URL for the target documentation. Value MUST be in the format of a URL."
+     * )
      */
-    private $produces;
+    private $externalDocs;
+    /**
+     * @var string $operationId
+     */
+    private $operationId;
     /**
      * @var string[] $consumes
      */
     private $consumes;
     /**
+     * @var string[] $produces
+     */
+    private $produces;
+    /**
+     * @var SwaggerParameter[] $parameters
+     */
+    private $parameters;
+    /**
+     * @var SwaggerResponse[] $responses
+     */
+    private $responses;
+    /**
+     * @var string[] $schemes
+     */
+    private $schemes;
+    /**
+     * @var boolean $deprecated
+     */
+    private $deprecated;
+    /**
+     * @var Object $security
+     */
+    private $security;
+    /**
+     * @var string $name
+     */
+    private $name;
+    /**
      * @var RouteConfig $routeConfig
      */
     private $routeConfig;
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOperationId(): ?string
-    {
-        return $this->operationId;
-    }
-
-    /**
-     * @param string $operationId
-     */
-    public function setOperationId(string $operationId = null): void
-    {
-        $this->operationId = $operationId;
-    }
-
-    /**
-     * @return SwaggerParameter[]
-     */
-    public function getParameters(): ?array
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param SwaggerParameter[] $parameters
-     */
-    public function setParameters(array $parameters = null): void
-    {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * @return SwaggerResponse[]
-     */
-    public function getResponses(): ?array
-    {
-        return $this->responses;
-    }
-
-    /**
-     * @param SwaggerResponse[] $responses
-     */
-    public function setResponses(array $responses = null): void
-    {
-        $this->responses = $responses;
-    }
 
     /**
      * @return string[]
@@ -165,19 +125,35 @@ class SwaggerMethod implements \JsonSerializable
     }
 
     /**
-     * @return string[]
+     * @return Object
      */
-    public function getProduces(): ?array
+    public function getExternalDocs(): Object
     {
-        return $this->produces;
+        return $this->externalDocs;
     }
 
     /**
-     * @param string[] $produces
+     * @param Object $externalDocs
      */
-    public function setProduces(array $produces = null): void
+    public function setExternalDocs(Object $externalDocs): void
     {
-        $this->produces = $produces;
+        $this->externalDocs = $externalDocs;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOperationId(): ?string
+    {
+        return $this->operationId;
+    }
+
+    /**
+     * @param string $operationId
+     */
+    public function setOperationId(string $operationId = null): void
+    {
+        $this->operationId = $operationId;
     }
 
     /**
@@ -194,6 +170,118 @@ class SwaggerMethod implements \JsonSerializable
     public function setConsumes(array $consumes = null): void
     {
         $this->consumes = $consumes;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getProduces(): ?array
+    {
+        return $this->produces;
+    }
+
+    /**
+     * @param string[] $produces
+     */
+    public function setProduces(array $produces = null): void
+    {
+        $this->produces = $produces;
+    }
+
+    /**
+     * @return SwaggerParameter[]
+     */
+    public function getParameters(): ?array
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param SwaggerParameter[] $parameters
+     */
+    public function setParameters(array $parameters = null): void
+    {
+        $this->parameters = $parameters;
+    }
+
+    /**
+     * @return SwaggerResponse[]
+     */
+    public function getResponses(): ?array
+    {
+        return $this->responses;
+    }
+
+    /**
+     * @param SwaggerResponse[] $responses
+     */
+    public function setResponses(array $responses = null): void
+    {
+        $this->responses = $responses;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSchemes(): array
+    {
+        return $this->schemes;
+    }
+
+    /**
+     * @param string[] $schemes
+     */
+    public function setSchemes(array $schemes): void
+    {
+        $this->schemes = $schemes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeprecated(): bool
+    {
+        return $this->deprecated;
+    }
+
+    /**
+     * @param bool $deprecated
+     */
+    public function setDeprecated(bool $deprecated): void
+    {
+        $this->deprecated = $deprecated;
+    }
+
+    /**
+     * @return Object
+     */
+    public function getSecurity(): Object
+    {
+        return $this->security;
+    }
+
+    /**
+     * @param Object $security
+     */
+    public function setSecurity(Object $security): void
+    {
+        $this->security = $security;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 
     /**

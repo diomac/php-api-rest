@@ -6,8 +6,10 @@
  * Time: 14:04
  */
 
-namespace Diomac\API;
+namespace Diomac\API\swagger;
 
+
+use Diomac\API\Response;
 
 class SwaggerParameter implements \JsonSerializable
 {
@@ -35,6 +37,10 @@ class SwaggerParameter implements \JsonSerializable
      * @var string $format
      */
     private $format;
+    /**
+     * @var boolean $allowEmptyValue
+     */
+    private $allowEmptyValue;
     /**
      * @var string $collectionFormat
      */
@@ -145,6 +151,22 @@ class SwaggerParameter implements \JsonSerializable
     }
 
     /**
+     * @return bool
+     */
+    public function isAllowEmptyValue(): bool
+    {
+        return $this->allowEmptyValue;
+    }
+
+    /**
+     * @param bool $allowEmptyValue
+     */
+    public function setAllowEmptyValue(bool $allowEmptyValue): void
+    {
+        $this->allowEmptyValue = $allowEmptyValue;
+    }
+
+    /**
      * @return string
      */
     public function getCollectionFormat(): ?string
@@ -208,6 +230,7 @@ class SwaggerParameter implements \JsonSerializable
             'required' => 'isRequired',
             'type' => 'getType',
             'format' => 'getFormat',
+            'allowEmptyValue' => 'getAllowEmptyValue',
             'collectionFormat' => 'getCollectionFormat',
             'items' => 'getItems',
             'schema' => 'getSchema'

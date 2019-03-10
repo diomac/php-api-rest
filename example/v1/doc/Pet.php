@@ -8,7 +8,7 @@
 
 namespace example\v1\doc;
 
-use Diomac\API\SwaggerDefinition;
+use Diomac\API\swagger\SwaggerDefinition;
 
 /**
  * Class Pet
