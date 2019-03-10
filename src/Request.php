@@ -50,10 +50,16 @@ class Request
     }
 
     /**
+     * @param Swagger|null $swagger
+     * @param \JsonSerializable|null $definition
      * @return object
+     * @throws BadRequestException
      */
-    public function getData(): object
+    public function getData(Swagger $swagger = null, \JsonSerializable $definition = null): object
     {
+        if ($swagger && $definition) {
+            $this->checkData(json_decode(json_encode($definition)), $swagger);
+        }
         return $this->data;
     }
 

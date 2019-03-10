@@ -143,8 +143,7 @@ class Router
                 'class' => trim($class),
                 'function' => $m,
                 'annotation' => $s,
-                'tag' => $tag->name,
-                'code' => $annotation->getCodeFunctionString($m)
+                'tag' => $tag->name
             ];
 
             $infoRoutes[$route][strtoupper($reqMethod)] = $r;

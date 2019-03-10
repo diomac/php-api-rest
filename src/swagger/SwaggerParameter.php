@@ -46,11 +46,11 @@ class SwaggerParameter implements \JsonSerializable
      */
     private $collectionFormat;
     /**
-     * @var Object[] $items
+     * @var object[] $items
      */
     private $items;
     /**
-     * @var Object $schema
+     * @var object $schema
      */
     private $schema;
 
@@ -183,7 +183,7 @@ class SwaggerParameter implements \JsonSerializable
     }
 
     /**
-     * @return Object[]
+     * @return object[]
      */
     public function getItems(): ?array
     {
@@ -191,7 +191,7 @@ class SwaggerParameter implements \JsonSerializable
     }
 
     /**
-     * @param Object[] $items
+     * @param object[] $items
      */
     public function setItems(array $items = null): void
     {
@@ -199,17 +199,17 @@ class SwaggerParameter implements \JsonSerializable
     }
 
     /**
-     * @return Object
+     * @return object
      */
-    public function getSchema(): ?Object
+    public function getSchema(): ?object
     {
         return $this->schema;
     }
 
     /**
-     * @param Object $schema
+     * @param object $schema
      */
-    public function setSchema(Object $schema = null): void
+    public function setSchema(object $schema = null): void
     {
         $this->schema = $schema;
     }

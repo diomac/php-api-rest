@@ -18,6 +18,10 @@ class ExampleSwaggerJson extends Resource
      * @route /swagger.json
      * @summary Example api rest php
      * @description A example api rest php
+     * @response(
+     *     code="default",
+     *     description="Internal Server Error"
+     * )
      * @throws \Exception
      */
     function swaggerJson()

@@ -154,22 +154,6 @@ class Annotation extends \ReflectionClass
     }
 
     /**
-     * @param \ReflectionMethod $func
-     * @return string
-     */
-    public function getCodeFunctionString(\ReflectionMethod $func): string
-    {
-        $filename = $func->getFileName();
-        $start_line = $func->getStartLine() - 1;
-        $end_line = $func->getEndLine();
-        $length = $end_line - $start_line;
-
-        $source = file($filename);
-
-        return implode("", array_slice($source, $start_line, $length));
-    }
-
-    /**
      * @param string $annotation
      * @param string $tag
      * @return array

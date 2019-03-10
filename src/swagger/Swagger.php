@@ -59,16 +59,16 @@ abstract class Swagger implements \JsonSerializable
      */
     protected $securityDefinitions;
     /**
-     * @var Object $security
+     * @var object $security
      */
     protected $security;
     /**
-     * @var Object[] $tags
+     * @var object[] $tags
      *
      */
     protected $tags;
     /**
-     * @var Object $externalDocs
+     * @var object $externalDocs
      * @externalDocs(
      *     description="A short description of the target documentation. GFM syntax can be used for rich text representation.",
      *     url="Required. The URL for the target documentation. Value MUST be in the format of a URL."
@@ -205,7 +205,7 @@ abstract class Swagger implements \JsonSerializable
 
         foreach ($this->paths as $path) {
             foreach ($path->getMethods() as $method) {
-                $jsonPaths[$path->getRoute()][$method->getName()] = $method;
+                $jsonPaths[$path->getRoute()][strtolower($method->getName())] = $method;
             }
         }
 
@@ -302,7 +302,7 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @return Object[]
+     * @return object[]
      */
     public function getTags(): array
     {
@@ -310,7 +310,7 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @param Object[] $tags
+     * @param object[] $tags
      */
     public function setTags(array $tags): void
     {

@@ -28,7 +28,7 @@ class SwaggerMethod implements \JsonSerializable
      */
     private $description;
     /**
-     * @var Object $externalDocs
+     * @var object $externalDocs
      * @externalDocs(
      *     description="A short description of the target documentation. GFM syntax can be used for rich text representation.",
      *     url="Required. The URL for the target documentation. Value MUST be in the format of a URL."
@@ -64,7 +64,7 @@ class SwaggerMethod implements \JsonSerializable
      */
     private $deprecated;
     /**
-     * @var Object $security
+     * @var object $security
      */
     private $security;
     /**
@@ -125,17 +125,17 @@ class SwaggerMethod implements \JsonSerializable
     }
 
     /**
-     * @return Object
+     * @return object
      */
-    public function getExternalDocs(): Object
+    public function getExternalDocs(): object
     {
         return $this->externalDocs;
     }
 
     /**
-     * @param Object $externalDocs
+     * @param object $externalDocs
      */
-    public function setExternalDocs(Object $externalDocs): void
+    public function setExternalDocs(object $externalDocs): void
     {
         $this->externalDocs = $externalDocs;
     }
@@ -267,17 +267,17 @@ class SwaggerMethod implements \JsonSerializable
     }
 
     /**
-     * @return Object
+     * @return object
      */
-    public function getSecurity(): Object
+    public function getSecurity(): object
     {
         return $this->security;
     }
 
     /**
-     * @param Object $security
+     * @param object $security
      */
-    public function setSecurity(Object $security): void
+    public function setSecurity(object $security): void
     {
         $this->security = $security;
     }

@@ -13,16 +13,31 @@ if (!@include('../../../autoload.php')) {
 use Diomac\API\App;
 use Diomac\API\AppConfiguration;
 
+/**
+ * Initializing API configuration
+ */
 $config = new AppConfiguration();
 $config->setBaseUrl('/php-api-rest/vendor/example/v1');
 
+/**
+ * Adding resources classes
+ */
 $config->addResource(\example\v1\ExampleResource::class);
 $config->addResource(\example\core\secure\ExampleGuard::class);
 
+/**
+ * Adding swagger doc class
+ */
 $config->setSwaggerResourceName(\example\v1\ExampleSwaggerJson::class);
 
+/**
+ * Setting contentType for Exceptions
+ */
 $config->setContentTypeExceptions('application/json');
 
+/**
+ * Setting use cache
+ */
 $config->setUseCache(false);
 
 try{

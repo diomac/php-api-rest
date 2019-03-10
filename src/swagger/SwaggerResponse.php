@@ -22,7 +22,7 @@ class SwaggerResponse implements \JsonSerializable
      */
     private $description;
     /**
-     * @var Object $schema
+     * @var object $schema
      */
     private $schema;
 
@@ -59,17 +59,17 @@ class SwaggerResponse implements \JsonSerializable
     }
 
     /**
-     * @return Object
+     * @return object
      */
-    public function getSchema(): ?Object
+    public function getSchema(): ?object
     {
         return $this->schema;
     }
 
     /**
-     * @param Object $schema
+     * @param object $schema
      */
-    public function setSchema(Object $schema = null): void
+    public function setSchema(object $schema = null): void
     {
         $this->schema = $schema;
     }
