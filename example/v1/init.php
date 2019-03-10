@@ -21,13 +21,14 @@ $config->addResource(\example\core\secure\ExampleGuard::class);
 
 $config->setSwaggerResourceName(\example\v1\ExampleSwaggerJson::class);
 
-//$config->setContentTypeExceptions('application/json');
+$config->setContentTypeExceptions('application/json');
 
 $config->setUseCache(false);
 
-try {
+try{
     $app = new App($config);
     $app->exec();
-} catch (\Exception $ex) {
-    dd($ex);
+}catch (Exception $ex){
+
 }
+

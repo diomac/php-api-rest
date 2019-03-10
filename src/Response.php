@@ -341,6 +341,10 @@ class Response
      * @var array $tags
      */
     private $tags;
+    /**
+     * @var AppConfiguration $appConfig
+     */
+    private $appConfig;
 
     /**
      * @var array
@@ -349,13 +353,15 @@ class Response
 
     /**
      * Response constructor.
-     * @param array $routes
-     * @param array $tags
+     * @param array|null $routes
+     * @param array|null $tags
+     * @param AppConfiguration|null $config
      */
-    public function __construct(array $routes, array $tags)
+    public function __construct(array $routes = null, array $tags = null, AppConfiguration $config = null)
     {
         $this->routes = $routes;
         $this->tags = $tags;
+        $this->appConfig = $config;
     }
 
     /**
@@ -404,7 +410,9 @@ class Response
      */
     public function setBodySwaggerJSON(Swagger $swagger): void
     {
+        $swagger->setBasePath($this->appConfig->getBaseUrl());
         $swagger->setPaths($this->routes);
+        $swagger->setTags($this->tags);
         $swagger->setConsumes();
         $swagger->setProduces();
         try {
@@ -420,8 +428,13 @@ class Response
      */
     public function setBodySwaggerYAML(Swagger $swagger): void
     {
+        $swagger->setBasePath($this->appConfig->getBaseUrl());
+        $swagger->setPaths($this->routes);
+        $swagger->setTags($this->tags);
+        $swagger->setConsumes();
+        $swagger->setProduces();
         try {
-            $this->body = yaml_emit($this->generateSwaggerDoc($swagger));
+            $this->body = yaml_emit($swagger);
         } catch (\Exception $ex) {
             throw $ex;
         } catch (\Error $err) {
@@ -429,119 +442,6 @@ class Response
                 throw new \Exception('Yaml not configured. Check http://pecl.php.net/package/yaml.');
             }
         }
-    }
-
-    /**
-     * @param Swagger $swagger
-     * @return array
-     * @throws \ReflectionException
-     */
-    private function generateSwaggerDoc(Swagger $swagger): array
-    {
-        $json = [
-            'swagger' => Swagger::getVersion(),
-            'info' => $swagger->info(),
-            'host' => $swagger->host(),
-            'basePath' => $swagger->basePath(),
-            'schemes' => $swagger->schemes(),
-            'tags' => $this->tags,
-            'paths' => $this->getRoutesDoc($swagger),
-            'definitions' => $swagger->definitions(),
-            'securityDefinitions' => $swagger->securityDefinitions()
-        ];
-
-        return $json;
-    }
-
-    /**
-     * @param $swagger
-     * @return array
-     * @throws \ReflectionException
-     */
-    private function getRoutesDoc($swagger)
-    {
-        foreach ($this->routes as $k => $r) {
-            foreach ($r as $j => $m) {
-                unset($this->routes[$k][$j]['guards']);
-                unset($this->routes[$k][$j]['class']);
-                unset($this->routes[$k][$j]['function']);
-                $this->routes[$k][$j] = $this->setRouteDoc($this->routes[$k][$j], $swagger);
-                unset($this->routes[$k][$j]['annotation']);
-                unset($this->routes[$k][$j]['tag']);
-                unset($this->routes[$k][$j]['code']);
-
-                $this->routes[$k][strtolower($j)] = $this->routes[$k][$j];
-                unset($this->routes[$k][$j]);
-            }
-        }
-        return $this->routes;
-    }
-
-    /**
-     * @param $route
-     * @param $swagger
-     * @return mixed
-     * @throws \ReflectionException
-     * @throws \Exception
-     */
-    private function setRouteDoc($route, $swagger)
-    {
-        $annotation = new Annotation();
-        $str = $route['annotation'];
-        $contentTypes = $annotation->simpleAnnotationToArray($str, 'contentType', 'trim');
-        $consumeTypes = $annotation->simpleAnnotationToArray($str, 'consumeType', 'trim');
-        $parameters = $annotation->complexAnnotationToArrayJSON($str, 'parameter', function ($value) {
-            if (is_object($value)) {
-                $value->required = property_exists($value, 'required') ? $value->required : true;
-                if (property_exists($value, 'definitionId')) {
-                    $schema = new \stdClass();
-                    $schema->{'$ref'} = '#/definitions/' . $value->definitionId;
-                    $value->schema = $schema;
-                    unset($value->definitionId);
-                }
-                return $value;
-            } else {
-                return 'Error in documentation';
-            }
-        });
-        $summary = $annotation->simpleAnnotationToString($str, 'summary');
-        $description = $annotation->simpleAnnotationToString($str, 'description');
-        $operationId = $annotation->simpleAnnotationToString($str, 'operationId');
-        $responses = $annotation->responses($route['code'], $str, $swagger);
-
-        if (isset($route['tag'])) {
-            $route['tags'] = [$route['tag']];
-        }
-
-        if ($summary) {
-            $route['summary'] = $summary;
-        }
-
-        if ($description) {
-            $route['description'] = $description;
-        }
-
-        if ($operationId) {
-            $route['operationId'] = $operationId;
-        }
-
-        if ($contentTypes) {
-            $route['produces'] = $contentTypes;
-        }
-
-        if ($consumeTypes) {
-            $route['consumes'] = $consumeTypes;
-        }
-
-        if ($parameters) {
-            $route['parameters'] = $parameters;
-        }
-
-        if ($responses) {
-            $route['responses'] = $responses;
-        }
-
-        return $route;
     }
 
     /**
@@ -588,10 +488,14 @@ class Response
      *
      * @param \JsonSerializable $object
      * @param array $indexMethods
+     * @param bool $showNullValues
      * @return array
      */
-    public static function jsonSerialize(\JsonSerializable $object, array $indexMethods): array
-    {
+    public static function jsonSerialize(
+        \JsonSerializable $object,
+        array $indexMethods,
+        bool $showNullValues = false
+    ): array {
         $properties = self::$fields[get_class($object)] ?? array_keys($indexMethods);
         $json = [];
 
@@ -603,7 +507,10 @@ class Response
 
             if (method_exists($object, $indexMethods[$i])) {
                 $m = $indexMethods[$i];
-                $json[$prop] = $object->$m();
+                $value = $object->$m();
+                if ($value || $showNullValues) {
+                    $json[$prop] = $object->$m();
+                }
             }
         }
 

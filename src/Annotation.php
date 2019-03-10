@@ -8,8 +8,6 @@
 
 namespace Diomac\API;
 
-use Diomac\API\swagger\Swagger;
-
 /**
  * Class Annotation
  * @package Diomac\API
@@ -101,7 +99,7 @@ class Annotation extends \ReflectionClass
      * @return mixed|null|\stdClass
      * @throws \Exception
      */
-    public function complexAnnotationToJSON(string $annotation, string $tag): \stdClass
+    public function complexAnnotationToJSON(string $annotation, string $tag): ?\stdClass
     {
 
         $pregResult = null;
@@ -119,7 +117,10 @@ class Annotation extends \ReflectionClass
         $std = json_decode(preg_replace('/@|\s/', '', $json));
 
         if (!$std) {
-            throw new \Exception('Bad documentation. Check PHPDoc in tag ' . $tag . '.');
+            throw new \Exception(
+                'Bad documentation. Check PHPDoc @' . $tag,
+                Response::INTERNAL_SERVER_ERROR
+            );
         }
 
         return $std;
@@ -131,7 +132,7 @@ class Annotation extends \ReflectionClass
      * @param string|null $closePar
      * @return array|null
      */
-    private function pregMatchComplexAnnotation(string $annotation, string $tag, string $closePar = null): array
+    private function pregMatchComplexAnnotation(string $annotation, string $tag, string $closePar = null): ?array
     {
         $pattern = '/@' . $tag . '(\([^)]*\)' . $closePar . ')/';
 
@@ -144,65 +145,12 @@ class Annotation extends \ReflectionClass
         $open = substr_count($pregResult[0], '(');
         $close = substr_count($pregResult[0], ')');
 
-        if ($open > $close) {
+        if ($open > $close && !$closePar) {
             $closePar = str_repeat('[^)]*\)', $open - $close);
             $pregResult = $this->pregMatchComplexAnnotation($annotation, $tag, $closePar);
         }
 
         return $pregResult;
-    }
-
-    /**
-     * @param string $code
-     * @param string $annotationStr
-     * @param Swagger $swagger
-     * @return \stdClass
-     * @throws \ReflectionException
-     * @throws \Exception
-     */
-    public function responses(string $code, string $annotationStr, Swagger $swagger): \stdClass
-    {
-        $responses = new \stdClass();
-        $pregResult = null;
-        $responsesDoc = $this->complexAnnotationToArrayJSON($annotationStr, 'response');
-
-        if (!$responsesDoc) {
-            $responsesDoc = [];
-        }
-
-        foreach ($responsesDoc as $res) {
-            $obj = new \stdClass();
-            $obj->description = $res->description;
-            $responses->{$res->code} = $obj;
-        }
-
-        preg_match_all('/Response::([A-Z\_]+)/', $code, $pregResult);
-
-        $reflection = new Annotation(Response::class);
-
-        if ($pregResult) {
-            foreach ($pregResult[1] as $res) {
-                $obj = new \stdClass();
-                $code = $reflection->getConstant($res);
-
-                if (isset($responses->{$code})) {
-                    continue;
-                }
-
-                $constant = $reflection->getReflectionConstant($res);
-
-                $swaggerDesc = $swagger->defaultResponsesDescription();
-
-                if (isset($swaggerDesc[$code])) {
-                    $obj->description = $swaggerDesc[$code];
-                } else {
-                    $obj->description = trim(preg_replace(['/\s\s+/', '/\/\*+/'], '', $constant->getDocComment()));
-                }
-                $responses->{$code} = $obj;
-            }
-        }
-
-        return $responses;
     }
 
     /**

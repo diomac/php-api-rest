@@ -79,7 +79,7 @@ class SwaggerMethod implements \JsonSerializable
     /**
      * @return string[]
      */
-    public function getTags(): array
+    public function getTags(): ?array
     {
         return $this->tags;
     }
@@ -210,6 +210,20 @@ class SwaggerMethod implements \JsonSerializable
     public function getResponses(): ?array
     {
         return $this->responses;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getJsonSerializableResponses(): ?array
+    {
+        $jsonResponses = [];
+
+        foreach ($this->responses as $res) {
+                $jsonResponses[$res->getCode()] = $res;
+        }
+
+        return $jsonResponses;
     }
 
     /**
@@ -413,7 +427,7 @@ class SwaggerMethod implements \JsonSerializable
             'consumes' => 'getConsumes',
             'tags' => 'getTags',
             'parameters' => 'getParameters',
-            'responses' => 'getResponses'
+            'responses' => 'getJsonSerializableResponses'
         ]);
     }
 }

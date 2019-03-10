@@ -70,6 +70,7 @@ class Router
      * Router constructor.
      * @param $config AppConfiguration
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function __construct(AppConfiguration $config)
     {
@@ -101,45 +102,28 @@ class Router
     }
 
     /**
-     * @param $doc
-     * @return array|null
+     * @param string|null $doc
+     * @return \stdClass|null
      * @throws \ReflectionException
      * @throws \Exception
      */
-    private function configTag($doc)
+    private function configTag(string $doc = null): ?\stdClass
     {
         if (!$doc) {
             return null;
         }
         $annotation = new Annotation();
-        $name = $annotation->simpleAnnotationToString($doc, 'resourceName');
-        $description = $annotation->simpleAnnotationToString($doc, 'resourceDescription');
-        $externalDocs = $annotation->complexAnnotationToJSON($doc, 'externalDocs');
-
-        if (!$name || !$description) {
-            return null;
-        }
-
-        $tag = [
-            'name' => $name,
-            'description' => $description
-        ];
-
-        if ($externalDocs) {
-            $tag['externalDocs'] = $externalDocs;
-        }
-
-        return $tag;
+        return $annotation->complexAnnotationToJSON($doc, 'tag');
     }
 
     /**
      * @param \ReflectionMethod[] $methods
      * @param string $class
-     * @param array|null $tag
+     * @param \stdClass|null $tag
      * @throws \ReflectionException
      * @throws \Exception
      */
-    private function configRoutes(array $methods, string $class, array $tag = null)
+    private function configRoutes(array $methods, string $class, \stdClass $tag = null)
     {
         $annotation = new Annotation();
         $infoRoutes = [];
@@ -159,7 +143,7 @@ class Router
                 'class' => trim($class),
                 'function' => $m,
                 'annotation' => $s,
-                'tag' => $tag['name'],
+                'tag' => $tag->name,
                 'code' => $annotation->getCodeFunctionString($m)
             ];
 
@@ -199,7 +183,7 @@ class Router
     ): SwaggerMethod {
 
         $sm = new SwaggerMethod();
-        if($this->appConfig->getSwaggerResourceName()){
+        if ($this->appConfig->getSwaggerResourceName()) {
             try {
                 $sm->setName($httpMethod);
                 $sm->setSummary($sm->readPHPDocSummary($configMethod['annotation'], $methodAnnotation));
@@ -216,8 +200,10 @@ class Router
             $sm->setConsumes($sm->readPHPDocConsumes($configMethod['annotation'], $methodAnnotation));
             $sm->setProduces($sm->readPHPDocProduces($configMethod['annotation'], $methodAnnotation));
 
-            $sm->setTags([$configMethod['tag']]);
-        }else{
+            if ($configMethod['tag']) {
+                $sm->setTags([$configMethod['tag']]);
+            }
+        } else {
             $sm->setName($httpMethod);
         }
 

@@ -14,7 +14,7 @@ use Diomac\API\Response;
 class SwaggerResponse implements \JsonSerializable
 {
     /**
-     * @var integer $code
+     * @var string $code
      */
     private $code;
     /**
@@ -27,17 +27,17 @@ class SwaggerResponse implements \JsonSerializable
     private $schema;
 
     /**
-     * @return int
+     * @return string
      */
-    public function getCode(): int
+    public function getCode(): string
     {
         return $this->code;
     }
 
     /**
-     * @param int $code
+     * @param string $code
      */
-    public function setCode(int $code): void
+    public function setCode(string $code): void
     {
         $this->code = $code;
     }
@@ -84,7 +84,6 @@ class SwaggerResponse implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return Response::jsonSerialize($this, [
-            'code' => 'getCode',
             'description' => 'getDescription',
             'schema' => 'getSchema'
         ]);

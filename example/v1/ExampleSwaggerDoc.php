@@ -9,7 +9,6 @@
 namespace example\v1;
 
 use Diomac\API\swagger\Swagger;
-use Diomac\API\Response;
 use Diomac\API\swagger\SwaggerInfo;
 use example\v1\doc\Definitions;
 use example\v1\doc\NewPet;
@@ -40,11 +39,6 @@ class ExampleSwaggerDoc extends Swagger
         return 'localhost';
     }
 
-    public function basePath(): string
-    {
-        return '/vendor/example/v1';
-    }
-
     public function schemes(): array
     {
         return ['http', 'https'];
@@ -62,16 +56,60 @@ class ExampleSwaggerDoc extends Swagger
         return $d;
     }
 
-    public function securityDefinitions(): ?array
+    public function securityDefinitions(): ?\JsonSerializable
     {
         return null;
     }
 
-
-    public function defaultResponsesDescription(): array
+    /**
+     * A declaration of which security schemes are applied for the API as a whole. The list of values describes
+     * alternative security schemes that can be used (that is, there is a logical OR between the security requirements).
+     * Individual operations can override this definition.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public function security(): ?\JsonSerializable
     {
-        return [
-            Response::OK => 'Success request.'
-        ];
+        return null;
+    }
+
+    /**
+     * An object to hold parameters that can be used across operations.
+     * This property does not define global parameters for all operations.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parametersDefinitionsObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public function parametersDefinitions(): ?\JsonSerializable
+    {
+        return null;
+    }
+
+    /**
+     * An object to hold responses that can be used across operations.
+     * This property does not define global responses for all operations.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responsesDefinitionsObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public function responsesDefinitions(): ?\JsonSerializable
+    {
+       return null;
+    }
+
+    /**
+     * Additional external documentation.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#externalDocumentationObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public function externalDocs(): ?\JsonSerializable
+    {
+        return null;
     }
 }

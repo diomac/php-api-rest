@@ -42,6 +42,14 @@ class ExampleResource extends Resource
      *     type="array",
      *     @items($ref="#/definitions/pet")
      * )
+     *
+     * @response(
+     *     code="default",
+     *     description="Internal Server Error",
+     *     @schema(
+     *     type="array",
+     *     @items($ref="#/definitions/internalError")
+     * )
      * )
      * @parameter(
      *     in="path",

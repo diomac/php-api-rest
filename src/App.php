@@ -60,15 +60,20 @@ class App
                 throw new \Exception('Resources not configured.');
             }
         }
+        try {
+            /**
+             * Init routes and request configuration
+             */
+            self::$config = $config;
+            $this->router = new Router($config);
+            $this->request = new Request($config);
 
-        /**
-         * Init routes and request configuration
-         */
-        self::$config = $config;
-        $this->router = new Router($config);
-        $this->request = new Request($config);
-
-        $this->response = new Response($this->router->getRoutes(), $this->router->getTags());
+            $this->response = new Response($this->router->getRoutes(), $this->router->getTags(), $config);
+        } catch (\Exception $e) {
+            $this->exceptionMessage($e);
+            $this->response->output();
+            exit;
+        }
     }
 
     /**
@@ -192,14 +197,18 @@ class App
      */
     private function exceptionMessage(\Exception $ex): void
     {
+        if (!$this->response) {
+            $this->response = new Response();
+        }
+
         $contentType = self::$config->getContentTypeExceptions();
 
         $this->response->setCode($ex->getCode());
 
         if ($contentType === 'application/json') {
-            $json = json_decode($ex->getMessage());
-            $json->code = $ex->getCode();
-            $this->response->setBodyJSON($json);
+            $jsonEx = new Exception($ex->getMessage(), $ex->getCode());
+            $this->response->setCode($ex->getCode());
+            $this->response->setBodyJSON($jsonEx);
         } else {
             $this->response->setContentType($contentType);
             $this->response->setBody($ex->getMessage());

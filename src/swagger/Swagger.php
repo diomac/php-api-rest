@@ -51,7 +51,7 @@ abstract class Swagger implements \JsonSerializable
      */
     protected $parameters;
     /**
-     * @var SwaggerResponse[] $responses
+     * @var \JsonSerializable $responses
      */
     protected $responses;
     /**
@@ -83,10 +83,11 @@ abstract class Swagger implements \JsonSerializable
     {
         $this->info = $this->info();
         $this->host = $this->host();
-        $this->basePath = $this->basePath();
         $this->schemes = $this->schemes();
         $this->definitions = $this->definitions();
         $this->securityDefinitions = $this->securityDefinitions();
+        $this->security = $this->security();
+        $this->externalDocs = $this->externalDocs();
     }
 
     /**
@@ -195,6 +196,9 @@ abstract class Swagger implements \JsonSerializable
         return $this->paths;
     }
 
+    /**
+     * @return array|null
+     */
     public function getJsonSerializablePaths(): ?array
     {
         $jsonPaths = [];
@@ -236,7 +240,7 @@ abstract class Swagger implements \JsonSerializable
     /**
      * @return \JsonSerializable
      */
-    public function getParameters(): \JsonSerializable
+    public function getParameters(): ?\JsonSerializable
     {
         return $this->parameters;
     }
@@ -250,17 +254,17 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @return SwaggerResponse[]
+     * @return \JsonSerializable
      */
-    public function getResponses(): array
+    public function getResponses(): ?\JsonSerializable
     {
         return $this->responses;
     }
 
     /**
-     * @param SwaggerResponse[] $responses
+     * @param \JsonSerializable $responses
      */
-    public function setResponses(array $responses): void
+    public function setResponses(\JsonSerializable $responses): void
     {
         $this->responses = $responses;
     }
@@ -282,17 +286,17 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @return Object
+     * @return \JsonSerializable
      */
-    public function getSecurity(): Object
+    public function getSecurity(): ?\JsonSerializable
     {
         return $this->security;
     }
 
     /**
-     * @param Object $security
+     * @param \JsonSerializable $security
      */
-    public function setSecurity(Object $security): void
+    public function setSecurity(\JsonSerializable $security): void
     {
         $this->security = $security;
     }
@@ -314,34 +318,108 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @return Object
+     * @return \JsonSerializable
      */
-    public function getExternalDocs(): Object
+    public function getExternalDocs(): ?\JsonSerializable
     {
         return $this->externalDocs;
     }
 
     /**
-     * @param Object $externalDocs
+     * @param \JsonSerializable $externalDocs
      */
-    public function setExternalDocs(Object $externalDocs): void
+    public function setExternalDocs(\JsonSerializable $externalDocs): void
     {
         $this->externalDocs = $externalDocs;
     }
 
+    /**
+     * Required. Provides metadata about the API. The metadata can be used by the clients if needed.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#infoObject
+     *
+     * @return SwaggerInfo
+     */
     public abstract function info(): SwaggerInfo;
 
+    /**
+     * The host (name or ip) serving the API. This MUST be the host only and does not include the scheme nor sub-paths.
+     * It MAY include a port. If the host is not included, the host serving the documentation is to be used
+     * (including the port). The host does not support path templating.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#schema
+     *
+     * @return string
+     */
     public abstract function host(): string;
 
-    public abstract function basePath(): string;
-
+    /**
+     * The transfer protocol of the API. Values MUST be from the list: "http", "https", "ws", "wss". If the schemes
+     * is not included, the default scheme to be used is the one used to access the Swagger definition itself.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#schema
+     *
+     * @return string[]
+     */
     public abstract function schemes(): array;
 
-    public abstract function definitions(): \JsonSerializable;
+    /**
+     * An object to hold data types produced and consumed by operations.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#definitionsObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public abstract function definitions(): ?\JsonSerializable;
 
-    public abstract function securityDefinitions(): ?array;
+    /**
+     * An object to hold parameters that can be used across operations.
+     * This property does not define global parameters for all operations.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parametersDefinitionsObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public abstract function parametersDefinitions():?\JsonSerializable;
 
-    public abstract function defaultResponsesDescription(): array;
+    /**
+     * An object to hold responses that can be used across operations.
+     * This property does not define global responses for all operations.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responsesDefinitionsObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public abstract function responsesDefinitions():?\JsonSerializable;
+
+    /**
+     * Security scheme definitions that can be used across the specification.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityDefinitionsObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public abstract function securityDefinitions(): ?\JsonSerializable;
+
+    /**
+     * A declaration of which security schemes are applied for the API as a whole. The list of values describes
+     * alternative security schemes that can be used (that is, there is a logical OR between the security requirements).
+     * Individual operations can override this definition.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public abstract function security(): ?\JsonSerializable;
+
+    /**
+     * Additional external documentation.
+     *
+     * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#externalDocumentationObject
+     *
+     * @return \JsonSerializable|null
+     */
+    public abstract function externalDocs():?\JsonSerializable;
 
     /**
      * @return string[]
@@ -391,6 +469,8 @@ abstract class Swagger implements \JsonSerializable
             'tags' => 'getTags',
             'paths' => 'getJsonSerializablePaths',
             'definitions' => 'getDefinitions',
+            'parameters' => 'getParameters',
+            'responses' => 'getResponses',
             'securityDefinitions' => 'getSecurityDefinitions'
         ];
         return Response::jsonSerialize($this, $p);
