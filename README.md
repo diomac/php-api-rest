@@ -1,6 +1,6 @@
 PHP-API-REST
 ============
-A PHP API REST Micro-Framework using annotations
+PHP API REST framework using annotations, and support for Swagger documentation.
 
 Prerequisites
 =============
@@ -19,22 +19,42 @@ Using
 * 1 - Place an .htaccess file (Apache Servers) to redirect all routes to the REST API initialization file:
 ```
 RewriteEngine On
-RewriteCond %{REQUEST_URI} !api-start\.php$
+RewriteCond %{REQUEST_URI} !init\.php$
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule .* api-start.php [L,QSA]
+RewriteRule .* init.php [L,QSA]
 ```
 
-* 2 - Use the api-start.php file to import the dependencies of your project, enter the namespace (each folder in an array key) and the list of resources of your REST API in the variable $config:
+* 2 - Use the initialization file to import the dependencies of your project and...
+    * Instantiate a Diomac\API\AppConfiguration object;
+    * Set the base url of your API;
+    * Add the Resources Class Names of your API (See how implements Resources in next topic);
+    * Instantiate a Diomac\API\App object using the configuration object;
+    * Finally call exec method.
 ```
 use Diomac\API\App;
-$config = [
-    'namespaceResources' => ['api', 'v1'],
-    'resources' => [
-        'ExampleResource'
-    ]
-];
-$app = new App($config);
-$app->exec();
+use Diomac\API\AppConfiguration;
+
+/**
+ * Initializing API configuration
+ */
+$config = new AppConfiguration();
+$config->setBaseUrl('/php-api-rest/vendor/example/v1');
+
+/**
+ * Adding resources classes
+ */
+$config->addResource(\example\v1\ExampleResource::class);
+$config->addResource(\example\core\secure\ExampleGuard::class);
+
+/**
+ * Execute API
+ */
+try{
+    $app = new App($config);
+    $app->exec();
+}catch (Exception $ex){
+ ...
+}
 ```
 
 * 3 - In the resource class, enter the inheritance of the Resource class:
@@ -48,12 +68,15 @@ use Diomac\API\UnauthorizedException;
 class ExampleResource extends Resource {...
 ```
 
-* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a Class implementing Guard Interface to protect the route (@guard):
+* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a Class implementing Guard Interface to protect the route (@guard - See how implement guards in topic "Implementing a Guard Class" ):
 ```
 /**
 * @method get
 * @route /auth/usr-data/id/{id}
-* @guard AuthGuard
+* @guard(
+*     className="example\core\secure\ExampleGuard",
+*     @parameters(operationId="GETUSERDATA")
+* )
 */
 function getUsrData()
 {
@@ -79,7 +102,7 @@ A Response object with the methods:
 $this->response->setHeader('name', 'value'); // set HTTP header response
 $this->response->setCode(Response::BAD_REQUEST); // set HTTP response code
 $this->response->setBody('string'); // set response body
-$this->response->setBodyJSON([]); // set response body to convert in JSON
+$this->response->setBodyJSON(\JsonSerializable object); // set response body to convert in JSON
 $this->response->setContentType(''); // set content type response (for setBodyJSON not needed)
 ```
 And it inherits methods from the Resource class:
@@ -92,13 +115,18 @@ For the output simply return the response object:
 ```
 return $this->response;
 ```
-## Using 1 or more route guards
+## Using one or more route guards
 ```
 /**
 * @method get
 * @route /auth/usr-data/id/{id}
-* @guard AuthGuard
-* @guard AuthGuard2WithJSONParam {"param1":"value1"}
+* @guard(
+*     className="example\core\secure\ExampleGuard"
+* )
+* @guard(
+*     className="example\core\secure\ExampleGuardWithParams",
+*     @parameters(operationId="GETUSERDATA", operationName="GETUSERDATA")
+* )
 */
 function getUsrData()
 {
@@ -151,26 +179,22 @@ class AuthGuard implements Guard
     }
 }
 ```
-## Config App options
-|Option|Type|Default|Description|
-|------|----|-------|-----------|
-|contentTypeExceptions|string|'text/html'|(Optional) Set content type response when throw exceptions.|
-|namespaceGuards|array|null|(Optional) Set namespace of guard Classes. (If the '@guard' annotation contains only the class name, you will need to set this option.)|
-|namespaceResources|array|Not default|(Mandatory) Set namespace of resource Classes.|
-|resources|array|Not default|(Mandatory) Set resource Classes list.|
-|useCache|boolean|false|(Optional) Set use cache routes with APC -  Auternative PHP Cache.|
 ## Using cache (APC - Auternative PHP Cache)
 ```
-use Diomac\API\App;
-$config = [
-    'namespaceResources' => ['api', 'v1'],
-    'useCache' => true, // Stores the routes cached.
-    'resources' => [
-        'ExampleResource'
-    ]
-];
-$app = new App($config);
-$app->exec();
+**
+ * Setting use cache for caching of annotations mapping
+ */
+$config->setUseCache(true);
+
+/**
+ * Execute API
+ */
+try{
+    $app = new App($config);
+    $app->exec();
+}catch (Exception $ex){
+    ...
+}
 ```
 ## License
 

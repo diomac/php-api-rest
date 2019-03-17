@@ -340,7 +340,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return SwaggerInfo
      */
-    public abstract function info(): SwaggerInfo;
+    abstract public function info(): SwaggerInfo;
 
     /**
      * The host (name or ip) serving the API. This MUST be the host only and does not include the scheme nor sub-paths.
@@ -351,7 +351,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return string
      */
-    public abstract function host(): string;
+    abstract public function host(): string;
 
     /**
      * The transfer protocol of the API. Values MUST be from the list: "http", "https", "ws", "wss". If the schemes
@@ -361,7 +361,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return string[]
      */
-    public abstract function schemes(): array;
+    abstract public function schemes(): array;
 
     /**
      * An object to hold data types produced and consumed by operations.
@@ -370,7 +370,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return \JsonSerializable|null
      */
-    public abstract function definitions(): ?\JsonSerializable;
+    abstract public function definitions(): ?\JsonSerializable;
 
     /**
      * An object to hold parameters that can be used across operations.
@@ -380,7 +380,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return \JsonSerializable|null
      */
-    public abstract function parametersDefinitions():?\JsonSerializable;
+    abstract public function parametersDefinitions(): ?\JsonSerializable;
 
     /**
      * An object to hold responses that can be used across operations.
@@ -390,7 +390,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return \JsonSerializable|null
      */
-    public abstract function responsesDefinitions():?\JsonSerializable;
+    abstract public function responsesDefinitions(): ?\JsonSerializable;
 
     /**
      * Security scheme definitions that can be used across the specification.
@@ -399,7 +399,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return \JsonSerializable|null
      */
-    public abstract function securityDefinitions(): ?\JsonSerializable;
+    abstract public function securityDefinitions(): ?\JsonSerializable;
 
     /**
      * A declaration of which security schemes are applied for the API as a whole. The list of values describes
@@ -410,7 +410,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return \JsonSerializable|null
      */
-    public abstract function security(): ?\JsonSerializable;
+    abstract public function security(): ?\JsonSerializable;
 
     /**
      * Additional external documentation.
@@ -419,7 +419,7 @@ abstract class Swagger implements \JsonSerializable
      *
      * @return \JsonSerializable|null
      */
-    public abstract function externalDocs():?\JsonSerializable;
+    abstract public function externalDocs(): ?\JsonSerializable;
 
     /**
      * @return string[]

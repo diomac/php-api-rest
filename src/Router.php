@@ -198,9 +198,12 @@ class Router
             $sm->setResponses($sm->readPHPDocResponses($configMethod['annotation'], $methodAnnotation));
             $sm->setConsumes($sm->readPHPDocConsumes($configMethod['annotation'], $methodAnnotation));
             $sm->setProduces($sm->readPHPDocProduces($configMethod['annotation'], $methodAnnotation));
+            $sm->setTags($sm->readPHPDocTags($configMethod['annotation'], $methodAnnotation));
 
             if ($configMethod['tag']) {
-                $sm->setTags([$configMethod['tag']]);
+                $tags = $sm->getTags() ?? [];
+                $tags[] = $configMethod['tag'];
+                $sm->setTags($tags);
             }
         } else {
             $sm->setName($httpMethod);

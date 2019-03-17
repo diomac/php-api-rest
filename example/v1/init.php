@@ -40,6 +40,9 @@ $config->setContentTypeExceptions('application/json');
  */
 $config->setUseCache(false);
 
+/**
+ * Execute API
+ */
 try{
     $app = new App($config);
     $app->exec();

@@ -31,6 +31,7 @@ class ExampleResource extends Resource
      * @description A example api rest php
      * @operationId GETUSERDATA
      * @consumeType text/plain; charset=utf-8
+     * @tag More one tag
      * @response(
      *     code=401,
      *     description="Unauthorized"

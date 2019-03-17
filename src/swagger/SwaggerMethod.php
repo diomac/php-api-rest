@@ -87,7 +87,7 @@ class SwaggerMethod implements \JsonSerializable
     /**
      * @param string[] $tags
      */
-    public function setTags(array $tags): void
+    public function setTags(array $tags = null): void
     {
         $this->tags = $tags;
     }
@@ -408,6 +408,16 @@ class SwaggerMethod implements \JsonSerializable
     public function readPHPDocProduces(string $PHPDoc, Annotation $annotation): ?array
     {
         return $annotation->simpleAnnotationToArray($PHPDoc, 'contentType');
+    }
+
+    /**
+     * @param string $PHPDoc
+     * @param Annotation $annotation
+     * @return array|null
+     */
+    public function readPHPDocTags(string $PHPDoc, Annotation $annotation): ?array
+    {
+        return $annotation->simpleAnnotationToArray($PHPDoc, 'tag');
     }
 
     /**
