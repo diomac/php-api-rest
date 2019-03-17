@@ -381,7 +381,8 @@ PHPDoc:
      *     type="array",
      *     @items($ref="#/definitions/pet")
      * )
-     */
+     * )
+     */ 
     function getUsrData(): Response
     {
         ...
