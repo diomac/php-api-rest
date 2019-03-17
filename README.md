@@ -298,7 +298,8 @@ Swagger json result:
         "summary": "Example api rest php",
 ...
 ```
-### @description - Use @description in PHPDoc function to document your route with [Swagger description string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+### @description
+#### Use @description in PHPDoc function to document your route with [Swagger description string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
 PHPDoc:
 ```
     /**
