@@ -213,9 +213,21 @@ class ExampleResource extends Resource
     ...
 }
 ```
-@contentType - Use @contentType in PHPDoc function to document your routes with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+##### @tag - Use @tag in PHPDoc function to document your routes with a additional tag.
 ```
-/**
+    /**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @tag More one tag
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
+##### @contentType - Use @contentType in PHPDoc function to document your routes with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+```
+    /**
      * @method get
      * @route /example/api/value1/{value1}/value2/{value2}
      * @contentType application/json
