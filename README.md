@@ -222,7 +222,7 @@ Swagger json result:
 "tags": [
     {
       "name": "ExampleAPIDocSwagger",
-      "description": "ExampleAPIDocSwagger",
+      "description": "Example API Doc Swagger",
       "externalDocs": {
         "description": "Externaldocsexample",
         "url": "http:\/\/example_php_api_rest.com"
@@ -251,7 +251,7 @@ Swagger json result:
 ...
 "tags": [
           "More one tag",
-          "ExampleAPIDocSwagger"
+          "Example API Doc Swagger"
         ],
 ...
 ```
