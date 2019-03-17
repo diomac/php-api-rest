@@ -218,6 +218,7 @@ class ExampleResource extends Resource
 
 Swagger json result:
 ```
+...
 "tags": [
     {
       "name": "ExampleAPIDocSwagger",
@@ -228,8 +229,9 @@ Swagger json result:
       }
     }
   ],
+...
 ```
-##### @tag (string) - Use @tag in PHPDoc function to document your route with a additional tag.
+### @tag (string) - Use @tag in PHPDoc function to document your route with a additional tag.
 
 PHPDoc:
 ```
@@ -246,12 +248,15 @@ PHPDoc:
 
 Swagger json result:
 ```
+...
 "tags": [
           "More one tag",
           "ExampleAPIDocSwagger"
         ],
+...
 ```
-##### @contentType - Use @contentType in PHPDoc function to document your route with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+### @contentType - Use @contentType in PHPDoc function to document your route with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+PHPDoc:
 ```
     /**
      * @method get
@@ -263,6 +268,35 @@ Swagger json result:
     {
         ...
     }
+```
+Swagger json result:
+```
+...
+"produces": [
+    "application\/json",
+    "text\/html"
+  ],
+...
+```
+### @summary = Use @summary in PHPDoc function to document your route with [Swagger summary string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+PHPDoc:
+```
+    /**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @summary Example api rest php
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
+Swagger json result:
+```
+...
+"get": {
+        "summary": "Example api rest php",
+...
 ```
 ## License
 

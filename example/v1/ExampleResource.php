@@ -28,6 +28,7 @@ class ExampleResource extends Resource
      * @method post
      * @route /example/api/value1/{value1}/value2/{value2}
      * @contentType application/json
+     * @contentType text/html
      * @summary Example api rest php
      * @description A example api rest php
      * @operationId GETUSERDATA
