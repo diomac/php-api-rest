@@ -197,7 +197,8 @@ try{
 }
 ```
 ## Swagger 2.0 support
-### @tag - Use @tag in PHPDoc Class to document Resources's routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
+### @tag
+#### Use @tag in PHPDoc Class to document Resources's routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
 
 PHPDoc:
 ```
@@ -231,7 +232,8 @@ Swagger json result:
   ],
 ...
 ```
-### @tag (string) - Use @tag in PHPDoc function to document your route with a additional tag.
+### @tag (string)
+#### Use @tag in PHPDoc function to document your route with a additional tag.
 
 PHPDoc:
 ```
@@ -255,7 +257,8 @@ Swagger json result:
         ],
 ...
 ```
-### @contentType - Use @contentType in PHPDoc function to document your route with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+### @contentType
+#### Use @contentType in PHPDoc function to document your route with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
 PHPDoc:
 ```
     /**
@@ -278,7 +281,8 @@ Swagger json result:
   ],
 ...
 ```
-### @summary - Use @summary in PHPDoc function to document your route with [Swagger summary string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+### @summary
+#### Use @summary in PHPDoc function to document your route with [Swagger summary string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
 PHPDoc:
 ```
     /**
