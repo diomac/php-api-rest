@@ -1,6 +1,6 @@
 PHP-API-REST
 ============
-PHP API REST framework using annotations, and support for Swagger 2.0 documentation.
+PHP API REST framework using annotations, and Swagger 2.0 support.
 
 Prerequisites
 =============
@@ -196,8 +196,8 @@ try{
     ...
 }
 ```
-## Swagger 2.0 documentation support
-@tag - Use @tag to document your routes with [swagger tags](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
+## Swagger 2.0 support
+@tag - Use @tag in PHPDoc Class to document your routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
 ```
 /**
  * Class ExampleResource
@@ -213,7 +213,19 @@ class ExampleResource extends Resource
     ...
 }
 ```
-
+@contentType - Use @contentType in PHPDoc function to document your routes with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+```
+/**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @contentType application/json
+     * @contentType text/html
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
