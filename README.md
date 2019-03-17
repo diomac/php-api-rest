@@ -197,7 +197,7 @@ try{
 }
 ```
 ## Swagger 2.0 support
-@tag - Use @tag in PHPDoc Class to document your routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
+##### @tag - Use @tag in PHPDoc Class to document your routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
 ```
 /**
  * Class ExampleResource
