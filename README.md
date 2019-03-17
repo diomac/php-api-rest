@@ -222,7 +222,7 @@ Swagger json result:
 "tags": [
     {
       "name": "ExampleAPIDocSwagger",
-      "description": "Example API Doc Swagger",
+      "description": "ExampleAPIDocSwagger",
       "externalDocs": {
         "description": "Externaldocsexample",
         "url": "http:\/\/example_php_api_rest.com"
@@ -251,7 +251,7 @@ Swagger json result:
 ...
 "tags": [
           "More one tag",
-          "Example API Doc Swagger"
+          "ExampleAPIDocSwagger"
         ],
 ...
 ```
@@ -278,7 +278,7 @@ Swagger json result:
   ],
 ...
 ```
-### @summary = Use @summary in PHPDoc function to document your route with [Swagger summary string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+### @summary - Use @summary in PHPDoc function to document your route with [Swagger summary string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
 PHPDoc:
 ```
     /**
@@ -296,6 +296,26 @@ Swagger json result:
 ...
 "get": {
         "summary": "Example api rest php",
+...
+```
+### @description - Use @description in PHPDoc function to document your route with [Swagger description string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+PHPDoc:
+```
+    /**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @description A example api rest php
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
+Swagger json result:
+```
+...
+"get": {
+        "description": "A example api rest php",
 ...
 ```
 ## License
