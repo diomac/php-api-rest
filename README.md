@@ -197,7 +197,7 @@ try{
 }
 ```
 ## Swagger 2.0 support
-##### @tag - Use @tag in PHPDoc Class to document your routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
+##### @tag - Use @tag in PHPDoc Class to document your route with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
 ```
 /**
  * Class ExampleResource
@@ -213,7 +213,7 @@ class ExampleResource extends Resource
     ...
 }
 ```
-##### @tag - Use @tag in PHPDoc function to document your routes with a additional tag.
+##### @tag - Use @tag in PHPDoc function to document your route with a additional tag.
 ```
     /**
      * @method get
@@ -225,7 +225,7 @@ class ExampleResource extends Resource
         ...
     }
 ```
-##### @contentType - Use @contentType in PHPDoc function to document your routes with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+##### @contentType - Use @contentType in PHPDoc function to document your route with [Swagger produces \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
 ```
     /**
      * @method get
