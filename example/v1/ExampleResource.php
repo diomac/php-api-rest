@@ -10,6 +10,7 @@ namespace example\v1;
 
 use Diomac\API\Resource;
 use Diomac\API\Response;
+use example\v1\doc\NewPet;
 use example\v1\doc\Pet;
 
 /**
@@ -24,7 +25,7 @@ use example\v1\doc\Pet;
 class ExampleResource extends Resource
 {
     /**
-     * @method get
+     * @method post
      * @route /example/api/value1/{value1}/value2/{value2}
      * @contentType application/json
      * @summary Example api rest php
@@ -76,6 +77,8 @@ class ExampleResource extends Resource
      */
     function getUsrData(): Response
     {
+        $doc = new ExampleSwaggerDoc();
+        $data = $this->request->getData($doc, new NewPet());
         $pet = new Pet();
         $this->response->setCode(Response::OK);
         $this->response->setBodyJSON($pet);

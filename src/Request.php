@@ -229,11 +229,11 @@ class Request
      */
     private function checkDataType($value, string $propertyName, \stdClass $definition, Swagger $swagger): void
     {
-        if (!$definition->properies) {
+        if (!$definition->properties) {
             throw new \Exception('Definition not contain field "properties"');
         }
 
-        $strPath = $definition->properies->{$propertyName}->{'$ref'};
+        $strPath = $definition->properties->{$propertyName}->{'$ref'};
 
         if ($strPath) {
             $path = explode('/', str_replace('#/definition/', '', $strPath));
@@ -248,7 +248,7 @@ class Request
 
             $this->checkData($refDefinition, $swagger, $value);
         } else {
-            $dType = $definition->properies->{$propertyName}->type;
+            $dType = $definition->properties->{$propertyName}->type;
             $pType = gettype($value);
 
             if ($pType !== $dType) {

@@ -1,6 +1,6 @@
 PHP-API-REST
 ============
-PHP API REST framework using annotations, and support for Swagger documentation.
+PHP API REST framework using annotations, and support for Swagger 2.0 documentation.
 
 Prerequisites
 =============
@@ -196,6 +196,24 @@ try{
     ...
 }
 ```
+## Swagger 2.0 documentation support
+@tag - Use @tag to document your routes with [swagger tags](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
+```
+/**
+ * Class ExampleResource
+ * @package example\v1
+ * @tag(
+ *     name="Example API Doc Swagger",
+ *     description="Example API Doc Swagger",
+ *     @externalDocs(description="External docs example", url="http://example_php_api_rest.com")
+ * )
+ */
+class ExampleResource extends Resource
+{
+    ...
+}
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
