@@ -27,7 +27,7 @@ RewriteRule .* init.php [L,QSA]
 * 2 - Use the initialization file to import the dependencies of your project and...
     * Instantiate a Diomac\API\AppConfiguration object;
     * Set the base url of your API;
-    * Add the Resources Class Names of your API (See how implements Resources in next topic);
+    * Add the Resources Class Names of your API (See how implements Resources in item 3);
     * Instantiate a Diomac\API\App object using the configuration object;
     * Finally call exec method.
 ```
@@ -68,7 +68,7 @@ use Diomac\API\UnauthorizedException;
 class ExampleResource extends Resource {...
 ```
 
-* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a Class implementing Guard Interface to protect the route (@guard - See how implement guards in topic "Implementing a Guard Class" ):
+* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a Class implementing Guard Interface to protect the route (@guard - See how implement guards in topic ["Implementing a Guard Class"](https://github.com/diomac/php-api-rest#implementing-a-guard-class) ):
 ```
 /**
 * @method get
