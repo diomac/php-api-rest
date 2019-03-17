@@ -378,8 +378,8 @@ PHPDoc:
      *     code=200,
      *     description="Success",
      *     @schema(
-     *     type="array",
-     *     @items($ref="#/definitions/pet")
+     *     type="object",
+     *     @items($ref="#/definitions/sucess")
      * )
      * )
      */ 
@@ -395,9 +395,9 @@ Swagger json result:
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
+              "type": "objec",
               "items": {
-                "$ref": "#\/definitions\/pet"
+                "$ref": "#\/definitions\/sucess"
               }
             }
           },
