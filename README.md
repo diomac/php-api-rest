@@ -323,6 +323,27 @@ Swagger json result:
         "description": "A example api rest php",
 ...
 ```
+### @operationId
+#### Use @operationId in PHPDoc function to document your route with [Swagger operationId string](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+PHPDoc:
+```
+    /**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @operationId GETUSERDATA
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
+Swagger json result:
+```
+...
+"get": {
+        "operationId": "GETUSERDATA",
+...
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
