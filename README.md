@@ -395,7 +395,7 @@ Swagger json result:
           "200": {
             "description": "Success",
             "schema": {
-              "type": "objec",
+              "type": "object",
               "items": {
                 "$ref": "#\/definitions\/sucess"
               }
