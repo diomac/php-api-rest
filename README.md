@@ -367,6 +367,41 @@ Swagger json result:
                ],
 ...
 ```
+### @response(...)
+#### Use @response(...) in PHPDoc function to document your route with [Swagger response object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responseObject).
+PHPDoc:
+```
+    /**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @response(
+     *     code=200,
+     *     description="Success",
+     *     @schema(
+     *     type="array",
+     *     @items($ref="#/definitions/pet")
+     * )
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
+Swagger json result:
+```
+...
+"responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#\/definitions\/pet"
+              }
+            }
+          },
+...
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
