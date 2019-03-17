@@ -344,6 +344,29 @@ Swagger json result:
         "operationId": "GETUSERDATA",
 ...
 ```
+### @consumeType
+#### Use @consumeType in PHPDoc function to document your route with [Swagger consumes \[string\]](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#operationObject).
+PHPDoc:
+```
+    /**
+     * @method get
+     * @route /example/api/value1/{value1}/value2/{value2}
+     * @consumeType text/plain; charset=utf-8
+     */
+    function getUsrData(): Response
+    {
+        ...
+    }
+```
+Swagger json result:
+```
+...
+"post": {
+       "consumes": [
+                 "text\/plain; charset=utf-8"
+               ],
+...
+```
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
