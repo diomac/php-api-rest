@@ -199,7 +199,9 @@ try{
 ## Swagger 2.0 support
 
 ### Info
-#### To document how your API information you can use as Swagger and SwaggerInfo classes. Just implement an "ExampleSwaggerDoc" class that inherits from Swagger as in the example below:
+
+To document the information (Swagger Info) of your API, you can use Swagger and SwaggerInfo classes. Just implement 
+an "ExampleSwaggerDoc" class that inherits from Swagger as in the example below:
 
 PHP Class:
 ```
