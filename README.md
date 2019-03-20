@@ -199,7 +199,7 @@ try{
 ## Swagger 2.0 support
 
 ### swagger.json or swagger.yaml
-Crie uma rota em um recurso como no exmplo abaixo:
+Create a route in a resource like the example below:
 
 PHP Class:
 
