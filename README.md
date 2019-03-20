@@ -197,6 +197,38 @@ try{
 }
 ```
 ## Swagger 2.0 support
+
+### Info
+#### To document how your API information you can use as Swagger and SwaggerInfo classes. Just implement an "ExampleSwaggerDoc" class that inherits from Swagger as in the example below:
+
+PHP Class:
+```
+use Diomac\API\swagger\Swagger;
+use Diomac\API\swagger\SwaggerInfo;
+
+class ExampleSwaggerDoc extends Swagger
+{
+    public function info(): SwaggerInfo
+    {
+        $this->setInfo(new SwaggerInfo());
+        $this->info->setVersion('1.0.0');
+        $this->info->setTitle('Swagger Sample App');
+        $this->info->setDescription('This is a sample server Petstore server.');
+        $this->info->setTermsOfService('http://swagger.io/terms/');
+
+        $this->info->getContact()->setName('API Support');
+        $this->info->getContact()->setEmail('support@swagger.io');
+        $this->info->getContact()->setUrl('http://swagger.io');
+
+        $this->info->getLicense()->setName('Apache 2.0');
+        $this->info->getLicense()->setUrl('http://www.apache.org/licenses/LICENSE-2.0.html');
+
+        return $this->getInfo();
+    }
+    ...
+}
+```
+
 ### @tag
 #### Use @tag in PHPDoc Class to document Resources's routes with [Swagger Tag Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject).
 

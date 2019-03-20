@@ -6,13 +6,10 @@
  * Time: 15:13
  */
 
-namespace example\v1;
+namespace example\v1\doc;
 
 use Diomac\API\swagger\Swagger;
 use Diomac\API\swagger\SwaggerInfo;
-use example\v1\doc\Definitions;
-use example\v1\doc\NewPet;
-use example\v1\doc\Pet;
 
 class ExampleSwaggerDoc extends Swagger
 {
