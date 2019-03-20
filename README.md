@@ -400,7 +400,7 @@ Swagger json result:
                 "$ref": "#\/definitions\/sucess"
               }
             }
-          }, 
+          },
 ...
 ```
 ## License
