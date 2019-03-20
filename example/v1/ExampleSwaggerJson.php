@@ -10,6 +10,7 @@ namespace example\v1;
 
 use Diomac\API\Resource;
 use Diomac\API\Response;
+use example\v1\doc\ExampleSwaggerDoc;
 
 class ExampleSwaggerJson extends Resource
 {
@@ -28,7 +29,15 @@ class ExampleSwaggerJson extends Resource
     {
         $this->response->setCode(Response::OK);
         $swagger = new ExampleSwaggerDoc();
+
+        /**
+         * JSON
+         */
         $this->response->setBodySwaggerJSON($swagger);
+        /**
+         * Or YAML
+         */
+        //$this->response->setBodySwaggerYAML($swagger);
         return $this->response;
     }
 }

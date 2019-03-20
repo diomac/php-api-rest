@@ -198,6 +198,39 @@ try{
 ```
 ## Swagger 2.0 support
 
+### swagger.json or swagger.yaml
+Crie uma rota em um recurso como no exmplo abaixo:
+
+PHP Class:
+
+```
+use Diomac\API\Resource;
+use Diomac\API\Response;
+use example\v1\doc\ExampleSwaggerDoc;
+
+class ExampleSwaggerJson extends Resource
+{
+    /**
+     * @method get
+     * @route /swagger.json
+     */
+    function swaggerJson()
+    {
+        $this->response->setCode(Response::OK);
+        $swagger = new ExampleSwaggerDoc();
+
+        /**
+         * JSON
+         */
+        $this->response->setBodySwaggerJSON($swagger);
+        /**
+         * Or YAML
+         */
+        //$this->response->setBodySwaggerYAML($swagger);
+        return $this->response;
+    }
+}
+```
 ### Info
 
 To document the information (Swagger Info) of your API, you can use Swagger and SwaggerInfo classes. Just implement 
