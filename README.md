@@ -26,7 +26,7 @@ composer require diomac/php-api-rest
 ```
 Using
 =====
-* 1 - Place an .htaccess file to redirect all routes to the REST API initialization file:
+* 1 - Place an .htaccess file in the root folder of your Rest API (base url), to redirect all routes to the API initialization file.
 
 Example API folders:
 
