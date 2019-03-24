@@ -26,7 +26,7 @@ composer require diomac/php-api-rest
 ```
 Using
 =====
-* 1 - Place an .htaccess file (Apache Servers) to redirect all routes to the REST API initialization file:
+* 1 - Place an .htaccess file to redirect all routes to the REST API initialization file:
 ```
 RewriteEngine On
 RewriteCond %{REQUEST_URI} !init\.php$
