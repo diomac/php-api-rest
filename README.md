@@ -27,8 +27,9 @@ composer require diomac/php-api-rest
 Using
 =====
 * 1 - Place an .htaccess file to redirect all routes to the REST API initialization file:
+
 Example API folders:
-<img src=”https://github.com/diomac/php-api-rest/blob/master/example/assets/exampleV1Folder.png”>
+[](https://raw.githubusercontent.com/diomac/php-api-rest/master/example/assets/exampleV1Folder.png)
 
 ```
 RewriteEngine On
