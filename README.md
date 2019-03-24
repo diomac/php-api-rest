@@ -15,7 +15,7 @@ Optional (Recommended)
 Or
 * Pecl APC - Alternative PHP Cache - [https://pecl.php.net/package/apc](https://pecl.php.net/package/apc)
 ### Swagger yaml format
-* yaml pecl extension []()
+* yaml pecl extension [https://pecl.php.net/package/yaml](https://pecl.php.net/package/yaml)
 
 Installing
 ==========
