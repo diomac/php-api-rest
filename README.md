@@ -190,6 +190,8 @@ class AuthGuard implements Guard
 }
 ```
 ## Using cache (Redis)
+```
+```
 
 ## Using cache (APC - Alternative PHP Cache)
 ```
@@ -242,6 +244,53 @@ class ExampleSwaggerJson extends Resource
         return $this->response;
     }
 }
+```
+
+Route result:
+
+```
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Sample App",
+    "description": "This is a sample server Petstore server.",
+    "termsOfService": "http:\/\/swagger.io\/terms\/",
+    "contact": {
+      "name": "API Support",
+      "email": "support@swagger.io",
+      "url": "http:\/\/swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http:\/\/www.apache.org\/licenses\/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost",
+  "basePath": "\/php-api-rest\/vendor\/example\/v1",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "text\/plain; charset=utf-8"
+  ],
+  "produces": [
+    "application\/json",
+    "text\/html"
+  ],
+  "tags": [
+    {
+      "name": "ExampleAPIDocSwagger",
+      "description": "ExampleAPIDocSwagger",
+      "externalDocs": {
+        "description": "Externaldocsexample",
+        "url": "http:\/\/example_php_api_rest.com"
+      }
+    }
+  ],
+  "paths": {
+    ...
 ```
 ### Swagger Info
 
