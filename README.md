@@ -7,6 +7,16 @@ Prerequisites
 
 * PHP >=7.2
 
+Optional (Recommended)
+=============
+
+### Cache map of routes
+* nrk/predis (Redis) - [https://github.com/nrk/predis](https://github.com/nrk/predis)
+Or
+* Pecl APC - Alternative PHP Cache - [https://pecl.php.net/package/apc](https://pecl.php.net/package/apc)
+### Swagger yaml format
+* yaml pecl extension []()
+
 Installing
 ==========
 Use composer to manage your dependencies and download PHP-API-REST:
@@ -179,7 +189,9 @@ class AuthGuard implements Guard
     }
 }
 ```
-## Using cache (APC - Auternative PHP Cache)
+## Using cache (Redis)
+
+## Using cache (APC - Alternative PHP Cache)
 ```
 **
  * Setting use cache for caching of annotations mapping

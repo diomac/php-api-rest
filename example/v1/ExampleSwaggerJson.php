@@ -9,6 +9,7 @@
 namespace example\v1;
 
 use Diomac\API\redis\RedisUtil;
+use Diomac\API\redis\RedisUtilOLD;
 use Diomac\API\Resource;
 use Diomac\API\Response;
 use example\v1\doc\ExampleSwaggerDoc;
@@ -29,6 +30,10 @@ class ExampleSwaggerJson extends Resource
      */
     function swaggerJson()
     {
+        RedisUtil::init([
+
+        ]);
+        RedisUtil::con();
         $swagger = new ExampleSwaggerDoc();
 
         /**

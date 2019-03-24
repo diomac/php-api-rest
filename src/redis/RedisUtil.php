@@ -1,76 +1,26 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: diomac
+ * Date: 24/03/19
+ * Time: 18:21
+ */
 
 namespace Diomac\API\redis;
 
-use Predis\Client;
 
-class RedisUtil
+abstract class RedisUtil
 {
     /**
      * @var array
      */
-    private static $confEnvironment;
+    private static $config;
 
-    /**
-     * @var Client[]
-     */
-    private static $predis;
-
-    /**
-     * @throws \Exception
-     */
-    public static function ini()
-    {
-        $conf = [
-            'D' => [
-                'diomac' => [
-                    'parameters' => ['scheme' => 'tcp', 'host' => 'redis-server', 'port' => 6379],
-                    'auth' => '',
-                ],
-            ]
-        ];
-
-        if (!isset($conf[ENVIRONMENT])) {
-            throw new \Exception('Redis: configurações do ambiente inexistentes.');
-        }
-        self::$confEnvironment = $conf[ENVIRONMENT];
+    public static function init(array $config){
+        self::$config = $config;
     }
 
-    /**
-     * @param $dsn string
-     * @return Client
-     * @throws \Exception configurações do ambiente inexistentes
-     */
-    public static function con($dsn = null): Client
-    {
-        if (isset(self::$predis[$dsn])) {
-            return self::$predis[$dsn];
-        }
-        if (!$dsn) {
-            $dsn = array_keys(self::$confEnvironment)[0];
-        }
-        if (!self::$confEnvironment[$dsn]) {
-            throw new \Exception('Data source de redis não configurado.');
-        }
-        $conf = self::$confEnvironment[$dsn];
-        $predis = new Client($conf['parameters'], ['prefix' => 'Diomac\\API:']);
-        if ($conf['auth']) {
-            $predis->auth($conf['auth']);
-        }
-        self::$predis[$dsn] = $predis;
-        return $predis;
-    }
+    public static function con(){
 
-    /**
-     * @param $predis Client
-     * @param $pattern
-     */
-    public static function delKeys($predis, $pattern)
-    {
-        $keys = $predis->keys($pattern);
-        foreach ($keys as $key) {
-            $k = str_replace('Diomac\\API:', '', $key);
-            $predis->del($k);
-        }
     }
 }
