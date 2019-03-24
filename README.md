@@ -29,7 +29,7 @@ Using
 * 1 - Place an .htaccess file to redirect all routes to the REST API initialization file:
 
 Example API folders:
-[](/example/assets/exampleV1Folder.png)
+![](example/assets/exampleV1Folder.png)
 
 ```
 RewriteEngine On
