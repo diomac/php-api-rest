@@ -10,7 +10,7 @@ Prerequisites
 Optional (Recommended)
 =============
 
-### Cache map of routes
+### Caching routes
 * nrk/predis (Redis) - [https://github.com/nrk/predis](https://github.com/nrk/predis)
 Or
 * Pecl APC - Alternative PHP Cache - [https://pecl.php.net/package/apc](https://pecl.php.net/package/apc)
@@ -189,11 +189,11 @@ class AuthGuard implements Guard
     }
 }
 ```
-## Using cache (Redis)
+## Using route cache with Redis
 ```
 ```
 
-## Using cache (APC - Alternative PHP Cache)
+## Using route cache with APC - Alternative PHP Cache
 ```
 **
  * Setting use cache for caching of annotations mapping
