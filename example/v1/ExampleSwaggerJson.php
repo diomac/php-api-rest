@@ -8,9 +8,11 @@
 
 namespace example\v1;
 
+use Diomac\API\redis\RedisUtil;
 use Diomac\API\Resource;
 use Diomac\API\Response;
 use example\v1\doc\ExampleSwaggerDoc;
+use example\v1\doc\Pet;
 
 class ExampleSwaggerJson extends Resource
 {
@@ -27,7 +29,6 @@ class ExampleSwaggerJson extends Resource
      */
     function swaggerJson()
     {
-        $this->response->setCode(Response::OK);
         $swagger = new ExampleSwaggerDoc();
 
         /**
@@ -38,6 +39,8 @@ class ExampleSwaggerJson extends Resource
          * Or YAML
          */
         //$this->response->setBodySwaggerYAML($swagger);
+
+        $this->response->setCode(Response::OK);
         return $this->response;
     }
 }
