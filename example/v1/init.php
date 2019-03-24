@@ -10,6 +10,10 @@ if (!@include('../../../autoload.php')) {
     die('Could not find autoloader');
 }
 
+if (!@include('../../vendor/autoload.php')) {
+    die('Could not find autoloader');
+}
+
 use Diomac\API\App;
 use Diomac\API\AppConfiguration;
 
