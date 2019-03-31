@@ -32,7 +32,7 @@ composer require diomac/php-api-rest
 Get Started
 ===========
 
-###API Rest Configuration
+### API Rest Configuration
 
 * 1 - Place an .htaccess file in the root folder of your Rest API (base url), to redirect all routes to the API initialization file.
 
@@ -86,7 +86,7 @@ try{
 }
 ```
 
-###Implementing API Rest Resources
+### Implementing API Rest Resources
 
 * 3 - In the resource class, enter the inheritance of the Resource class:
 
