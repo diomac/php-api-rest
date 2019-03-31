@@ -132,7 +132,7 @@ function getUsrData()
 
 * 5 - Whenever a route is executed, the class holding the route will be instantiated and inherit the following attributes:
 
-A Request object with the methods:
+A Diomac\API\Request object with the methods:
 
 ```
 $this->request->getParams() // returns the parameters of the URL and $_GET
@@ -141,7 +141,7 @@ $this->request->getRoute()  // returns the executed route
 $this->request->getMethod() // returns the executed HTTP method
 ```
 
-A Response object with the methods:
+A Diomac\API\Response object with the methods:
 
 ```
 $this->response->setHeader('name', 'value'); // set HTTP header response
@@ -151,7 +151,7 @@ $this->response->setBodyJSON(\JsonSerializable object); // set response body to 
 $this->response->setContentType(''); // set content type response (for setBodyJSON not needed)
 ```
 
-And it inherits methods from the Resource class:
+And it inherits methods from the Diomac\API\Resource class:
 
 ```
 $this->getRoute(); // returns the configured route
@@ -159,7 +159,9 @@ $this->getParams(); // returns the parameters of the URL and $_GET
 $this->getParam('name'); // returns a parameter by name
 ```
 
-For the output simply return the response object:
+### Output
+
+* 6 - For the output simply return the response object:
 
 ```
 return $this->response;
