@@ -8,29 +8,39 @@ Prerequisites
 * PHP >=7.2
 
 Optional (Recommended)
-=============
+=====================
 
 ### Caching routes
+
 * nrk/predis (Redis) - [https://github.com/nrk/predis](https://github.com/nrk/predis)
 Or
 * Pecl APC - Alternative PHP Cache - [https://pecl.php.net/package/apc](https://pecl.php.net/package/apc)
+
 ### Swagger yaml format
+
 * yaml pecl extension [https://pecl.php.net/package/yaml](https://pecl.php.net/package/yaml)
 
 Installing
 ==========
+
 Use composer to manage your dependencies and download PHP-API-REST:
 
 ```bash
 composer require diomac/php-api-rest
 ```
-Using
-=====
+
+Get Started
+===========
+
+###API Rest Configuration
+
 * 1 - Place an .htaccess file in the root folder of your Rest API (base url), to redirect all routes to the API initialization file.
 
 Example API folders:
 
 ![](example/assets/exampleV1Folder.png)
+
+.htaccess file:
 
 ```
 RewriteEngine On
@@ -42,9 +52,13 @@ RewriteRule .* init.php [L,QSA]
 * 2 - Use the initialization file to import the dependencies of your project and...
     * Instantiate a Diomac\API\AppConfiguration object;
     * Set the base url of your API;
-    * Add the Resources Class Names of your API (See how implements Resources in item 3);
+    * Add the Resources Class Names of your API 
+    (See [Implementing API Rest Resources](https://github.com/diomac/php-api-rest#implementing-api-rest-resources));
     * Instantiate a Diomac\API\App object using the configuration object;
     * Finally call exec method.
+    
+init.php file:
+
 ```
 use Diomac\API\App;
 use Diomac\API\AppConfiguration;
@@ -72,7 +86,10 @@ try{
 }
 ```
 
+###Implementing API Rest Resources
+
 * 3 - In the resource class, enter the inheritance of the Resource class:
+
 ```
 namespace example;
 
@@ -80,10 +97,19 @@ use Diomac\API\Resource;
 use Diomac\API\Response;
 use Diomac\API\UnauthorizedException;
 
-class ExampleResource extends Resource {...
+class ExampleResource extends Resource 
+{
+    ...
+}
 ```
 
-* 4 - For each method of the resource class, enter PHP annotation to identify routes (@route), HTTP methods (@method) and if you need a Class implementing Guard Interface to protect the route (@guard - See how implement guards in topic ["Implementing a Guard Class"](https://github.com/diomac/php-api-rest#implementing-a-guard-class) ):
+* 4 - For each method of the resource class, 
+enter PHP annotation to identify routes (@route), 
+HTTP methods (@method) and if you need a 
+Class implementing Guard Interface to protect 
+the route (@guard - See how implement guards 
+in topic 
+[Implementing a Guard Class](https://github.com/diomac/php-api-rest#implementing-a-guard-class) ):
 ```
 /**
 * @method get
