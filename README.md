@@ -1,6 +1,6 @@
 PHP-API-REST
 ============
-PHP API REST framework using annotations, and Swagger 2.0 support.
+> PHP API REST framework using annotations, and Swagger 2.0 support.
 
 Prerequisites
 =============
