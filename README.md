@@ -203,7 +203,8 @@ function getPet(): Response
 }
 ```
 
-## Using one or more route guards
+## Guards
+
 ```
 /**
 * @method get
@@ -224,7 +225,9 @@ function getUsrData()
   return $this->response; // return response object
 }
 ```
-## Implementing a Guard Class
+
+### Implementing a Guard Class
+
 ```
 namespace api\secure;
 
@@ -267,11 +270,15 @@ class AuthGuard implements Guard
     }
 }
 ```
-## Using route cache with Redis
+## Cache
+
+### Cache with Redis
+
 ```
 ```
 
-## Using route cache with APC - Alternative PHP Cache
+### Cache with APC - Alternative PHP Cache
+
 ```
 **
  * Setting use cache for caching of annotations mapping
@@ -288,9 +295,11 @@ try{
     ...
 }
 ```
+
 ## Swagger 2.0 support
 
 ### swagger.json or swagger.yaml
+
 Create a route in a resource like the example below:
 
 PHP Class:
