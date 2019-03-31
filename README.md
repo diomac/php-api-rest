@@ -67,13 +67,13 @@ use Diomac\API\AppConfiguration;
  * Initializing API configuration
  */
 $config = new AppConfiguration();
-$config->setBaseUrl('/php-api-rest/vendor/example/v1');
+$config->setBaseUrl('/php-api-rest/example/v1');
 
 /**
  * Adding resources classes
  */
 $config->addResource(\example\v1\ExampleResource::class);
-$config->addResource(\example\core\secure\ExampleGuard::class);
+$config->addResource(\example\v1\ExampleSwaggerJson::class);
 
 /**
  * Execute API
@@ -82,7 +82,7 @@ try{
     $app = new App($config);
     $app->exec();
 }catch (Exception $ex){
- ...
+    ...
 }
 ```
 
@@ -123,22 +123,26 @@ function getUsrData()
 {
   // ... your code
   $this->response->setCode(Response::OK); // set HTTP response code
-  $this->response->setBodyJSON($ this->request->getData()); // set responde data
+  $this->response->setBodyJSON($jsonSerializable); // set responde data
   return $this->response; // return response object
 }
 ```
-## Running a route
 
-Whenever a route is executed, the class holding the route will be instantiated and inherit the following attributes:
+### Resource Class Inheritance
+
+* 5 - Whenever a route is executed, the class holding the route will be instantiated and inherit the following attributes:
 
 A Request object with the methods:
+
 ```
 $this->request->getParams() // returns the parameters of the URL and $_GET
 $this->request->getData()   // returns an object sent by the front end
 $this->request->getRoute()  // returns the executed route
 $this->request->getMethod() // returns the executed HTTP method
 ```
+
 A Response object with the methods:
+
 ```
 $this->response->setHeader('name', 'value'); // set HTTP header response
 $this->response->setCode(Response::BAD_REQUEST); // set HTTP response code
@@ -146,16 +150,21 @@ $this->response->setBody('string'); // set response body
 $this->response->setBodyJSON(\JsonSerializable object); // set response body to convert in JSON
 $this->response->setContentType(''); // set content type response (for setBodyJSON not needed)
 ```
+
 And it inherits methods from the Resource class:
+
 ```
 $this->getRoute(); // returns the configured route
 $this->getParams(); // returns the parameters of the URL and $_GET
 $this->getParam('name'); // returns a parameter by name
 ```
+
 For the output simply return the response object:
+
 ```
 return $this->response;
 ```
+
 ## Using one or more route guards
 ```
 /**
