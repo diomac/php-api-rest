@@ -12,6 +12,7 @@ use Diomac\API\Resource;
 use Diomac\API\Response;
 use example\v1\doc\NewPet;
 use example\v1\doc\Pet;
+use Exception;
 
 /**
  * Class ExampleResource
@@ -83,6 +84,37 @@ class ExampleResource extends Resource
         $pet = new Pet();
         $this->response->setCode(Response::OK);
         $this->response->setBodyJSON($pet);
+        return $this->response;
+    }
+
+    /**
+     * @method get
+     * @route /example/v1/pet/{petId}
+     *
+     * @return Response
+     * @throws Exception
+     */
+    function getPet(): Response
+    {
+        try {
+            $petId = $this->getParam('petId');
+            $pet = new Pet($petId);
+
+            /**
+             * API Rest best practices - selecting returned fields and aliases
+             */
+            $fields = $this->getParam('fields');
+
+            if($fields){
+                Response::setFields(explode(',', $fields), Pet::class);
+            }
+
+            $this->response->setCode(Response::OK);
+            $this->response->setBodyJSON($pet);
+        } catch (Exception $ex) {
+            throw new Exception('Internal Server Error', Response::INTERNAL_SERVER_ERROR);
+        }
+
         return $this->response;
     }
 }

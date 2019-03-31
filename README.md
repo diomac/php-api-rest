@@ -167,6 +167,42 @@ $this->getParam('name'); // returns a parameter by name
 return $this->response;
 ```
 
+### Complete Resource example
+
+API get method:
+```
+/**
+ * @method get
+ * @route /example/v1/pet/{petId}
+ *
+ * @return Response
+ * @throws Exception
+ */
+function getPet(): Response
+{
+    try {
+        $petId = $this->getParam('petId');
+        $pet = new Pet($petId);
+
+        /**
+         * API Rest best practices - selecting returned fields and aliases
+         */
+        $fields = $this->getParam('fields');
+
+        if($fields){
+            Response::setFields(explode(',', $fields), Pet::class);
+        }
+
+        $this->response->setCode(Response::OK);
+        $this->response->setBodyJSON($pet);
+    } catch (Exception $ex) {
+        throw new Exception('Internal Server Error', Response::INTERNAL_SERVER_ERROR);
+    }
+
+    return $this->response;
+}
+```
+
 ## Using one or more route guards
 ```
 /**
