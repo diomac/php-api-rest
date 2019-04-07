@@ -9,6 +9,8 @@
 namespace Diomac\API\swagger;
 
 
+use Exception;
+
 class SwaggerPath
 {
     /**
@@ -74,9 +76,10 @@ class SwaggerPath
 
     /**
      * @param string $name
-     * @return SwaggerMethod|null
+     * @return SwaggerMethod
+     * @throws Exception
      */
-    public function getMethodByName(string $name): ?SwaggerMethod
+    public function getMethodByName(string $name): SwaggerMethod
     {
         $filter = array_filter($this->methods, function (SwaggerMethod $m) use ($name) {
             return $m->getName() === $name;
@@ -86,6 +89,6 @@ class SwaggerPath
             return $filter[0];
         }
 
-        return null;
+        throw new Exception('Config routes error. Verify your resources class.');
     }
 }

@@ -105,7 +105,7 @@ class Resource
      * @param string $route
      * @return Resource
      */
-    public static function createResource(string $childClassName, string $route): Resource
+    public static function createResource(string $childClassName, string $route): self
     {
         return new $childClassName($route);
     }

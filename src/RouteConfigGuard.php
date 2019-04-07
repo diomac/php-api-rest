@@ -8,6 +8,7 @@
 
 namespace Diomac\API;
 
+use stdClass;
 
 class RouteConfigGuard
 {
@@ -16,7 +17,7 @@ class RouteConfigGuard
      */
     private $guardClass;
     /**
-     * @var \stdClass $guardParams
+     * @var stdClass $guardParams
      */
     private $guardParams;
 
@@ -37,17 +38,17 @@ class RouteConfigGuard
     }
 
     /**
-     * @return \stdClass
+     * @return stdClass
      */
-    public function getGuardParams(): ?\stdClass
+    public function getGuardParams(): ?stdClass
     {
         return $this->guardParams;
     }
 
     /**
-     * @param null|\stdClass $guardParams
+     * @param null|stdClass $guardParams
      */
-    public function setGuardParams(\stdClass $guardParams = null): void
+    public function setGuardParams(stdClass $guardParams = null): void
     {
         $this->guardParams = $guardParams;
     }

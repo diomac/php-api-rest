@@ -8,6 +8,10 @@
 
 namespace Diomac\API;
 
+use Error;
+use Exception;
+use Diomac\API\Exception as DiomacException;
+
 /**
  * Class App
  * @package Diomac\API
@@ -38,8 +42,7 @@ class App
     /**
      * App constructor.
      * @param $config
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(AppConfiguration $config)
     {
@@ -49,17 +52,18 @@ class App
         try {
             $config->getBaseUrl();
             $config->getResourceNames();
-        } catch (\Error $err) {
+        } catch (Error $err) {
             $msg = $err->getMessage();
 
             if (strpos($msg, 'Diomac\API\AppConfiguration::getBaseUrl()') !== false) {
-                throw new \Exception('Diomac\API\AppConfiguration::baseUrl is required.');
+                throw new Exception('Diomac\API\AppConfiguration::baseUrl is required.');
             }
 
             if (strpos($msg, 'Diomac\API\AppConfiguration::getResourceNames()') !== false) {
-                throw new \Exception('Resources not configured.');
+                throw new Exception('Resources not configured.');
             }
         }
+
         try {
             /**
              * Init routes and request configuration
@@ -69,7 +73,7 @@ class App
             $this->request = new Request($config);
 
             $this->response = new Response($this->router->getRoutes(), $this->router->getTags(), $config);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->exceptionMessage($e);
             $this->response->output();
             exit;
@@ -91,7 +95,7 @@ class App
             $this->exceptionMessage($e);
         } catch (MethodNotAllowedException $e) {
             $this->exceptionMessage($e);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->exceptionMessage($e);
         }
 
@@ -104,13 +108,16 @@ class App
      * @throws UnauthorizedException
      * @throws MethodNotAllowedException
      * @throws NotFoundException
-     * @throws \Exception
+     * @throws Exception
      */
     private function init()
     {
         $currentRoute = null;
         $routes = $this->router->getRoutes();
 
+        /**
+         * Search called route in resources
+         */
         foreach ($routes as $swaggerPath) {
             $patternRoute = $this->configPatternRoute($swaggerPath->getRoute());
             if (preg_match($patternRoute, explode('?', $this->request->getRoute())[0])) {
@@ -119,21 +126,24 @@ class App
             }
         }
 
+        /**
+         * Called route not exists
+         */
         if (!$currentRoute) {
             throw new NotFoundException();
         }
 
-        $routePath = $currentRoute->getRoute();
-
-        $this->request = new Request(self::$config, $routePath);
+        $this->request->setUriParams($currentRoute->getRoute());
         $method = $this->request->getMethod();
 
+        /**
+         * Called method is not allowed
+         */
         if (!in_array($method, $currentRoute->getAllowedMethods())) {
             $this->resource = new Resource($currentRoute->getRoute());
             $this->resource->setAllowedMethods($currentRoute->getAllowedMethods());
             throw new MethodNotAllowedException();
         }
-
 
         $swaggerMethod = $currentRoute->getMethodByName($method);
         $class = $swaggerMethod->getRouteConfig()->getResourceClass();
@@ -150,6 +160,9 @@ class App
                 $this->response = $function->invoke($this->resource);
             }
         } else {
+            /**
+             * Call function end point
+             */
             $this->response = $function->invoke($this->resource);
         }
     }
@@ -159,13 +172,13 @@ class App
      * @return bool
      * @throws UnauthorizedException
      * @throws ForbiddenException
-     * @throws \Exception
+     * @throws Exception
      */
     private function execGuards(array $guards): bool
     {
         foreach ($guards as $g) {
             if (!$g->getGuardClass()) {
-                throw new \Exception('Guard bad configured. ClassName is required.');
+                throw new Exception('Guard bad configured. ClassName is required.');
             }
 
             $guard = Request::createGuard($g->getGuardClass());
@@ -176,7 +189,7 @@ class App
                 throw $ex;
             } catch (ForbiddenException $ex) {
                 throw $ex;
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 throw $ex;
             }
         }
@@ -184,18 +197,18 @@ class App
     }
 
     /**
-     * @param $route
+     * @param string $route
      * @return string
      */
-    private function configPatternRoute($route): string
+    private function configPatternRoute(string $route): string
     {
         return '|^' . preg_replace('/({[^\/]+})/', '[^\/]+', $route) . '$|';
     }
 
     /**
-     * @param \Exception $ex
+     * @param Exception $ex
      */
-    private function exceptionMessage(\Exception $ex): void
+    private function exceptionMessage(Exception $ex): void
     {
         if (!$this->response) {
             $this->response = new Response();
@@ -206,7 +219,7 @@ class App
         $this->response->setCode($ex->getCode());
 
         if ($contentType === 'application/json') {
-            $jsonEx = new Exception($ex->getMessage(), $ex->getCode());
+            $jsonEx = new DiomacException($ex->getMessage(), $ex->getCode());
             $this->response->setCode($ex->getCode());
             $this->response->setBodyJSON($jsonEx);
         } else {

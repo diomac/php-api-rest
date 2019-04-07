@@ -9,6 +9,11 @@
 namespace Diomac\API;
 
 use Diomac\API\swagger\Swagger;
+use Diomac\API\swagger\SwaggerDefinition;
+use Exception;
+use Error;
+use JsonSerializable;
+use stdClass;
 
 /**
  * Class Request
@@ -51,11 +56,11 @@ class Request
 
     /**
      * @param Swagger|null $swagger
-     * @param \JsonSerializable|null $definition
+     * @param SwaggerDefinition $definition
      * @return object
      * @throws BadRequestException
      */
-    public function getData(Swagger $swagger = null, \JsonSerializable $definition = null): object
+    public function getData(Swagger $swagger = null, SwaggerDefinition $definition = null): object
     {
         if ($swagger && $definition) {
             $this->checkData(json_decode(json_encode($definition)), $swagger);
@@ -65,7 +70,7 @@ class Request
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getParams(): array
     {
@@ -75,24 +80,22 @@ class Request
     /**
      * Request constructor.
      * @param AppConfiguration $config
-     * @param string $currentRoute
-     * @throws \Exception
+     * @throws Exception
      */
-    public function __construct(AppConfiguration $config, string $currentRoute = null)
+    public function __construct(AppConfiguration $config)
     {
-        $baseUrl = $config->getBaseUrl();
-        $this->getEnvironmentRoute($baseUrl);
+        $this->getEnvironmentRoute($config->getBaseUrl());
 
         /**
          * Test required configuration
          */
         try {
             $this->getRoute();
-        } catch (\Error $err) {
+        } catch (Error $err) {
             $msg = $err->getMessage();
 
             if (strpos($msg, 'Diomac\API\Request::getRoute()') !== false) {
-                throw new \Exception(
+                throw new Exception(
                     'Diomac\API\AppConfiguration::baseUrl is bad configured. 
                     Verify that the variable matches the resource folder.'
                 );
@@ -101,16 +104,13 @@ class Request
 
         $this->getEnvironmentMethod();
         $this->getEnvironmentData();
-        if ($currentRoute) {
-            $this->getUriParams($currentRoute);
-        }
     }
 
     /**
      * @param $routeData
-     * @throws \Exception
+     * @throws Exception
      */
-    private function getUriParams($routeData): void
+    public function setUriParams($routeData): void
     {
         $params = $_GET;
         $partsRouteData = explode('/', $routeData);
@@ -120,7 +120,7 @@ class Request
             if (preg_match('/({[^\/]+})/', $p)) {
                 $pName = preg_replace('/({|})/', '', $p);
                 if (isset($params[$pName])) {
-                    throw new \Exception('Duplicate variables in the call.');
+                    throw new Exception('Duplicate variables in the call.');
                 }
                 $params[$pName] = preg_replace('/\?(.*)/', '', $partsRoute[$key]);
             }
@@ -157,10 +157,10 @@ class Request
         if ($data && isset($dataMethods[$this->method])) {
             $this->data = json_decode($data);
             if (!is_object($this->data)) {
-                $this->data = new \stdClass();
+                $this->data = new stdClass();
             }
         } else {
-            $this->data = new \stdClass();
+            $this->data = new stdClass();
         }
     }
 
@@ -192,13 +192,13 @@ class Request
     /**
      * Check request data using swagger 2.0 definitions
      *
-     * @param \stdClass $definition
+     * @param stdClass $definition
      * @param Swagger $swagger
-     * @param \stdClass|null $data
+     * @param stdClass|null $data
      * @throws BadRequestException
-     * @throws \Exception
+     * @throws Exception
      */
-    private function checkData(\stdClass $definition, Swagger $swagger, \stdClass $data = null): void
+    private function checkData(stdClass $definition, Swagger $swagger, stdClass $data = null): void
     {
         if (!$data) {
             $data = $this->data;
@@ -222,15 +222,15 @@ class Request
      *
      * @param $value
      * @param string $propertyName
-     * @param \stdClass $definition
+     * @param stdClass $definition
      * @param Swagger $swagger
      * @throws BadRequestException
-     * @throws \Exception
+     * @throws Exception
      */
-    private function checkDataType($value, string $propertyName, \stdClass $definition, Swagger $swagger): void
+    private function checkDataType($value, string $propertyName, stdClass $definition, Swagger $swagger): void
     {
         if (!$definition->properties) {
-            throw new \Exception('Definition not contain field "properties"');
+            throw new Exception('Definition not contain field "properties"');
         }
 
         $strPath = $definition->properties->{$propertyName}->{'$ref'};

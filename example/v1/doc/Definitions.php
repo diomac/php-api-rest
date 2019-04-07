@@ -8,7 +8,9 @@
 
 namespace example\v1\doc;
 
-class Definitions implements \JsonSerializable
+use JsonSerializable;
+
+class Definitions implements JsonSerializable
 {
     /**
      * @var Pet $pet

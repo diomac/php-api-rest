@@ -104,9 +104,6 @@ class AppConfiguration
      */
     public function getContentTypeExceptions(): string
     {
-        if (!$this->contentTypeExceptions) {
-            return 'text/html';
-        }
         return $this->contentTypeExceptions;
     }
 

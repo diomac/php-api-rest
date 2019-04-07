@@ -8,6 +8,7 @@
 
 namespace Diomac\API;
 
+use ReflectionMethod;
 
 class RouteConfig
 {
@@ -20,7 +21,7 @@ class RouteConfig
      */
     private $guards;
     /**
-     * @var \ReflectionMethod $function
+     * @var ReflectionMethod $function
      */
     private $function;
 
@@ -57,17 +58,17 @@ class RouteConfig
     }
 
     /**
-     * @return \ReflectionMethod
+     * @return ReflectionMethod
      */
-    public function getFunction(): \ReflectionMethod
+    public function getFunction(): ReflectionMethod
     {
         return $this->function;
     }
 
     /**
-     * @param \ReflectionMethod $function
+     * @param ReflectionMethod $function
      */
-    public function setFunction(\ReflectionMethod $function): void
+    public function setFunction(ReflectionMethod $function): void
     {
         $this->function = $function;
     }

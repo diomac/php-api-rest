@@ -10,6 +10,11 @@ namespace Diomac\API;
 
 use Diomac\API\swagger\SwaggerMethod;
 use Diomac\API\swagger\SwaggerPath;
+use Error;
+use Exception;
+use ReflectionException;
+use ReflectionMethod;
+use stdClass;
 
 /**
  * Class Router
@@ -69,8 +74,8 @@ class Router
     /**
      * Router constructor.
      * @param $config AppConfiguration
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @throws ReflectionException
+     * @throws Exception
      */
     public function __construct(AppConfiguration $config)
     {
@@ -103,27 +108,31 @@ class Router
 
     /**
      * @param string|null $doc
-     * @return \stdClass|null
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @return stdClass|null
+     * @throws ReflectionException
+     * @throws Exception
      */
-    private function configTag(string $doc = null): ?\stdClass
+    private function configTag(string $doc = null): ?stdClass
     {
         if (!$doc) {
             return null;
         }
-        $annotation = new Annotation();
-        return $annotation->complexAnnotationToJSON($doc, 'tag');
+        if($this->appConfig->getSwaggerResourceName()){
+            $annotation = new Annotation();
+            return $annotation->complexAnnotationToJSON($doc, 'tag');
+        }
+
+        return null;
     }
 
     /**
-     * @param \ReflectionMethod[] $methods
+     * @param ReflectionMethod[] $methods
      * @param string $class
-     * @param \stdClass|null $tag
-     * @throws \ReflectionException
-     * @throws \Exception
+     * @param stdClass|null $tag
+     * @throws ReflectionException
+     * @throws Exception
      */
-    private function configRoutes(array $methods, string $class, \stdClass $tag = null)
+    private function configRoutes(array $methods, string $class, stdClass $tag = null): void
     {
         $annotation = new Annotation();
         $infoRoutes = [];
@@ -173,7 +182,7 @@ class Router
      * @param array $configMethod
      * @param Annotation $methodAnnotation
      * @return SwaggerMethod
-     * @throws \Exception
+     * @throws Exception
      */
     private function buildConfigRoute(
         string $httpMethod,
@@ -187,9 +196,9 @@ class Router
                 $sm->setName($httpMethod);
                 $sm->setSummary($sm->readPHPDocSummary($configMethod['annotation'], $methodAnnotation));
                 $sm->setDescription($sm->readPHPDocDescription($configMethod['annotation'], $methodAnnotation));
-            } catch (\Error $err) {
+            } catch (Error $err) {
                 if (strpos($err->getMessage(), 'Diomac\API\SwaggerMethod::set') !== false) {
-                    throw new \Exception('Swagger 2.0 require @method, @summary and @description in all the paths.');
+                    throw new Exception('Swagger 2.0 require @method, @summary and @description in all the paths.');
                 }
             }
 

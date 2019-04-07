@@ -8,16 +8,21 @@
 
 namespace Diomac\API;
 
+use ReflectionException;
+use ReflectionClass;
+use stdClass;
+use Exception;
+
 /**
  * Class Annotation
  * @package Diomac\API
  */
-class Annotation extends \ReflectionClass
+class Annotation extends ReflectionClass
 {
     /**
      * Annotation constructor.
      * @param null $class
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct($class = null)
     {
@@ -73,8 +78,8 @@ class Annotation extends \ReflectionClass
      * @param string $annotation
      * @param string $tag
      * @param callable $func
-     * @return \stdClass[]
-     * @throws \Exception
+     * @return stdClass[]
+     * @throws Exception
      */
     public function complexAnnotationToArrayJSON(string $annotation, string $tag, callable $func = null): array
     {
@@ -96,10 +101,10 @@ class Annotation extends \ReflectionClass
     /**
      * @param string $annotation
      * @param string $tag
-     * @return mixed|null|\stdClass
-     * @throws \Exception
+     * @return mixed|null|stdClass
+     * @throws Exception
      */
-    public function complexAnnotationToJSON(string $annotation, string $tag): ?\stdClass
+    public function complexAnnotationToJSON(string $annotation, string $tag): ?stdClass
     {
 
         $pregResult = null;
@@ -117,7 +122,7 @@ class Annotation extends \ReflectionClass
         $std = json_decode(preg_replace('/@|\s/', '', $json));
 
         if (!$std) {
-            throw new \Exception(
+            throw new Exception(
                 'Bad documentation. Check PHPDoc @' . $tag,
                 Response::INTERNAL_SERVER_ERROR
             );
