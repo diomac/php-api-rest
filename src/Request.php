@@ -12,7 +12,6 @@ use Diomac\API\swagger\Swagger;
 use Diomac\API\swagger\SwaggerDefinition;
 use Exception;
 use Error;
-use JsonSerializable;
 use stdClass;
 
 /**

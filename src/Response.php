@@ -9,6 +9,9 @@
 namespace Diomac\API;
 
 use Diomac\API\swagger\Swagger;
+use Error;
+use JsonSerializable;
+use Exception;
 
 /**
  * Class Response
@@ -393,9 +396,9 @@ class Response
     }
 
     /**
-     * @param \JsonSerializable $body
+     * @param JsonSerializable $body
      */
-    public function setBodyJSON(\JsonSerializable $body): void
+    public function setBodyJSON(JsonSerializable $body): void
     {
         $this->setContentType('application/json');
         $this->body = json_encode($body, JSON_PRETTY_PRINT);
@@ -406,7 +409,7 @@ class Response
 
     /**
      * @param Swagger $swagger
-     * @throws \Exception
+     * @throws Exception
      */
     public function setBodySwaggerJSON(Swagger $swagger): void
     {
@@ -416,15 +419,15 @@ class Response
         $swagger->setConsumes();
         $swagger->setProduces();
         try {
-            $this->body = json_encode($swagger, JSON_PRETTY_PRINT);
-        } catch (\Exception $ex) {
+            $this->setBodyJSON($swagger);
+        } catch (Exception $ex) {
             throw $ex;
         }
     }
 
     /**
      * @param Swagger $swagger
-     * @throws \Exception
+     * @throws Exception
      */
     public function setBodySwaggerYAML(Swagger $swagger): void
     {
@@ -435,11 +438,11 @@ class Response
         $swagger->setProduces();
         try {
             $this->body = yaml_emit($swagger);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             throw $ex;
-        } catch (\Error $err) {
+        } catch (Error $err) {
             if (strpos('Call to undefined function Diomac\API\yaml_emit()', $err->getMessage()) !== false) {
-                throw new \Exception('Yaml not configured. Check http://pecl.php.net/package/yaml.');
+                throw new Exception('Yaml not configured. Check http://pecl.php.net/package/yaml.');
             }
         }
     }
@@ -486,13 +489,14 @@ class Response
     /**
      * Use this method to implements JsonSerialize of your Definition Class.
      *
-     * @param \JsonSerializable $object
+     * @param JsonSerializable $object
      * @param array $indexMethods
      * @param bool $showNullValues
      * @return array
+     * @throws Exception
      */
     public static function jsonSerialize(
-        \JsonSerializable $object,
+        JsonSerializable $object,
         array $indexMethods,
         bool $showNullValues = false
     ): array {
@@ -511,6 +515,8 @@ class Response
                 if ($value || $showNullValues) {
                     $json[$prop] = $object->$m();
                 }
+            } else {
+                throw new Exception(' Method ' . $indexMethods[$i] . ' not exists in '. get_class($object));
             }
         }
 
