@@ -10,8 +10,10 @@ namespace Diomac\API\swagger;
 
 
 use Diomac\API\Response;
+use Exception;
+use JsonSerializable;
 
-class SwaggerInfo implements \JsonSerializable
+class SwaggerInfo implements JsonSerializable
 {
     /**
      * @var string $version
@@ -149,6 +151,7 @@ class SwaggerInfo implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws Exception
      */
     public function jsonSerialize()
     {

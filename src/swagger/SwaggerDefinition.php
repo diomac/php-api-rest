@@ -11,8 +11,10 @@ namespace Diomac\API\swagger;
 
 use Diomac\API\Annotation;
 use Diomac\API\Response;
+use Exception;
+use JsonSerializable;
 
-abstract class SwaggerDefinition implements \JsonSerializable
+abstract class SwaggerDefinition implements JsonSerializable
 {
     /**
      * @var string $type
@@ -33,7 +35,7 @@ abstract class SwaggerDefinition implements \JsonSerializable
 
     /**
      * SwaggerDefinition constructor.
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
@@ -41,7 +43,7 @@ abstract class SwaggerDefinition implements \JsonSerializable
         try {
             $ann = new Annotation($child);
         } catch (\ReflectionException $ex) {
-            throw new \Exception('Can\'t read ' . $child . ' information.');
+            throw new Exception('Can\'t read ' . $child . ' information.');
         }
 
         preg_match('/@swaggerType ([A-Za-z]+)/', $ann->getDocComment(), $match);
@@ -49,7 +51,7 @@ abstract class SwaggerDefinition implements \JsonSerializable
         if ($match) {
             $this->type = $match[1];
         } else {
-            throw new \Exception('@swaggerType bad configured in "' . $ann->getName() . '"');
+            throw new Exception('@swaggerType bad configured in "' . $ann->getName() . '"');
         }
 
         $properties = $ann->getProperties();
@@ -124,6 +126,7 @@ abstract class SwaggerDefinition implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws Exception
      */
     public function jsonSerialize()
     {

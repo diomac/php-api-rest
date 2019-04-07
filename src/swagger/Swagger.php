@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: dioma
+ * User: Dionisio Gabriel Rigo de Souza Machado - https://github.com/diomac
  * Date: 19/10/2018
  * Time: 15:45
  */
@@ -10,8 +10,10 @@ namespace Diomac\API\swagger;
 
 
 use Diomac\API\Response;
+use Exception;
+use JsonSerializable;
 
-abstract class Swagger implements \JsonSerializable
+abstract class Swagger implements JsonSerializable
 {
     private static $version = '2.0';
     /**
@@ -43,19 +45,19 @@ abstract class Swagger implements \JsonSerializable
      */
     protected $paths;
     /**
-     * @var \JsonSerializable $definitions
+     * @var JsonSerializable $definitions
      */
     protected $definitions;
     /**
-     * @var \JsonSerializable $parameters
+     * @var JsonSerializable $parameters
      */
     protected $parameters;
     /**
-     * @var \JsonSerializable $responses
+     * @var JsonSerializable $responses
      */
     protected $responses;
     /**
-     * @var \JsonSerializable $securityDefinitions
+     * @var JsonSerializable $securityDefinitions
      */
     protected $securityDefinitions;
     /**
@@ -222,81 +224,81 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @return \JsonSerializable
+     * @return JsonSerializable
      */
-    public function getDefinitions(): \JsonSerializable
+    public function getDefinitions(): JsonSerializable
     {
         return $this->definitions;
     }
 
     /**
-     * @param \JsonSerializable $definitions
+     * @param JsonSerializable $definitions
      */
-    public function setDefinitions(\JsonSerializable $definitions): void
+    public function setDefinitions(JsonSerializable $definitions): void
     {
         $this->definitions = $definitions;
     }
 
     /**
-     * @return \JsonSerializable
+     * @return JsonSerializable
      */
-    public function getParameters(): ?\JsonSerializable
+    public function getParameters(): ?JsonSerializable
     {
         return $this->parameters;
     }
 
     /**
-     * @param \JsonSerializable $parameters
+     * @param JsonSerializable $parameters
      */
-    public function setParameters(\JsonSerializable $parameters): void
+    public function setParameters(JsonSerializable $parameters): void
     {
         $this->parameters = $parameters;
     }
 
     /**
-     * @return \JsonSerializable
+     * @return JsonSerializable
      */
-    public function getResponses(): ?\JsonSerializable
+    public function getResponses(): ?JsonSerializable
     {
         return $this->responses;
     }
 
     /**
-     * @param \JsonSerializable $responses
+     * @param JsonSerializable $responses
      */
-    public function setResponses(\JsonSerializable $responses): void
+    public function setResponses(JsonSerializable $responses): void
     {
         $this->responses = $responses;
     }
 
     /**
-     * @return \JsonSerializable
+     * @return JsonSerializable
      */
-    public function getSecurityDefinitions(): ?\JsonSerializable
+    public function getSecurityDefinitions(): ?JsonSerializable
     {
         return $this->securityDefinitions;
     }
 
     /**
-     * @param \JsonSerializable $securityDefinitions
+     * @param JsonSerializable $securityDefinitions
      */
-    public function setSecurityDefinitions(\JsonSerializable $securityDefinitions): void
+    public function setSecurityDefinitions(JsonSerializable $securityDefinitions): void
     {
         $this->securityDefinitions = $securityDefinitions;
     }
 
     /**
-     * @return \JsonSerializable
+     * @return JsonSerializable
      */
-    public function getSecurity(): ?\JsonSerializable
+    public function getSecurity(): ?JsonSerializable
     {
         return $this->security;
     }
 
     /**
-     * @param \JsonSerializable $security
+     * @param JsonSerializable $security
      */
-    public function setSecurity(\JsonSerializable $security): void
+    public function setSecurity(JsonSerializable $security): void
     {
         $this->security = $security;
     }
@@ -318,17 +320,17 @@ abstract class Swagger implements \JsonSerializable
     }
 
     /**
-     * @return \JsonSerializable
+     * @return JsonSerializable
      */
-    public function getExternalDocs(): ?\JsonSerializable
+    public function getExternalDocs(): ?JsonSerializable
     {
         return $this->externalDocs;
     }
 
     /**
-     * @param \JsonSerializable $externalDocs
+     * @param JsonSerializable $externalDocs
      */
-    public function setExternalDocs(\JsonSerializable $externalDocs): void
+    public function setExternalDocs(JsonSerializable $externalDocs): void
     {
         $this->externalDocs = $externalDocs;
     }
@@ -368,9 +370,9 @@ abstract class Swagger implements \JsonSerializable
      *
      * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#definitionsObject
      *
-     * @return \JsonSerializable|null
+     * @return JsonSerializable|null
      */
-    abstract public function definitions(): ?\JsonSerializable;
+    abstract public function definitions(): ?JsonSerializable;
 
     /**
      * An object to hold parameters that can be used across operations.
@@ -378,9 +380,9 @@ abstract class Swagger implements \JsonSerializable
      *
      * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parametersDefinitionsObject
      *
-     * @return \JsonSerializable|null
+     * @return JsonSerializable|null
      */
-    abstract public function parametersDefinitions(): ?\JsonSerializable;
+    abstract public function parametersDefinitions(): ?JsonSerializable;
 
     /**
      * An object to hold responses that can be used across operations.
@@ -388,18 +390,18 @@ abstract class Swagger implements \JsonSerializable
      *
      * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#responsesDefinitionsObject
      *
-     * @return \JsonSerializable|null
+     * @return JsonSerializable|null
      */
-    abstract public function responsesDefinitions(): ?\JsonSerializable;
+    abstract public function responsesDefinitions(): ?JsonSerializable;
 
     /**
      * Security scheme definitions that can be used across the specification.
      *
      * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityDefinitionsObject
      *
-     * @return \JsonSerializable|null
+     * @return JsonSerializable|null
      */
-    abstract public function securityDefinitions(): ?\JsonSerializable;
+    abstract public function securityDefinitions(): ?JsonSerializable;
 
     /**
      * A declaration of which security schemes are applied for the API as a whole. The list of values describes
@@ -408,18 +410,18 @@ abstract class Swagger implements \JsonSerializable
      *
      * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject
      *
-     * @return \JsonSerializable|null
+     * @return JsonSerializable|null
      */
-    abstract public function security(): ?\JsonSerializable;
+    abstract public function security(): ?JsonSerializable;
 
     /**
      * Additional external documentation.
      *
      * https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#externalDocumentationObject
      *
-     * @return \JsonSerializable|null
+     * @return JsonSerializable|null
      */
-    abstract public function externalDocs(): ?\JsonSerializable;
+    abstract public function externalDocs(): ?JsonSerializable;
 
     /**
      * @return string[]
@@ -455,6 +457,7 @@ abstract class Swagger implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws Exception
      */
     public function jsonSerialize()
     {

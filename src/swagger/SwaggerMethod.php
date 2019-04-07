@@ -12,8 +12,10 @@ namespace Diomac\API\swagger;
 use Diomac\API\Annotation;
 use Diomac\API\Response;
 use Diomac\API\RouteConfig;
+use Exception;
+use JsonSerializable;
 
-class SwaggerMethod implements \JsonSerializable
+class SwaggerMethod implements JsonSerializable
 {
     /**
      * @var string[] $tags
@@ -348,7 +350,7 @@ class SwaggerMethod implements \JsonSerializable
      * @param string $PHPDoc
      * @param Annotation $annotation
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function readPHPDocParameters(string $PHPDoc, Annotation $annotation): array
     {
@@ -374,7 +376,7 @@ class SwaggerMethod implements \JsonSerializable
      * @param string $PHPDoc
      * @param Annotation $annotation
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function readPHPDocResponses(string $PHPDoc, Annotation $annotation): array
     {
@@ -426,6 +428,7 @@ class SwaggerMethod implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws Exception
      */
     public function jsonSerialize(): array
     {
