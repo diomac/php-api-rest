@@ -9,11 +9,10 @@
 namespace example\v1;
 
 use Diomac\API\redis\RedisUtil;
-use Diomac\API\redis\RedisUtilOLD;
 use Diomac\API\Resource;
 use Diomac\API\Response;
 use example\v1\doc\ExampleSwaggerDoc;
-use example\v1\doc\Pet;
+use Exception;
 
 class ExampleSwaggerJson extends Resource
 {
@@ -26,7 +25,7 @@ class ExampleSwaggerJson extends Resource
      *     code="default",
      *     description="Internal Server Error"
      * )
-     * @throws \Exception
+     * @throws Exception
      */
     function swaggerJson()
     {
@@ -35,17 +34,15 @@ class ExampleSwaggerJson extends Resource
         ]);
         RedisUtil::con();
         $swagger = new ExampleSwaggerDoc();
-
         /**
          * JSON
          */
+        $this->response->setCode(Response::OK);
         $this->response->setBodySwaggerJSON($swagger);
         /**
          * Or YAML
          */
         //$this->response->setBodySwaggerYAML($swagger);
-
-        $this->response->setCode(Response::OK);
         return $this->response;
     }
 }

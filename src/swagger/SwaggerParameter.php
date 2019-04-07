@@ -153,9 +153,9 @@ class SwaggerParameter implements JsonSerializable
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isAllowEmptyValue(): bool
+    public function isAllowEmptyValue(): ?bool
     {
         return $this->allowEmptyValue;
     }
@@ -233,7 +233,7 @@ class SwaggerParameter implements JsonSerializable
             'required' => 'isRequired',
             'type' => 'getType',
             'format' => 'getFormat',
-            'allowEmptyValue' => 'getAllowEmptyValue',
+            'allowEmptyValue' => 'isAllowEmptyValue',
             'collectionFormat' => 'getCollectionFormat',
             'items' => 'getItems',
             'schema' => 'getSchema'

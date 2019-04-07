@@ -49,10 +49,10 @@ $config->setUseCache(false);
 /**
  * Execute API
  */
-try{
+try {
     $app = new App($config);
     $app->exec();
-}catch (Exception $ex){
-
+} catch (Exception $ex) {
+    dd($ex);
 }
 

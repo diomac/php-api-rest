@@ -444,6 +444,7 @@ class Response
             if (strpos('Call to undefined function Diomac\API\yaml_emit()', $err->getMessage()) !== false) {
                 throw new Exception('Yaml not configured. Check http://pecl.php.net/package/yaml.');
             }
+            throw $err;
         }
     }
 

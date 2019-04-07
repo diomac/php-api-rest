@@ -88,6 +88,9 @@ class ExampleResource extends Resource
     }
 
     /**
+     * @summary Example api rest php
+     * @description A example api rest php
+     *
      * @method get
      * @route /example/v1/pet/{petId}
      *

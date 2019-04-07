@@ -117,7 +117,7 @@ class Router
         if (!$doc) {
             return null;
         }
-        if($this->appConfig->getSwaggerResourceName()){
+        if ($this->appConfig->getSwaggerResourceName()) {
             $annotation = new Annotation();
             return $annotation->complexAnnotationToJSON($doc, 'tag');
         }
@@ -197,8 +197,11 @@ class Router
                 $sm->setSummary($sm->readPHPDocSummary($configMethod['annotation'], $methodAnnotation));
                 $sm->setDescription($sm->readPHPDocDescription($configMethod['annotation'], $methodAnnotation));
             } catch (Error $err) {
-                if (strpos($err->getMessage(), 'Diomac\API\SwaggerMethod::set') !== false) {
-                    throw new Exception('Swagger 2.0 require @method, @summary and @description in all the paths.');
+                if (strpos($err->getMessage(), 'Diomac\API\swagger\SwaggerMethod::set') !== false) {
+                    throw new Exception(
+                        'Swagger 2.0 require @method, @summary and @description in all the paths.',
+                        Response::INTERNAL_SERVER_ERROR
+                    );
                 }
             }
 
