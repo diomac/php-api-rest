@@ -46,6 +46,9 @@ $config->setContentTypeExceptions('application/json');
  */
 $config->setNameCache('MyProjectCacheRoutes');
 
+/**
+ * Set Redis for cache
+ */
 $redis = new RedisConfig();
 $redis->setScheme('tcp');
 $redis->setHost('redis');
