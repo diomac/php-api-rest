@@ -49,7 +49,7 @@ abstract class RedisUtil
             'port' => self::$config->getPort()
         ];
 
-        $predis = new Client($parameters, ['prefix' => 'Diomac\\API:']);
+        $predis = new Client($parameters, ['prefix' => 'DiomacAPI:']);
 
         if (self::$config->getAuth()) {
             $predis->auth(self::$config->getAuth());

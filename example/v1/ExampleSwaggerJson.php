@@ -29,10 +29,6 @@ class ExampleSwaggerJson extends Resource
      */
     function swaggerJson()
     {
-        RedisUtil::init([
-
-        ]);
-        RedisUtil::con();
         $swagger = new ExampleSwaggerDoc();
         /**
          * JSON

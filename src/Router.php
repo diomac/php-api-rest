@@ -8,6 +8,7 @@
 
 namespace Diomac\API;
 
+use Diomac\API\redis\RedisUtil;
 use Diomac\API\swagger\SwaggerMethod;
 use Diomac\API\swagger\SwaggerPath;
 use Error;
@@ -83,11 +84,45 @@ class Router
 
         $successCache = false;
 
+        /**
+         * Use cache
+         */
         if ($config->isUseCache()) {
-            $this->cache = new ResourceCacheAPC($config->getNameCache());
-            $successCache = $this->routes = $this->cache->load();
+            if ($config->getRedisConf()) {
+                RedisUtil::init($config->getRedisConf());
+                $this->cache = RedisUtil::con();
+
+                if ($this->cache->exists('DiomacAPI:routes')) {
+                    $this->routes = unserialize($this->cache->get('DiomacAPI:routes'));
+                    $successCache = true;
+                }
+
+                if ($this->cache->exists('DiomacAPI:tags')) {
+                    $this->tags = unserialize($this->cache->get('DiomacAPI:tags'));
+                } else {
+                    $this->tags = [];
+                }
+            } else {
+                $this->cache = new ResourceCacheAPC($config->getNameCache());
+                try {
+                    $successCache = $this->routes = $this->cache->load();
+                } catch (Error $err) {
+                    $msg = $err->getMessage();
+
+                    if (strpos($msg, 'Call to undefined function apc_fetch()') !== false) {
+                        throw new Exception(
+                            'APC - Alternative PHP Cache is not configured.',
+                            Response::INTERNAL_SERVER_ERROR
+                        );
+                    }
+                }
+
+            }
         }
 
+        /**
+         * No use cache or first call using cache
+         */
         if (!$successCache) {
             $this->routes = [];
             $this->tags = [];
@@ -101,7 +136,13 @@ class Router
                 $this->configRoutes($methods, $class, $tag);
             }
             if ($config->isUseCache()) {
-                $this->cache->save($this->routes);
+                if ($config->getRedisConf()) {
+                    $this->cache->set('DiomacAPI:routes', serialize($this->routes));
+                    $this->cache->set('DiomacAPI:tags', serialize($this->tags));
+                } else {
+                    $this->cache->save($this->routes);
+                }
+
             }
         }
     }

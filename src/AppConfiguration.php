@@ -9,6 +9,8 @@
 namespace Diomac\API;
 
 
+use Diomac\API\redis\RedisConfig;
+
 class AppConfiguration
 {
     const DEFAULT_CONTENT_TYPE_EXCEPTIONS = 'text/html';
@@ -41,6 +43,11 @@ class AppConfiguration
      * @var string $nameCache
      */
     private $nameCache;
+
+    /**
+     * @var RedisConfig $redisConf
+     */
+    private $redisConf;
 
     /**
      * AppConfiguration constructor.
@@ -124,12 +131,25 @@ class AppConfiguration
     }
 
     /**
+     * @return RedisConfig
+     */
+    public function getRedisConf(): ?RedisConfig
+    {
+        return $this->redisConf;
+    }
+
+    /**
      * Set true if your API development is finished for more performance (require APC - Alternative PHP Cache) - Default: false
      * @param bool $useCache
+     * @param RedisConfig|null $redisConf
      */
-    public function setUseCache(bool $useCache): void
+    public function setUseCache(bool $useCache, RedisConfig $redisConf = null): void
     {
         $this->useCache = $useCache;
+
+        if ($redisConf) {
+            $this->redisConf = $redisConf;
+        }
     }
 
     /**

@@ -11,6 +11,7 @@ namespace Diomac\API;
 use Error;
 use Exception;
 use Diomac\API\Exception as DiomacException;
+use ReflectionMethod;
 
 /**
  * Class App
@@ -152,7 +153,9 @@ class App
         $this->resource->setParams($this->request->getParams());
         $this->resource->setRequest($this->request);
         $this->resource->setResponse($this->response);
-        $function = $swaggerMethod->getRouteConfig()->getFunction();
+
+        $functionCached = $swaggerMethod->getRouteConfig()->getFunction();
+        $function = new ReflectionMethod($this->resource, $functionCached->name);
 
         if ($swaggerMethod->getRouteConfig()->getGuards()) {
             $authorized = $this->execGuards($swaggerMethod->getRouteConfig()->getGuards());

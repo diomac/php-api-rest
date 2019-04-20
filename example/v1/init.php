@@ -16,6 +16,7 @@ if (!@include('../../vendor/autoload.php')) {
 
 use Diomac\API\App;
 use Diomac\API\AppConfiguration;
+use Diomac\API\redis\RedisConfig;
 use example\v1\ExampleResource;
 use example\v1\ExampleSwaggerJson;
 
@@ -44,7 +45,14 @@ $config->setContentTypeExceptions('application/json');
  * Setting use cache
  */
 $config->setNameCache('MyProjectCacheRoutes');
-$config->setUseCache(false);
+
+$redis = new RedisConfig();
+$redis->setDsn('diomac');
+$redis->setScheme('tcp');
+$redis->setHost('redis');
+$redis->setPort(6379);
+
+$config->setUseCache(true);
 
 /**
  * Execute API
