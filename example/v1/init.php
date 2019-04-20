@@ -52,7 +52,7 @@ $redis->setScheme('tcp');
 $redis->setHost('redis');
 $redis->setPort(6379);
 
-$config->setUseCache(true);
+$config->setUseCache(true, $redis);
 
 /**
  * Execute API
