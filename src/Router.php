@@ -105,7 +105,9 @@ class Router
             } else {
                 $this->cache = new ResourceCacheAPC($config->getNameCache());
                 try {
-                    $successCache = $this->routes = $this->cache->load();
+                    $successCache = $cacheAPC = $this->cache->load();
+                    $this->routes = $cacheAPC['routes'];
+                    $this->tags = $cacheAPC['tags'];
                 } catch (Error $err) {
                     $msg = $err->getMessage();
 
@@ -140,7 +142,11 @@ class Router
                     $this->cache->set('DiomacAPI:routes', serialize($this->routes));
                     $this->cache->set('DiomacAPI:tags', serialize($this->tags));
                 } else {
-                    $this->cache->save($this->routes);
+                    $cacheAPC = [
+                        'routes' => $this->routes,
+                        'tags' => $this->tags
+                    ];
+                    $this->cache->save($cacheAPC);
                 }
 
             }
