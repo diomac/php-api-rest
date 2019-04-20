@@ -19,7 +19,7 @@ abstract class RedisUtil
      */
     private static $config;
     /**
-     * @var Client[]
+     * @var Client
      */
     private static $predis;
 
@@ -29,14 +29,13 @@ abstract class RedisUtil
     }
 
     /**
-     * @param string|null $dsn
      * @return Client
      * @throws Exception
      */
-    public static function con(string $dsn = null)
+    public static function con(): Client
     {
-        if (isset(self::$predis[$dsn])) {
-            return self::$predis[$dsn];
+        if (self::$predis) {
+            return self::$predis;
         }
 
         if (!self::$config) {
@@ -49,12 +48,12 @@ abstract class RedisUtil
             'port' => self::$config->getPort()
         ];
 
-        $predis = new Client($parameters, ['prefix' => 'DiomacAPI:']);
+        $predis = new Client($parameters, ['prefix' => self::$config->getDsn() . ':']);
 
         if (self::$config->getAuth()) {
             $predis->auth(self::$config->getAuth());
         }
-        self::$predis[$dsn] = $predis;
+        self::$predis = $predis;
         return $predis;
     }
 }

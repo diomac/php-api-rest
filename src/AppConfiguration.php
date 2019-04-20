@@ -148,6 +148,9 @@ class AppConfiguration
         $this->useCache = $useCache;
 
         if ($redisConf) {
+            if($this->getNameCache()){
+                $redisConf->setDsn($this->getNameCache());
+            }
             $this->redisConf = $redisConf;
         }
     }

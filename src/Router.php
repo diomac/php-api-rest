@@ -92,13 +92,15 @@ class Router
                 RedisUtil::init($config->getRedisConf());
                 $this->cache = RedisUtil::con();
 
-                if ($this->cache->exists('DiomacAPI:routes')) {
-                    $this->routes = unserialize($this->cache->get('DiomacAPI:routes'));
+                $prefix = $config->getRedisConf()->getDsn();
+
+                if ($this->cache->exists($prefix . ':routes')) {
+                    $this->routes = unserialize($this->cache->get($prefix . ':routes'));
                     $successCache = true;
                 }
 
                 if ($this->cache->exists('DiomacAPI:tags')) {
-                    $this->tags = unserialize($this->cache->get('DiomacAPI:tags'));
+                    $this->tags = unserialize($this->cache->get($prefix . ':tags'));
                 } else {
                     $this->tags = [];
                 }
@@ -139,8 +141,9 @@ class Router
             }
             if ($config->isUseCache()) {
                 if ($config->getRedisConf()) {
-                    $this->cache->set('DiomacAPI:routes', serialize($this->routes));
-                    $this->cache->set('DiomacAPI:tags', serialize($this->tags));
+                    $prefix = $config->getRedisConf()->getDsn();
+                    $this->cache->set($prefix . ':routes', serialize($this->routes));
+                    $this->cache->set($prefix . ':tags', serialize($this->tags));
                 } else {
                     $cacheAPC = [
                         'routes' => $this->routes,

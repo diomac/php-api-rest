@@ -47,7 +47,6 @@ $config->setContentTypeExceptions('application/json');
 $config->setNameCache('MyProjectCacheRoutes');
 
 $redis = new RedisConfig();
-$redis->setDsn('diomac');
 $redis->setScheme('tcp');
 $redis->setHost('redis');
 $redis->setPort(6379);
