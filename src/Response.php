@@ -350,7 +350,7 @@ class Response
     private $appConfig;
 
     /**
-     * @var array
+     * @var array $fields
      */
     private static $fields;
 
@@ -368,10 +368,10 @@ class Response
     }
 
     /**
-     * @param array $fields
+     * @param string $fields
      * @param string $className
      */
-    public static function setFields(array $fields, string $className): void
+    public static function setFields(string $fields, string $className): void
     {
         self::$fields[$className] = $fields;
     }
@@ -491,33 +491,41 @@ class Response
      * Use this method to implements JsonSerialize of your Definition Class.
      *
      * @param JsonSerializable $object
-     * @param array $indexMethods
+     * @param JsonField[] $defaultJsonFields
      * @param bool $showNullValues
      * @return array
      * @throws Exception
      */
     public static function jsonSerialize(
         JsonSerializable $object,
-        array $indexMethods,
+        array $defaultJsonFields,
         bool $showNullValues = false
     ): array {
-        $properties = self::$fields[get_class($object)] ?? array_keys($indexMethods);
+
+        $arrayKeys = [];
+        $indexValues = [];
+
+        foreach ($defaultJsonFields as $jf) {
+            $arrayKeys[] = $jf->getName();
+            $indexValues[$jf->getName()] = $jf->getValue();
+        }
+
+        if (isset(self::$fields[get_class($object)])) {
+            $properties = explode(',', self::$fields[get_class($object)]);
+        } else {
+            $properties = $arrayKeys;
+        }
+
         $json = [];
 
-        foreach ($properties as $prop) {
-            $i = $prop;
-            if (strpos($prop, ':') !== false) {
-                list($i, $prop) = explode(':', $prop);
+        foreach ($properties as $p) {
+            $i = $p;
+            if (strpos($p, ':') !== false) {
+                list($i, $p) = explode(':', $p);
             }
 
-            if (method_exists($object, $indexMethods[$i])) {
-                $m = $indexMethods[$i];
-                $value = $object->$m();
-                if ($value || $showNullValues) {
-                    $json[$prop] = $object->$m();
-                }
-            } else {
-                throw new Exception(' Method ' . $indexMethods[$i] . ' not exists in '. get_class($object));
+            if ($indexValues[$i] || $showNullValues) {
+                $json[$p] = $indexValues[$i];
             }
         }
 
@@ -536,5 +544,15 @@ class Response
         return array_filter($fields, function ($v) use ($restrict) {
             return in_array(explode(':', $v)[0], $restrict);
         });
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return JsonField
+     */
+    public static function jsonField(string $name, $value): JsonField
+    {
+        return new JsonField($name, $value);
     }
 }

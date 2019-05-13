@@ -13,6 +13,7 @@ use Diomac\API\Annotation;
 use Diomac\API\Response;
 use Exception;
 use JsonSerializable;
+use ReflectionException;
 
 abstract class SwaggerDefinition implements JsonSerializable
 {
@@ -42,7 +43,7 @@ abstract class SwaggerDefinition implements JsonSerializable
         $child = get_called_class();
         try {
             $ann = new Annotation($child);
-        } catch (\ReflectionException $ex) {
+        } catch (ReflectionException $ex) {
             throw new Exception('Can\'t read ' . $child . ' information.');
         }
 
@@ -131,15 +132,15 @@ abstract class SwaggerDefinition implements JsonSerializable
     public function jsonSerialize()
     {
         $p = [];
-        $p['type'] = 'getType';
+        $p[] = Response::jsonField('type', $this->getType());
 
         if ($this->allOf) {
-            $p['allOf'] = 'getAllOf';
+            $p[] = Response::jsonField('allOf', $this->getAllOf());
         } else {
             if ($this->required) {
-                $p['required'] = 'getRequired';
+                $p[] = Response::jsonField('required', $this->getRequired());
             }
-            $p['properties'] = 'getProperties';
+            $p[] = Response::jsonField('properties', $this->getProperties());
         }
 
         return Response::jsonSerialize($this, $p);
