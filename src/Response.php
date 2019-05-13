@@ -547,6 +547,9 @@ class Response
     }
 
     /**
+     * Use this method to implements function jsonSerialize from JsonSerializable
+     * Interface
+     *
      * @param string $name
      * @param mixed $value
      * @return JsonField
