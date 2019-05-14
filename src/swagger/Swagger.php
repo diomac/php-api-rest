@@ -461,21 +461,20 @@ abstract class Swagger implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        $p = [
-            'swagger' => 'getVersion',
-            'info' => 'getInfo',
-            'host' => 'getHost',
-            'basePath' => 'getBasePath',
-            'schemes' => 'getSchemes',
-            'consumes' => 'getConsumes',
-            'produces' => 'getProduces',
-            'tags' => 'getTags',
-            'paths' => 'getJsonSerializablePaths',
-            'definitions' => 'getDefinitions',
-            'parameters' => 'getParameters',
-            'responses' => 'getResponses',
-            'securityDefinitions' => 'getSecurityDefinitions'
-        ];
-        return Response::jsonSerialize($this, $p);
+        Response::jsonField('swagger', $this->getVersion());
+        Response::jsonField('info', $this->getInfo());
+        Response::jsonField('host', $this->getHost());
+        Response::jsonField('basePath', $this->getBasePath());
+        Response::jsonField('schemes', $this->getSchemes());
+        Response::jsonField('consumes', $this->getConsumes());
+        Response::jsonField('produces', $this->getProduces());
+        Response::jsonField('tags', $this->getTags());
+        Response::jsonField('paths', $this->getJsonSerializablePaths());
+        Response::jsonField('definitions', $this->getDefinitions());
+        Response::jsonField('parameters', $this->getParameters());
+        Response::jsonField('responses', $this->getResponses());
+        Response::jsonField('securityDefinitions', $this->getSecurityDefinitions());
+
+        return Response::jsonSerialize($this);
     }
 }

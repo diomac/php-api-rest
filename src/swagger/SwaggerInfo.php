@@ -155,13 +155,13 @@ class SwaggerInfo implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return Response::jsonSerialize($this, [
-            'version' => 'getVersion',
-            'title' => 'getTitle',
-            'description' => 'getDescription',
-            'termsOfService' => 'getTermsOfService',
-            'contact' =>  'getContact',
-            'license' =>  'getLicense'
-        ]);
+        Response::jsonField('version', $this->getVersion());
+        Response::jsonField('title', $this->getTitle());
+        Response::jsonField('description', $this->getDescription());
+        Response::jsonField('termsOfService', $this->getTermsOfService());
+        Response::jsonField('contact', $this->getContact());
+        Response::jsonField('license', $this->getLicense());
+
+        return Response::jsonSerialize($this);
     }
 }

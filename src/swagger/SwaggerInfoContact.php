@@ -86,10 +86,10 @@ class SwaggerInfoContact implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return Response::jsonSerialize($this, [
-            'name' => 'getName',
-            'email' => 'getEmail',
-            'url' => 'getUrl'
-        ]);
+        Response::jsonField('name', $this->getName());
+        Response::jsonField('email', $this->getEmail());
+        Response::jsonField('url', $this->getUrl());
+
+        return Response::jsonSerialize($this);
     }
 }

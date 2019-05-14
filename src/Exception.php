@@ -25,12 +25,13 @@ class Exception extends \Exception implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws \Exception
      */
     public function jsonSerialize(): array
     {
-        return Response::jsonSerialize($this, [
-            'code' => 'getCode',
-            'message' => 'getMessage'
-        ], true);
+        Response::jsonField('code', $this->getCode());
+        Response::jsonField('message', $this->getMessage());
+
+        return Response::jsonSerialize($this, true);
     }
 }

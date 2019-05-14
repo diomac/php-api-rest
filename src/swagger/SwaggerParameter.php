@@ -226,17 +226,17 @@ class SwaggerParameter implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return Response::jsonSerialize($this, [
-            'name' => 'getName',
-            'in' => 'getIn',
-            'description' => 'getDescription',
-            'required' => 'isRequired',
-            'type' => 'getType',
-            'format' => 'getFormat',
-            'allowEmptyValue' => 'isAllowEmptyValue',
-            'collectionFormat' => 'getCollectionFormat',
-            'items' => 'getItems',
-            'schema' => 'getSchema'
-        ]);
+        Response::jsonField('name', $this->getName());
+        Response::jsonField('in', $this->getIn());
+        Response::jsonField('description', $this->getDescription());
+        Response::jsonField('required', $this->isRequired());
+        Response::jsonField('type', $this->getType());
+        Response::jsonField('format', $this->getFormat());
+        Response::jsonField('allowEmptyValue', $this->isAllowEmptyValue());
+        Response::jsonField('collectionFormat', $this->getCollectionFormat());
+        Response::jsonField('items', $this->getItems());
+        Response::jsonField('schema', $this->getSchema());
+
+        return Response::jsonSerialize($this);
     }
 }

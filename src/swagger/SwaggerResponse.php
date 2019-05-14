@@ -86,9 +86,9 @@ class SwaggerResponse implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return Response::jsonSerialize($this, [
-            'description' => 'getDescription',
-            'schema' => 'getSchema'
-        ]);
+        Response::jsonField('description', $this->getDescription());
+        Response::jsonField('schema', $this->getSchema());
+
+        return Response::jsonSerialize($this);
     }
 }

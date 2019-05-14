@@ -432,15 +432,15 @@ class SwaggerMethod implements JsonSerializable
      */
     public function jsonSerialize(): array
     {
-        return Response::jsonSerialize($this, [
-            'summary' => 'getSummary',
-            'description' => 'getDescription',
-            'operationId' => 'getOperationId',
-            'produces' => 'getProduces',
-            'consumes' => 'getConsumes',
-            'tags' => 'getTags',
-            'parameters' => 'getParameters',
-            'responses' => 'getJsonSerializableResponses'
-        ]);
+        Response::jsonField('summary', $this->getSummary());
+        Response::jsonField('description', $this->getDescription());
+        Response::jsonField('operationId', $this->getOperationId());
+        Response::jsonField('produces', $this->getProduces());
+        Response::jsonField('consumes', $this->getConsumes());
+        Response::jsonField('tags', $this->getTags());
+        Response::jsonField('parameters', $this->getParameters());
+        Response::jsonField('responses', $this->getResponses());
+
+        return Response::jsonSerialize($this);
     }
 }

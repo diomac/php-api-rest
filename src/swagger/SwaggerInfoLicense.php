@@ -66,9 +66,9 @@ class SwaggerInfoLicense implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        return Response::jsonSerialize($this, [
-            'name' => 'getName',
-            'url' => 'getUrl'
-        ]);
+        Response::jsonField('name', $this->getName());
+        Response::jsonField('url', $this->getUrl());
+
+        return Response::jsonSerialize($this);
     }
 }

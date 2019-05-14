@@ -12,6 +12,7 @@ use Diomac\API\swagger\Swagger;
 use Error;
 use JsonSerializable;
 use Exception;
+use function PHPSTORM_META\type;
 
 /**
  * Class Response
@@ -353,6 +354,10 @@ class Response
      * @var array $fields
      */
     private static $fields;
+    /**
+     * @var array $defaultJsonFields
+     */
+    private static $defaultJsonFields;
 
     /**
      * Response constructor.
@@ -491,21 +496,19 @@ class Response
      * Use this method to implements JsonSerialize of your Definition Class.
      *
      * @param JsonSerializable $object
-     * @param JsonField[] $defaultJsonFields
      * @param bool $showNullValues
      * @return array
      * @throws Exception
      */
     public static function jsonSerialize(
         JsonSerializable $object,
-        array $defaultJsonFields,
         bool $showNullValues = false
     ): array {
 
         $arrayKeys = [];
         $indexValues = [];
 
-        foreach ($defaultJsonFields as $jf) {
+        foreach (self::$defaultJsonFields as $jf) {
             $arrayKeys[] = $jf->getName();
             $indexValues[$jf->getName()] = $jf->getValue();
         }
@@ -529,6 +532,7 @@ class Response
             }
         }
 
+        self::$defaultJsonFields = [];
         return $json;
     }
 
@@ -552,10 +556,9 @@ class Response
      *
      * @param string $name
      * @param mixed $value
-     * @return JsonField
      */
-    public static function jsonField(string $name, $value): JsonField
+    public static function jsonField(string $name, $value): void
     {
-        return new JsonField($name, $value);
+        self::$defaultJsonFields[] = new JsonField($name, $value);
     }
 }

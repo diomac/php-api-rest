@@ -131,18 +131,17 @@ abstract class SwaggerDefinition implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        $p = [];
-        $p[] = Response::jsonField('type', $this->getType());
+        Response::jsonField('type', $this->getType());
 
         if ($this->allOf) {
-            $p[] = Response::jsonField('allOf', $this->getAllOf());
+            Response::jsonField('allOf', $this->getAllOf());
         } else {
             if ($this->required) {
-                $p[] = Response::jsonField('required', $this->getRequired());
+                Response::jsonField('required', $this->getRequired());
             }
-            $p[] = Response::jsonField('properties', $this->getProperties());
+            Response::jsonField('properties', $this->getProperties());
         }
 
-        return Response::jsonSerialize($this, $p);
+        return Response::jsonSerialize($this);
     }
 }

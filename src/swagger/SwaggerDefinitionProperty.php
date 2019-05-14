@@ -108,14 +108,12 @@ class SwaggerDefinitionProperty implements JsonSerializable
      */
     public function jsonSerialize()
     {
-        $p = [
-            'type' => 'getType'
-        ];
+        Response::jsonField('type', $this->getType());
 
         if($this->format){
-            $p['format'] = 'getFormat';
+            Response::jsonField('format', $this->getFormat());
         }
 
-        return Response::jsonSerialize($this, $p);
+        return Response::jsonSerialize($this);
     }
 }

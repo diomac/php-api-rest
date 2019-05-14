@@ -109,7 +109,7 @@ class ExampleResource extends Resource
             $fields = $this->getParam('fields');
 
             if($fields){
-                Response::setFields(explode(',', $fields), Pet::class);
+                Response::setFields($fields, Pet::class);
             }
 
             $this->response->setCode(Response::OK);

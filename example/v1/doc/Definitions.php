@@ -8,6 +8,8 @@
 
 namespace example\v1\doc;
 
+use Diomac\API\Response;
+use Exception;
 use JsonSerializable;
 
 class Definitions implements JsonSerializable
@@ -59,12 +61,13 @@ class Definitions implements JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
+     * @throws Exception
      */
     public function jsonSerialize()
     {
-        return \Diomac\API\Response::jsonSerialize($this, [
-            'pet' => 'getPet',
-            'newPet' => 'getNewPet'
-        ]);
+        Response::jsonField('pet', $this->getPet());
+        Response::jsonField('newPet', $this->getNewPet());
+
+        return Response::jsonSerialize($this);
     }
 }
