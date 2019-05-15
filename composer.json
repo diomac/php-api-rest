@@ -1,7 +1,6 @@
 {
   "name": "diomac/php-api-rest",
   "description": "A PHP API REST Micro-Framework using annotations",
-  "type": "micro-framework",
   "version": "2.0.1",
   "keywords": [
     "api",
