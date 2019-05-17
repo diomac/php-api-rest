@@ -22,7 +22,7 @@
     "ext-apc": "*"
   },
   "minimum-stability": "dev",
-   "autoload": {
+  "autoload": {
     "psr-4": {
       "Diomac\\API\\": "src"
     }
