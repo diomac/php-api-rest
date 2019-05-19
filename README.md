@@ -203,8 +203,8 @@ function getPet(): Response
 }
 ```
 
-## Guards
-
+Guards
+======
 ```
 /**
 * @method get
@@ -270,12 +270,11 @@ class AuthGuard implements Guard
     }
 }
 ```
-## Cache
+Cache
+=====
 
-### Cache with Redis
-
-```
-```
+Cache settings save the mapped routes into a list, and when used (set to true), 
+skip the route mapping step for better performance.  
 
 ### Cache with APC - Alternative PHP Cache
 
@@ -296,7 +295,25 @@ try{
 }
 ```
 
-## Swagger 2.0 support
+### Cache with Redis
+
+```
+/**
+ * Set Redis for cache
+ */
+$redis = new RedisConfig();
+$redis->setScheme('tcp');
+$redis->setHost('redis');
+$redis->setPort(6379);
+
+**
+ * Setting use cache for caching of annotations mapping
+ */
+$config->setUseCache(true, $redis);
+```
+
+Swagger 2.0 support
+===================
 
 ### swagger.json or swagger.yaml
 
