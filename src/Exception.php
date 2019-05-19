@@ -8,11 +8,14 @@
 
 namespace Diomac\API;
 
+use Exception as ExceptionCore;
+use JsonSerializable;
+
 /**
  * Class Exception
  * @package Diomac\API
  */
-class Exception extends \Exception implements \JsonSerializable
+class Exception extends ExceptionCore implements JsonSerializable
 {
     public function __construct($message, $code = 0, Exception $previous = null)
     {
@@ -25,7 +28,7 @@ class Exception extends \Exception implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0
-     * @throws \Exception
+     * @throws ExceptionCore
      */
     public function jsonSerialize(): array
     {
