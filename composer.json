@@ -17,9 +17,7 @@
   "require": {
     "php": ">=7.2",
     "predis/predis": "^1.1",
-    "ext-json": "*",
-    "ext-yaml": "*",
-    "ext-apc": "*"
+    "ext-json": "*"
   },
   "minimum-stability": "dev",
   "autoload": {
